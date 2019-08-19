@@ -35,4 +35,11 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     
     runtimeOnly project(':mpd-front')
+
+    // https://projectlombok.org
+    implementationOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation group: 'com.google.guava', name: 'guava', version: '28.0-jre'
+
 }

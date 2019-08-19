@@ -6,6 +6,7 @@ import {SocksConnected} from "./SocksConnected";
 import {IProps} from "./types";
 import * as Actions from "../../actions/index";
 import SocksClient from "./SocksClient/index";
+import {createRef} from "react";
 
 const mapStateToProps = (state: any) => {
     return {
@@ -19,16 +20,28 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
         onSocketDisonnected: Actions.onSocketDisconnected
     }, dispatch);
 
-const SocksComponent = (props: IProps) => <>
-        <SocksClient onConnect={props.onSocketConnected} onDisconnect={props.onSocketDisonnected} subscriptions={[]}/>
-        {props.socksConnected
-        ? printConnected()
-        : printNotConnected()
+class Socks extends React.Component<IProps> {
+    private client = createRef<SocksClient>();
+    render() {
+        return <>
+            <SocksClient onConnect={this.onConnect} onDisconnect={
+                this.props.onSocketDisonnected} subscriptions={[]}
+                         ref={this.client}
+            />
+            {this.props.socksConnected
+                ? this.printConnected()
+                : this.printNotConnected()
+            }
+        </>;
     }
-    </>;
 
-const printConnected = () => <SocksConnected/>;
+    printConnected = () => <SocksConnected/>;
 
-const printNotConnected = () => <SocksNotConnected/>;
+    printNotConnected = () => <SocksNotConnected/>;
 
-export const Socks = connect(mapStateToProps, mapDispatchToProps)(SocksComponent);
+    onConnect = () => {
+        this.props.onSocketConnected()
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Socks);
