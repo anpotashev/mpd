@@ -9,3 +9,9 @@ wrapper {
     gradleVersion = '5.5.1'
     distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
 }
+
+task initCustom(type: Copy) {
+    from 'mpd-back/src/main/resources/config/mpd.properties.template'
+    into 'custom'
+    rename 'mpd.properties.template', 'mpd.properties'
+}

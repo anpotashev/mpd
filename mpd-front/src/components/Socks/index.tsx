@@ -1,34 +1,34 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { SocksNotConnected } from "./SocksNotConnected";
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {SocksNotConnected} from "./SocksNotConnected";
 import {SocksConnected} from "./SocksConnected";
 import {IProps} from "./types";
-import * as Actions from "../../actions/index";
-import SocksClient from "./SocksClient/index";
+import * as Actions from "actions";
 
 const mapStateToProps = (state: any) => {
     return {
-        socksConnected: state.socksConnection.connected
+        socksConnected: state.socksConnection
     }
 };
 
 const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     {
-        onSocketConnected: Actions.onSocketConnected,
-        onSocketDisonnected: Actions.onSocketDisconnected
+        socksConnect: Actions.socksConnect
     }, dispatch);
 
-const SocksComponent = (props: IProps) => <>
-        <SocksClient onConnect={props.onSocketConnected} onDisconnect={props.onSocketDisonnected} subscriptions={[]}/>
-        {props.socksConnected
-        ? printConnected()
-        : printNotConnected()
+class Socks extends React.Component<IProps> {
+
+    componentDidMount(): void {
+        this.props.socksConnect();
     }
-    </>;
 
-const printConnected = () => <SocksConnected/>;
+    render() {
+        return this.props.socksConnected
+            ? <SocksConnected/>
+            : <SocksNotConnected/>
+    }
 
-const printNotConnected = () => <SocksNotConnected/>;
+}
 
-export const Socks = connect(mapStateToProps, mapDispatchToProps)(SocksComponent);
+export default connect(mapStateToProps, mapDispatchToProps)(Socks);
