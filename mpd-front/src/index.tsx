@@ -5,9 +5,10 @@ import {Provider} from 'react-redux';
 import reducers from './reducers';
 import {composeWithDevTools} from "redux-devtools-extension";
 import thunk from "redux-thunk";
-import Socks from './components/Socks';
+import Socks from "./components/Socks";
+import {socketMiddleware} from './redux/SockJSMiddleware'
 
-export const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));
+export const store = createStore(reducers, composeWithDevTools(applyMiddleware(socketMiddleware, thunk)));
 
 ReactDOM.render(<Provider store={store}>
     <Socks/>
