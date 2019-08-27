@@ -1,1 +1,1 @@
-export { onSocketConnected, onSocketDisconnected, onMessageReceived } from './Socks/index'
+export { onSocketConnected, onSocketDisconnected, onMessageReceived, socksConnect, sendMessage } from './Socks/index'

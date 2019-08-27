@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {CompatClient, Stomp} from '@stomp/stompjs';
-import SockJS from "sockjs-client";
-import {WS_ROOT} from '../../../constants/Socks';
+// import {CompatClient, Stomp} from '@stomp/stompjs';
+// import SockJS from "sockjs-client";
+// import {WS_ROOT} from '../../../constants/Socks';
 import {IStompClientProps} from "./types";
 import {ISubscription} from "../types";
 
@@ -13,7 +13,7 @@ interface IStompClientState {
 
 export default class SocksClient extends React.Component<IStompClientProps, IStompClientState> {
 
-    client: CompatClient;
+    // client: CompatClient;
 
     constructor(props: IStompClientProps) {
         super(props);
@@ -21,8 +21,8 @@ export default class SocksClient extends React.Component<IStompClientProps, ISto
             connected: false,
             subscriptions: []
         };
-        let ws : WebSocket = new SockJS(WS_ROOT);
-        this.client = Stomp.over(ws);
+        // let ws : WebSocket = new SockJS(WS_ROOT);
+        // this.client = Stomp.over(ws);
     }
 
     componentDidMount(): void {
@@ -30,15 +30,15 @@ export default class SocksClient extends React.Component<IStompClientProps, ISto
     }
 
     private connectAndReconnect(): void {
-        this.client.onWebSocketClose = () => {
-            this.onDisconnect();
-            setTimeout(() => {
-                this.connectAndReconnect();
-            }, 5000);
-        };
-        this.client.onConnect = () => this.onConnect();
-        this.client.debug = () => { };
-        this.client.activate();
+        // this.client.onWebSocketClose = () => {
+        //     this.onDisconnect();
+        //     setTimeout(() => {
+        //         this.connectAndReconnect();
+        //     }, 5000);
+        // };
+        // this.client.onConnect = () => this.onConnect();
+        // this.client.debug = () => { };
+        // this.client.activate();
     }
 
     private onConnect() {
@@ -47,7 +47,7 @@ export default class SocksClient extends React.Component<IStompClientProps, ISto
     }
 
     private subscribe = (value: ISubscription) => {
-        this.client.subscribe(value.topic, (msg: any) => value.action(JSON.parse(msg.body)));
+        // this.client.subscribe(value.topic, (msg: any) => value.action(JSON.parse(msg.body)));
     };
 
     private onDisconnect() {

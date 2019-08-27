@@ -7,6 +7,7 @@ import {IProps} from "./types";
 import * as Actions from "../../actions/index";
 import SocksClient from "./SocksClient/index";
 import {createRef} from "react";
+import {Button, Card} from "react-bootstrap";
 
 const mapStateToProps = (state: any) => {
     return {
@@ -17,7 +18,9 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     {
         onSocketConnected: Actions.onSocketConnected,
-        onSocketDisonnected: Actions.onSocketDisconnected
+        onSocketDisonnected: Actions.onSocketDisconnected,
+        socksConnect: Actions.socksConnect,
+        sendMessage: Actions.sendMessage
     }, dispatch);
 
 class Socks extends React.Component<IProps> {
@@ -32,6 +35,11 @@ class Socks extends React.Component<IProps> {
                 ? this.printConnected()
                 : this.printNotConnected()
             }
+            <Button onClick={() => this.props.socksConnect()}>connect</Button>
+
+            <Button onClick={() => this.props.sendMessage('/mpd/connectionState', {})} >state</Button>
+            <Button onClick={() => this.props.sendMessage('/mpd/disconnect', {})} >disconnect</Button>
+            <Button onClick={() => this.props.sendMessage('/mpd/connect', {})} >connect</Button>
         </>;
     }
 

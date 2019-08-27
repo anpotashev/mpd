@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConnectionSettings {
 
-    private String host;
-    private Integer port;
-    private String password;
+    private String host = "127.0.0.1";
+    private Integer port = 6600;
+    private String password = "";
 
 }
