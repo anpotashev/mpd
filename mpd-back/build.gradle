@@ -1,3 +1,5 @@
+import sun.security.util.PropertyExpander
+
 buildscript {
     ext {
         springBootVersion = '2.1.1.RELEASE'
@@ -43,4 +45,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation group: 'com.google.guava', name: 'guava', version: '28.0-jre'
 
+}
+
+bootRun {
+    jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"]
 }

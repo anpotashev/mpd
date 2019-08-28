@@ -7,7 +7,7 @@ import {IProps} from "./types";
 import * as Actions from "../../actions/index";
 import SocksClient from "./SocksClient/index";
 import {createRef} from "react";
-import {Button, Card} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 
 const mapStateToProps = (state: any) => {
     return {
@@ -24,6 +24,12 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     }, dispatch);
 
 class Socks extends React.Component<IProps> {
+
+    componentDidMount(): void {
+        console.log('hhh');
+        this.props.socksConnect();
+    }
+
     private client = createRef<SocksClient>();
     render() {
         return <>

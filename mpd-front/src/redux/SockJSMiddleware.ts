@@ -1,7 +1,3 @@
-import {Action} from "redux";
-
-// import { Middleware, MiddlewareAPI, Dispatch, Action } from "redux";
-// import { Action } from "react-redux";
 import * as actions from '../actions/index';
 import {SEND_MESSAGE, SOCKS_CONNECT} from "../constants/ActionTypes";
 import {CompatClient, IMessage, Stomp} from "@stomp/stompjs";
@@ -23,8 +19,6 @@ export const socketMiddleware = (function(){
         client.subscribe("/user/queue/reply", (msg) => onMessage(store, msg));
         client.subscribe("/topic/connection", (msg) => onMessage(store, msg));
         client.subscribe("/topic/connection1", (msg) => onMessage(store, msg));
-        client.subscribe("/mpd/topic/connection", (msg) => onMessage(store, msg));
-        client.subscribe("/mpd/topic/connection1", (msg) => onMessage(store, msg));
         store.dispatch(actions.onSocketConnected());
     };
 

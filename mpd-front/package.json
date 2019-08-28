@@ -51,6 +51,5 @@
     "redux-thunk": "^2.3.0",
     "sockjs-client": "^1.3.0",
     "stompjs": "^2.3.3"
-  },
-  "proxy": "http://localhost:8080"
+  }
 }

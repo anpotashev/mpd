@@ -1,9 +1,8 @@
-package ru.net.arh.mpd.events;
+package ru.net.arh.mpd.model.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.ApplicationEvent;
 
 @Getter
 @Setter

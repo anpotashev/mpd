@@ -22,7 +22,7 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/stomp").withSockJS().setClientLibraryUrl("/webjars/sockjs-client/1.1.2/sockjs.js");
+        registry.addEndpoint("/stomp").setAllowedOrigins("*").withSockJS().setClientLibraryUrl("/webjars/sockjs-client/1.1.2/sockjs.js");
     }
 
 }
