@@ -1,7 +1,7 @@
 import {
     ON_SOCKS_CONNECTED,
     ON_SOCKS_DISCONNECTED
-} from "../../constants/ActionTypes";
+} from "constants/ActionTypes";
 import {ISocksConnectionState} from "./types";
 
 const notConnected : ISocksConnectionState = {

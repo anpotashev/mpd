@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @PropertySources({
         @PropertySource("classpath:/config/application.yaml")
         ,
-        @PropertySource(value = "file:${MPD_CONFIG}/custom/mpd.properties", ignoreResourceNotFound = false)
+        @PropertySource(value = "file:${MPD_CONFIG}/custom/mpd.properties", ignoreResourceNotFound = true)
 })
 public class ConnectionSettings {
 

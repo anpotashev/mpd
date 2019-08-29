@@ -1,8 +1,9 @@
-import * as actions from '../actions/index';
-import {SEND_MESSAGE, SOCKS_CONNECT} from "../constants/ActionTypes";
+import * as actions from 'actions';
+import {SEND_MESSAGE, SOCKS_CONNECT} from "constants/ActionTypes";
 import {CompatClient, IMessage, Stomp} from "@stomp/stompjs";
-import {WS_ROOT} from "../constants/Socks";
 import SockJS from "sockjs-client";
+import {WS_ROOT} from "constants/Socks";
+import {topics} from "constants/topics";
 
 
 export const socketMiddleware = (function(){
@@ -14,16 +15,12 @@ export const socketMiddleware = (function(){
 
 
     const onOpen = (store : any) => {
-        console.log("connected socks");
         connected = true;
-        client.subscribe("/user/queue/reply", (msg) => onMessage(store, msg));
-        client.subscribe("/topic/connection", (msg) => onMessage(store, msg));
-        client.subscribe("/topic/connection1", (msg) => onMessage(store, msg));
+        topics.forEach(value => client.subscribe(value, (msg) => onMessage(store, msg)));
         store.dispatch(actions.onSocketConnected());
     };
 
     const onClose = (store : any) => {
-        console.log("disconnected socks");
         connected = false;
         store.dispatch(actions.onSocketDisconnected());
     };
@@ -34,17 +31,23 @@ export const socketMiddleware = (function(){
 
     };
 
+    const tryConnect = (store : any) => {
+        client.onWebSocketClose = () => { onClose(store);
+            setTimeout(() => tryConnect(store), 1000);
+        };
+        client.onConnect = () => onOpen(store);
+        client.onreceive = (message) => onMessage(store, message);
+        client.debug = (msg) => console.log(msg);
+        client.activate();
+    };
+
     return (store : any) => (next : any) => (action : any) => {
         switch(action.type) {
             case SOCKS_CONNECT:
                 if(connected) {
                     return;
                 }
-                client.onWebSocketClose = () => onClose(store);
-                client.onConnect = () => onOpen(store);
-                client.onreceive = (message) => onMessage(store, message);
-                client.debug = (msg) => console.log(msg);
-                client.activate();
+                tryConnect(store);
                 break;
             case SEND_MESSAGE:
                 client.send(action.payload.destination, action.payload.msg);
