@@ -3,6 +3,7 @@ package ru.net.arh.mpd.events;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import ru.net.arh.mpd.connection.idle.IdleService;
 import ru.net.arh.mpd.model.events.MpdEvent;
 import ru.net.arh.mpd.model.events.MpdEventType;
 
@@ -20,5 +21,10 @@ public class EventsServiceImpl implements EventsService {
     @Override
     public void onDisconnect() {
         publisher.publishEvent(new MpdEvent<>(MpdEventType.CONNECTION_STATE_CHANGED, false));
+    }
+
+    @Override
+    public void onIdle(String system) {
+        publisher.publishEvent(new MpdEvent<>(MpdEventType.GOT_IDLE_EVENT, system));
     }
 }
