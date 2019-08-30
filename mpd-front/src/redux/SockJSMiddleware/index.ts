@@ -1,43 +1,72 @@
+import {Store} from 'redux';
 import * as Actions from 'actions';
 import {SEND_MESSAGE, SOCKS_CONNECT} from "constants/ActionTypes";
 import {CompatClient, IMessage, Stomp} from "@stomp/stompjs";
 import SockJS from "sockjs-client";
-import {Destinations, WS_ROOT} from "constants/Socks";
-import {topics} from "constants/topics";
+import {WS_FAILED, WS_SUCCESS, WS_ROOT, WsDestination} from "constants/Socks";
 
+export interface ISendMessagePayload {
+    type: WsDestination;
+    msg: any;
+}
+
+export interface IReceivedMessageBody {
+    type: string;
+    payload: any;
+}
+
+const topics: string[] = [
+    "/topic/connection"
+    , "/topic/playlist"
+    , "/topic/status"
+    , "/topic/fullTree"
+    , "/topic/tree"
+    , "/topic/songTime"
+];
 
 export const socketMiddleware = (function () {
     let client: CompatClient;
     client = Stomp.over(function () {
         return new SockJS(WS_ROOT);
     });
+
     let connected: boolean = false;
 
-
-    const onOpen = (store: any) => {
+    const onOpen = (store: Store) => {
         connected = true;
-        topics.forEach(value => client.subscribe(value, (msg) => onMessage(store, msg)));
+        topics.forEach(value => client.subscribe(value, (msg) => processReply(store, msg)));
+        client.subscribe("/user/queue/reply", (msg) => processReply(store, msg));
+        client.subscribe("/user/queue/error", (msg) => processError(store, msg));
         store.dispatch(Actions.onSocketConnected());
-        store.dispatch(Actions.sendMessage(Destinations.CONNECTION_STATE, {}));
     };
 
-    const onClose = (store: any) => {
+    const processReply = (store: Store, msg: IMessage) => {
+        let body: IReceivedMessageBody = JSON.parse(msg.body);
+        store.dispatch({type: WS_SUCCESS,
+            payload: body
+        });
+    };
+
+    const processError = (store: Store, msg: IMessage) => {
+        let body = JSON.parse(msg.body);
+        store.dispatch({type: WS_FAILED,
+            payload: body
+        });
+    };
+
+    const onClose = (store: Store) => {
         connected = false;
         store.dispatch(Actions.onSocketDisconnected());
     };
 
-    const onMessage = (store: any, message: IMessage) => {
-        store.dispatch(Actions.processMessage(message));
-    };
-
-    const tryConnect = (store: any) => {
+    const tryConnect = (store: Store) => {
         client.onWebSocketClose = () => {
             onClose(store);
-            setTimeout(() => tryConnect(store), 1000);
+            setTimeout(() => tryConnect(store), 5000);
         };
         client.onConnect = () => onOpen(store);
-        client.onreceive = (message) => onMessage(store, message);
-        client.debug = console.log;
+        // client.debug = console.log;
+        client.debug = ()=>{};
         client.activate();
     };
 
@@ -50,8 +79,14 @@ export const socketMiddleware = (function () {
                 tryConnect(store);
                 break;
             case SEND_MESSAGE:
-                client.send(action.payload.destination, {}, action.payload.msg);
+                let payload: ISendMessagePayload = action.payload;
+                if (!connected) {
+                    store.dispatch({type: WS_FAILED, payload: {type: payload.type.getType(), msg: "websocket not connected"}});
+                    break;
+                }
+                client.send(payload.type.getDestination(), {}, JSON.stringify(payload.msg));
                 break;
+
             default:
                 return next(action);
         }

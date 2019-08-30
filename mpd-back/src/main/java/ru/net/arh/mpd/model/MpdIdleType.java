@@ -1,10 +1,11 @@
 package ru.net.arh.mpd.model;
 
+/**
+ * Типы idle-событий, которые могут прийти от mpd-сервера. Перечисленны только обрабатываемые.
+ */
 public enum MpdIdleType {
 
-    PLAYER("player")
-    , PLAYLIST("playlist")
-    ;
+    PLAYER("player"), PLAYLIST("playlist"), TREE("tree"), STATUS("status"), OUTPUT("output");
 
     private final String text;
 

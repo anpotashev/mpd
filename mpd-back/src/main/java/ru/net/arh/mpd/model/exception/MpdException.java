@@ -8,7 +8,7 @@ public class MpdException extends RuntimeException {
         super(message);
     }
 
-    public MpdException(String message, Object...args) {
+    public MpdException(String message, Object... args) {
         super(MessageFormatter.arrayFormat(message, args).getMessage());
     }
 }
