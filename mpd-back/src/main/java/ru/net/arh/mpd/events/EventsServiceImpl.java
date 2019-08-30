@@ -3,9 +3,9 @@ package ru.net.arh.mpd.events;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import ru.net.arh.mpd.connection.idle.IdleService;
 import ru.net.arh.mpd.model.events.MpdEvent;
 import ru.net.arh.mpd.model.events.MpdEventType;
+import ru.net.arh.mpd.model.MpdIdleType;
 
 @Service
 public class EventsServiceImpl implements EventsService {
@@ -25,6 +25,6 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     public void onIdle(String system) {
-        publisher.publishEvent(new MpdEvent<>(MpdEventType.GOT_IDLE_EVENT, system));
+        publisher.publishEvent(MpdIdleType.fromString(system));
     }
 }
