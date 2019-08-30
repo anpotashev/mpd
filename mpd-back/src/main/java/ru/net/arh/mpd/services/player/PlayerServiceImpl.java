@@ -13,7 +13,6 @@ import ru.net.arh.mpd.model.MpdCommand.Command;
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-
     private final ConnectionService connectionService;
 
     @Autowired
@@ -75,4 +74,5 @@ public class PlayerServiceImpl implements PlayerService {
         command.addParam(seekPos + "");
         connectionService.sendCommand(command);
     }
+
 }
