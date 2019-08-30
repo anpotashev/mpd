@@ -3,7 +3,9 @@ package ru.net.arh.mpd.model.events;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 
 public enum MpdEventType {
-    CONNECTION_STATE_CHANGED("/topic/connection", ResponseType.CONNECTION_STATE);
+    CONNECTION_STATE_CHANGED("/topic/connection", ResponseType.CONNECTION_STATE)
+    , GOT_IDLE_EVENT("/topic/idle", ResponseType.IDLE_EVENT)
+    ;
 
     private String destination;
 

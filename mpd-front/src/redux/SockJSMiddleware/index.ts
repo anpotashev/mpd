@@ -50,7 +50,7 @@ export const socketMiddleware = (function () {
                 tryConnect(store);
                 break;
             case SEND_MESSAGE:
-                client.send(action.payload.destination, action.payload.msg);
+                client.send(action.payload.destination, {}, action.payload.msg);
                 break;
             default:
                 return next(action);

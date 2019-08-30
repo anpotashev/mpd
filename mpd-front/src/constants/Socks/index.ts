@@ -10,7 +10,8 @@ export const PLAY_TIME = '/topic/songTime';
 export const OUTPUTS = '/topic/output';
 
 export enum Destinations {
-    CONNECTION_STATE = "/mpd/connectionState",
-    CONNECT = "/mpd/connect",
-    DISCONNECT = "/mpd/disconnect"
+    CONNECTION_STATE = "/mpd/connectionState"
+    , CONNECT = "/mpd/connect"
+    , DISCONNECT = "/mpd/disconnect"
+    , PLAYER = "/mpd/player"
 }
