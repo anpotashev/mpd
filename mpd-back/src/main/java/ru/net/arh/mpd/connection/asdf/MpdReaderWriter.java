@@ -1,9 +1,7 @@
 package ru.net.arh.mpd.connection.asdf;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.event.Level;
 import ru.net.arh.mpd.model.exception.MpdException;
-import ru.net.arh.mpd.util.ExceptionUtil;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -64,13 +62,8 @@ public class MpdReaderWriter {
                 return result;
             }
             if (s.startsWith("ACK")) {
-                throw (ExceptionUtil.logAndGetException(
-                        "On sending command: '{}' got error '{}'",
-                        log,
-                        Level.INFO,
-                        command.toString(),
-                        s.substring(3).trim()
-                ));
+                log.info("On sending command: '{}' got error '{}'", command, s.substring(3).trim());
+                throw new MpdException("On sending command: '{}' got error '{}'", command, s.substring(3).trim());
             }
         }
     }

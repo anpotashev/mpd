@@ -2,3 +2,4 @@ mpdserver:
   defaulthost: 127.0.0.1
   defaultport: 6600
   defaultpassword: 12345678
+  defaultpinginterval: 15000

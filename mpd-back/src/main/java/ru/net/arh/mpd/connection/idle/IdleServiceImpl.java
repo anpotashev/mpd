@@ -1,8 +1,5 @@
 package ru.net.arh.mpd.connection.idle;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -10,7 +7,11 @@ import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.connection.ConnectionService;
 import ru.net.arh.mpd.events.EventsService;
 import ru.net.arh.mpd.model.events.MpdEvent;
-import ru.net.arh.mpd.util.ExceptionUtil;
+import ru.net.arh.mpd.model.exception.MpdException;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -55,10 +56,12 @@ public class IdleServiceImpl implements IdleService {
 
   private List<String> getIdleSystems(List<String> list) {
     if (list == null || list.isEmpty()) {
-      ExceptionUtil.logAndGetException("got empty message", log);
+      log.error("got empty message");
     }
     if (list.get(list.size() - 1).startsWith("ACK")) {
-      ExceptionUtil.logAndGetException("got error " + list.get(list.size() - 1), log);
+      String error = "got error " + list.get(list.size() - 1);
+      log.error(error);
+      throw new MpdException(error);
     }
     return list.stream()
         .filter(s -> s.startsWith(CHANGED))
