@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.connection.ConnectionService;
 import ru.net.arh.mpd.events.EventsService;
 import ru.net.arh.mpd.model.events.MpdEvent;
-import ru.net.arh.mpd.model.events.MpdEventType;
 import ru.net.arh.mpd.util.ExceptionUtil;
 
 @Slf4j
@@ -34,28 +33,22 @@ public class IdleServiceImpl implements IdleService {
     }
   };
 
-  @EventListener
+  @EventListener(condition = "#event.type == T(ru.net.arh.mpd.model.events.MpdEventType).CONNECTION_STATE_CHANGED")
   private void changedEvent(MpdEvent event) {
-    if(event.getType() == MpdEventType.CONNECTION_STATE_CHANGED) {
-      if ((Boolean) event.getBody()) {
-        startListeningIdle();
-      } else {
-        stopListeningIdle();
-      }
+    if ((Boolean) event.getBody()) {
+      startListeningIdle();
+    } else {
+      stopListeningIdle();
     }
   }
 
   @Override
-  //@EventListener(condition = "#event.type == T(ru.net.arh.events.MpdEventType).CONNECTION_STATE_CHANGED && #event.body")
-  //@EventListener(condition = "#event.type == T(ru.net.arh.events.MpdEventType).CONNECTION_STATE_CHANGED")
-  //@EventListener
   public void startListeningIdle() {
     t = new Thread(runnable);
     t.start();
   }
 
   @Override
-  //@EventListener(condition = "#event.type == T(ru.net.arh.events.MpdEventType).CONNECTION_STATE_CHANGED && !#event.body")
   public void stopListeningIdle() {
     t.interrupt();
   }
