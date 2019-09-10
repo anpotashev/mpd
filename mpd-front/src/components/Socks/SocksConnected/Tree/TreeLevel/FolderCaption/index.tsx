@@ -1,28 +1,35 @@
 import * as React from 'react';
+import {bindActionCreators} from "redux";
+import * as Actions from "actions";
+import {connect} from "react-redux";
+import '../index.css';
 
 export interface IFolderCaptionProps {
     path: string;
     title: string;
-    // addDirToPlaylistFirst: any;
-    addDirToPlaylist: Function;
-    // updateDb: any;
+    addToPlaylist: Function;
+    updateDb: Function
 }
 
-export const FolderCaption = (props: IFolderCaptionProps) => <span className="dropdown">
-    <a className="dropdown-toggle" role="button"
-        data-toggle="dropdown">{props.title}</a>
+const mapDispatchToProps = (dispatch: any) => bindActionCreators(
+    {
+        addToPlaylist: Actions.addToCurrentPlaylist,
+        updateDb: Actions.updateDb
+    }, dispatch);
+
+const FolderCaptionComponent = (props: IFolderCaptionProps) => <span className="dropdown">
+    <button className="dropdown-toggle" role="button"
+        data-toggle="dropdown">{props.title}</button>
     <ul className="dropdown-menu">
-        <li><a className="dropdown-item">add to current playlist at first</a></li>
-        <li><a className="dropdown-item"
-               onClick={e => props.addDirToPlaylist(props.path)}>add to current playlist at last</a></li>
-        {/*<li><a className="dropdown-item">add to current playlist at last</a></li>*/}
-        <li><a className="dropdown-item">update music database (full)</a></li>
-        <li><a className="dropdown-item">update music database (from here)</a></li>
-        {/*<li><a className="dropdown-item"*/}
-        {/*onClick={e => props.addDirToPlaylistFirst(props.path)}>add to current playlist at first</a></li>*/}
-        {/*<li><a className="dropdown-item"*/}
-            {/*onClick={e => props.updateDb('')}>update music database (full)</a></li>*/}
-        {/*<li><a className="dropdown-item"*/}
-            {/*onClick={e => props.updateDb(props.path)}>update music database (from here)</a></li>*/}
+        <li><button className="dropdown-item"
+               onClick={e => props.addToPlaylist(props.path, 0)}>add to current playlist at first</button></li>
+        <li><button className="dropdown-item"
+               onClick={e => props.addToPlaylist(props.path)}>add to current playlist at last</button></li>
+        <li><button className="dropdown-item"
+            onClick={e => props.updateDb('')}>update music database (full)</button></li>
+        <li><button className="dropdown-item"
+            onClick={e => props.updateDb(props.path)}>update music database (from here)</button></li>
     </ul>
 </span>;
+
+export const FolderCaption = connect(null, mapDispatchToProps)(FolderCaptionComponent);

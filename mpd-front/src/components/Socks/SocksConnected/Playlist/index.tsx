@@ -7,6 +7,7 @@ import {Table} from "react-bootstrap";
 import Loading from "components/Loading";
 import {IStatusReducer} from "reducers/Status";
 import './index.css'
+import {PlaylistPanel} from "./PlaylistPanel";
 
 interface IPlaylistProps {
     playlist: IPlaylistReducer;
@@ -37,7 +38,8 @@ const timeFormatter = (time: number) => {
 };
 const PlaylistComponent =
     (props: IPlaylistProps) => <Loading request={() => props.playlistRequest() } state={props.playlist}>
-        {/*<div>*/}
+        <>
+            <PlaylistPanel/>
         <Table>
         <thead>
         <tr>
@@ -66,7 +68,7 @@ const PlaylistComponent =
         </tr> )}
         </tbody>
     </Table>
-        {/*</div>*/}
+        </>
 </Loading>;
 
 export const Playlist = connect(mapStateToProps, mapDispatchToProps)(PlaylistComponent);

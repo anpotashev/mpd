@@ -100,7 +100,7 @@ public interface PlaylistService {
      * @param value
      * @param position
      */
-    void addIdFile(String value, Integer position);
+    void addFileToPos(String value, Integer position);
 
     /**
      * @param value

@@ -37,4 +37,14 @@ public class MpdTreeController {
     public SockJsResponse<TreeItem> fullTree() {
         return new SockJsResponse<>(ResponseType.FULL_TREE, treeService.fullTree());
     }
+
+    /**
+     * Запрос дерева музыкальной коллекции (детальной информации)
+     */
+    @MessageMapping("/updateDb")
+    @MpdErrorType(type = ResponseType.UPDATE_DB)
+    @SendToUser(REPLY_QUEUE)
+    public void update(String path) {
+        treeService.update(path);
+    }
 }

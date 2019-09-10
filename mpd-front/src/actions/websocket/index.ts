@@ -39,6 +39,27 @@ export const playlistRequest = (timeout: number = DEFAULT_TIMEOUT) => {
     }
 };
 
+export const clearPlaylist = () => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.CLEAR_PLAYLIST,
+            msg: {}
+        }
+    }
+};
+
+export const shufflePlaylist = () => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.SHUFFLE_PLAYLIST,
+            msg: {}
+        }
+    }
+};
+
+
 export const playerRequest = (cmd: string) => {
     return {
         type: WS_REQUEST,
@@ -114,4 +135,27 @@ export const addToCurrentPlaylist = (path: String, pos?: number) => {
             }
         }
     }
-}
+};
+export const addFileToCurrentPlaylist = (path: String, pos?: number) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.PLAYLIST_ADD_FILE,
+            msg: {
+                path: path,
+                pos: pos
+            }
+        }
+    }
+};
+export const updateDb = (path: String) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.UPDATE_DB,
+            msg: {
+                path: path
+            }
+        }
+    }
+};

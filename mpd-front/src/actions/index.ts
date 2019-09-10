@@ -9,5 +9,9 @@ export {onSocketConnected,
     statusRequest,
     playid,
     getTree,
-    addToCurrentPlaylist
+    addToCurrentPlaylist,
+    addFileToCurrentPlaylist,
+    clearPlaylist,
+    shufflePlaylist,
+    updateDb
 } from './websocket';
