@@ -143,7 +143,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void addIdFile(String path, Integer position) {
+    public void addFileToPos(String path, Integer position) {
         MpdCommand command = new MpdCommand(Command.ADD_ID, path, position.toString());
         connectionService.sendCommand(command);
     }

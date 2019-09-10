@@ -12,6 +12,10 @@ public enum ResponseType {
     , FULL_TREE
     , OUTPUT
     , PLAYLIST_ADD
+    , PLAYLIST_ADD_FILE
     , STORED_PLAYLISTS
-    , STORED_PLAYLIST;
+    , STORED_PLAYLIST
+    , UPDATE_DB
+    ;
+
 }

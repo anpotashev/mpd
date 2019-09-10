@@ -39,6 +39,17 @@ public class MpdPlaylistController {
         }
     }
 
+
+    @MessageMapping("/playlist/addFile")
+    @MpdErrorType(type = ResponseType.PLAYLIST_ADD_FILE)
+    public void addFile(AddRequest request) {
+        if (request.getPos() == null) {
+            playlistService.addFile(request.getPath());
+        } else {
+            playlistService.addFileToPos(request.getPath(), request.getPos());
+        }
+    }
+
     /**
      * Очистить текущий плейлист
      */
@@ -47,4 +58,16 @@ public class MpdPlaylistController {
     public void playlistClear() {
         playlistService.clear();
     }
+
+
+    /**
+     * Перемешать текущий плейлист
+     */
+    @MessageMapping("/playlist/shuffle")
+    @MpdErrorType(type = ResponseType.PLAYLIST_CLEAR)
+    public void shuffle() {
+        playlistService.shuffle();
+    }
+
+
 }

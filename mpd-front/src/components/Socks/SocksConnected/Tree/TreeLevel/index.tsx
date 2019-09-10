@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FolderCaption } from './FolderCaption';
 import { FileCaption } from './FileCaption';
 import './index.css';
-import {ITreeElement} from "../../../../../reducers/Tree";
+import {ITreeElement} from "reducers/Tree";
 
 const openClass = 'glyphicon glyphicon-folder-open span-li';
 const closedClass = 'glyphicon glyphicon-folder-close span-li';
@@ -13,11 +13,6 @@ export interface ITreeLevelProps {
     open: boolean;
     element: ITreeElement;
     path: string;
-    addDirToPlaylist: Function;
-    // addDirToPlaylistFirst: any;
-    // updateDb: any;
-    // addFileToPlaylistFirst: any;
-    // addFileToPlaylist: any;
 }
 
 interface ITreeLevelState {
@@ -50,9 +45,6 @@ export default class TreeLevel extends React.Component<ITreeLevelProps, ITreeLev
               onClick={e => this.toggleOpen()}/>
       <FolderCaption
             title={title} path={this.props.path}
-            addDirToPlaylist={this.props.addDirToPlaylist}
-            // addDirToPlaylistFirst={this.props.addDirToPlaylistFirst}
-            // updateDb={this.props.updateDb}
         />
     </li>
   }
@@ -76,26 +68,13 @@ export default class TreeLevel extends React.Component<ITreeLevelProps, ITreeLev
                           ? this.props.path + '/'
                           : '')                          
             + t.directory}
-        addDirToPlaylist={this.props.addDirToPlaylist}
-        // addDirToPlaylistFirst={this.props.addDirToPlaylistFirst}
-        // updateDb={this.props.updateDb}
-        // addFileToPlaylist={this.props.addFileToPlaylist}
-        // addFileToPlaylistFirst={this.props.addFileToPlaylistFirst}
     />
   }
 
   printFile(t: any, key: any) {
-      return <FileCaption key={key} path={this.props.path + '/' + t.file}
+      return <FileCaption key={key} path={(this.props.path.length === 0) ? t.file : this.props.path + '/' + t.file}
           title={t.file}
-          // addFileToPlaylist={this.props.addFileToPlaylist}
-          // addFileToPlaylistFirst={this.props.addFileToPlaylistFirst}
     />
   }
 
 }
-
-//TreeLevel.propTypes = {
-//  element: PropTypes.any,
-//  open: PropTypes.bool,
-//  path: PropTypes.string
-//};

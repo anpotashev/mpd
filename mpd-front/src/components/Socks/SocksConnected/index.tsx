@@ -2,7 +2,6 @@ import * as React from 'react';
 import {Menu} from "./menu";
 import {connect} from "react-redux";
 import {Player} from "./Player";
-import {Playlist} from "./Playlist";
 import {IMpdConnection} from "reducers/MpdConnection";
 import Loading from "../../Loading";
 import {bindActionCreators} from "redux";
