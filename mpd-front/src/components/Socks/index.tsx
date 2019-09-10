@@ -14,14 +14,14 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     {
-        socksConnect: Actions.socksConnect
+        socksConnect: Actions.playlistRequest
     }, dispatch);
 
 class Socks extends React.Component<IProps> {
 
-    componentDidMount(): void {
-        this.props.socksConnect();
-    }
+    // componentDidMount(): void {
+    //     this.props.socksConnect();
+    // }
 
     render() {
         return this.props.socksConnected

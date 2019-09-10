@@ -1,0 +1,21 @@
+.tree-ul {
+  padding: 8px;
+  padding-bottom: 0;
+  padding-top: 0;
+  margin-left: 2px;
+}
+
+.tree-li-file {
+  color: cadetblue;
+  list-style-type: none;
+  margin-left: 5px;
+}
+
+.tree-li-directory {
+  color: darkcyan;
+  list-style-type: none;
+}
+
+.span-li {
+  padding-right: 2px;
+}

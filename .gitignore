@@ -7,3 +7,4 @@ target
 build
 *.log
 custom
+package-lock.json

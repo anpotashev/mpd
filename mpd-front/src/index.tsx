@@ -3,12 +3,16 @@ import * as ReactDOM from 'react-dom';
 import {applyMiddleware, createStore} from 'redux';
 import {Provider} from 'react-redux';
 import reducers from 'reducers';
-import {composeWithDevTools} from "redux-devtools-extension";
-import thunk from "redux-thunk";
 import {socketMiddleware} from 'redux/SockJSMiddleware'
 import Socks from 'components/Socks';
+import {socksConnect} from 'actions';
+import {socketMiddleware2} from "./redux/SockJSMiddleware2";
+import {composeWithDevTools} from "redux-devtools-extension";
+import thunk from "redux-thunk";
 
-export const store = createStore(reducers, composeWithDevTools(applyMiddleware(socketMiddleware, thunk)));
+export const store = createStore(reducers, composeWithDevTools(applyMiddleware(socketMiddleware, socketMiddleware2, thunk)));
+
+store.dispatch(socksConnect());
 
 ReactDOM.render(<Provider store={store}>
     <Socks/>

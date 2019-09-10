@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "@stomp/stompjs": "^5.4.2",
-    "@types/immutable": "^3.8.7",
     "@types/react-bootstrap": "^0.32.15",
     "@types/react-redux": "^7.1.1",
+    "@types/react-splitter-layout": "^3.0.0",
     "@types/redux": "^3.6.0",
     "@types/redux-devtools-extension": "^2.13.2",
     "@types/redux-thunk": "^2.1.0",
@@ -47,6 +47,7 @@
     "immutable": "^4.0.0-rc.12",
     "react-bootstrap": "^0.32.4",
     "react-redux": "^7.1.0",
+    "react-splitter-layout": "^4.0.0",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",

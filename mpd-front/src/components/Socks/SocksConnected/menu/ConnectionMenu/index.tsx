@@ -3,27 +3,29 @@ import {connect} from 'react-redux';
 import * as Actions from 'actions';
 import {bindActionCreators} from 'redux';
 import DummyConnection from "./dummy";
-import {Destinations} from "constants/Socks";
+import {IMpdConnection} from "reducers/MpdConnection";
 
 interface IConnectionMenuProps {
-    connected: boolean;
-    sendMessage: Function;
+    connectionState: IMpdConnection;
+    changeConnectionState: Function;
 }
 
 const mapStateToProps = (state: any) => {
     return {
-        connected: state.mpdConnection
+        connectionState: state.mpdConnection
     }
 };
 
 const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     {
-        sendMessage: Actions.sendMessage
+        changeConnectionState: Actions.changeConnectionState
     }, dispatch);
 
-const Connection = (props: IConnectionMenuProps) => <DummyConnection
-    checked={props.connected}
-    click={() => props.sendMessage(props.connected ? Destinations.DISCONNECT : Destinations.CONNECT, {})}
-/>;
-
+const Connection = (props: IConnectionMenuProps) => {
+    return <DummyConnection
+        checked={props.connectionState.connected}
+        // click={() => props.connect(!props.connectionState.connected, 1000)}
+        click={() => props.changeConnectionState(!props.connectionState.connected)}
+    />;
+};
 export const ConnectionMenu = connect(mapStateToProps, mapDispatchToProps)(Connection);

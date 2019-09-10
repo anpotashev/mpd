@@ -8,17 +8,17 @@ import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.connection.ConnectionService;
 import ru.net.arh.mpd.model.MpdCommand;
 import ru.net.arh.mpd.model.MpdCommand.Command;
+import ru.net.arh.mpd.model.player.PlayerCommand;
 
 @Slf4j
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-    private final ConnectionService connectionService;
+    @Autowired
+    private ConnectionService connectionService;
 
     @Autowired
-    public PlayerServiceImpl(ConnectionService connectionService) {
-        this.connectionService = connectionService;
-    }
+    private PlayerService playerService;
 
     @Override
     @ThrowIfNotConnected
@@ -68,11 +68,33 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @ThrowIfNotConnected
-    public void seek(int seekPos, int songPos) {
+    public void seek(int songPos, int seekPos) {
         MpdCommand command = new MpdCommand(Command.SEEK);
         command.addParam(songPos + "");
         command.addParam(seekPos + "");
         connectionService.sendCommand(command);
+    }
+
+    @Override
+    public void doCommand(PlayerCommand playerCommand) {
+        switch (playerCommand) {
+            case PREV:
+                playerService.prev();
+                break;
+            case PLAY:
+                playerService.play();
+                break;
+            case PAUSE:
+                playerService.pause();
+                break;
+            case STOP:
+                playerService.stop();
+                break;
+            case NEXT:
+                playerService.next();
+                break;
+        }
+
     }
 
 }

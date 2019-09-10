@@ -4,11 +4,10 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.net.arh.mpd.connection.asdf.MpdReaderWriter;
+import ru.net.arh.mpd.connection.rw.MpdReaderWriter;
 import ru.net.arh.mpd.events.EventsService;
 import ru.net.arh.mpd.model.MpdCommand;
 import ru.net.arh.mpd.model.MpdCommand.Command;
-import ru.net.arh.mpd.model.connection.ConnectionSettings;
 import ru.net.arh.mpd.model.exception.MpdException;
 
 import java.io.IOException;
@@ -25,8 +24,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     private final EventsService eventsService;
     @Getter
     private boolean connected = false;
-    private MpdReaderWriter rw;
-    private MpdReaderWriter idleRw;
+    private MpdReaderWriter rw, idleRw;
 
     @Autowired
     public ConnectionServiceImpl(

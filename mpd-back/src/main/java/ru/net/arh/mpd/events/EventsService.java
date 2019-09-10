@@ -17,6 +17,7 @@ public interface EventsService {
 
     /**
      * Получено уведомление от mpd-сервера об изменениях в system.
+     *
      * @param system
      */
     void onIdle(String system);
