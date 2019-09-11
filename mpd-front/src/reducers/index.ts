@@ -4,6 +4,7 @@ import MpdConnection from "./MpdConnection";
 import Status from "./Status";
 import Playlist from "./Playlist";
 import Tree from "./Tree";
+import Stream from "./Stream";
 import {LOADING} from "../redux/SockJSMiddleware2";
 
 const reducers = combineReducers({
@@ -11,7 +12,8 @@ const reducers = combineReducers({
     mpdConnection: MpdConnection,
     playlist: Playlist,
     status: Status,
-    tree: Tree
+    tree: Tree,
+    stream: Stream
 });
 export default reducers;
 

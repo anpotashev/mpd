@@ -20,7 +20,7 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
 const FileCaptionComponent = (props: IFileCaptionProps) => <li className="tree-li-file"><span
     className="glyphicon glyphicon-file"/>
   <span className="dropdown">
-        <button className="dropdown-toggle" role="button"
+        <button className="dropdown-toggle"
            data-toggle="dropdown">{props.title}</button>
         <ul className="dropdown-menu">
             <li><button className="dropdown-item"

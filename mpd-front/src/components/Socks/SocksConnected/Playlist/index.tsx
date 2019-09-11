@@ -55,7 +55,7 @@ const PlaylistComponent =
         </thead>
         <tbody>
         {props.playlist.items.map(value => <tr key={value.id} className={props.status.songid === value.id ? 'currentsong' : 'othersong'}
-        onDoubleClick={event1 => { console.log(value.id);
+        onDoubleClick={event1 => {
             props.playid(value.id)}}>
             <td>{value.track}</td>
             <td>{value.artist}</td>

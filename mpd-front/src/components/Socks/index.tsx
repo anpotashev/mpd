@@ -3,8 +3,12 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {SocksNotConnected} from "./SocksNotConnected";
 import {SocksConnected} from "./SocksConnected";
-import {IProps} from "./types";
 import * as Actions from "actions";
+
+export interface IProps {
+    socksConnected: boolean;
+    socksConnect: Function;
+}
 
 const mapStateToProps = (state: any) => {
     return {
@@ -18,10 +22,6 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     }, dispatch);
 
 class Socks extends React.Component<IProps> {
-
-    // componentDidMount(): void {
-    //     this.props.socksConnect();
-    // }
 
     render() {
         return this.props.socksConnected

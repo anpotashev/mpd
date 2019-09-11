@@ -10,7 +10,7 @@ export const LeftPanel = (props: any) => <div className="container">
   </div>
 </div>;
 
-export const LeftPanel_Element = (props: any) => <div className="panel panel-default">
+export const LeftPanelElement = (props: any) => <div className="panel panel-default">
   <div className="panel-heading">
     <h4 className="panel-title">
       <a data-toggle="collapse" data-parent="#accordion"

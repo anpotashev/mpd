@@ -16,6 +16,7 @@ public enum ResponseType {
     , STORED_PLAYLISTS
     , STORED_PLAYLIST
     , UPDATE_DB
+    , STREAM_URL
     ;
 
 }

@@ -1,12 +1,13 @@
 import * as React from 'react';
 import {Menu} from "./menu";
-import {connect} from "react-redux";
-import {Player} from "./Player";
+import {connect} from 'react-redux';
+// import {Player} from "./Player";
 import {IMpdConnection} from "reducers/MpdConnection";
 import Loading from "../../Loading";
-import {bindActionCreators} from "redux";
+import {bindActionCreators} from 'redux';
 import * as Actions from "actions";
 import {Bottom} from "./Bottom";
+import StreamPlayer from './StreamPlayer';
 
 interface ISockConnectedProps {
     connectionState: IMpdConnection;
@@ -24,10 +25,11 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
         checkConnectionState: Actions.checkConnectionState
     }, dispatch);
 
-export const SocksConnectedComponent = (props: ISockConnectedProps) => <Loading request={props.checkConnectionState} state={props.connectionState}><>
+const SocksConnectedComponent = (props: ISockConnectedProps) => <Loading request={props.checkConnectionState} state={props.connectionState}><>
                 <Menu/>
                 {props.connectionState.connected ? <>
-                    <Player/>
+                    <StreamPlayer/>
+                    {/*<Player/>*/}
                     <Bottom/></> : <></> }
     </></Loading>;
 

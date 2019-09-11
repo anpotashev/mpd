@@ -34,7 +34,7 @@ const MyButton = (props: any) => <button type="button"
 
 
 const PlayerComponent = (props: IPlayerProps) => <Loading state={props.status} request={props.statusRequest}>
-        <div className="playerbtn">
+        <>
 
             <MyButton disable={props.status.state === "stop"}
                       playerCommand={() => props.playerRequest('PREV')}
@@ -51,7 +51,7 @@ const PlayerComponent = (props: IPlayerProps) => <Loading state={props.status} r
             <MyButton disable={props.status.state === "stop"}
                       playerCommand={() => props.playerRequest('NEXT')}
                       className="glyphicon glyphicon-fast-forward"/>
-        </div>
+        </>
     </Loading>;
 
 
