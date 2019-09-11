@@ -22,6 +22,7 @@ const topics: string[] = [
     , "/topic/fullTree"
     , "/topic/tree"
     , "/topic/songTime"
+    , "/topic/output"
 ];
 
 export const socketMiddleware = (function () {

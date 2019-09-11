@@ -18,7 +18,9 @@ export {onSocketConnected,
     setConsume,
     setRandom,
     setRepeat,
-    setSingle
+    setSingle,
+    getOutputs,
+    saveOutput
 } from './websocket';
 
 export {
