@@ -30,6 +30,9 @@ export class WsDestination {
     static SET_RANDOM = new WsDestination("/mpd/status/random", "SET_RANDOM");
     static SET_SINGLE = new WsDestination("/mpd/status/single", "SET_SINGLE");
 
+    static GET_OUTPUTS = new WsDestination("/mpd/outputs", "GET_OUTPUTS");
+    static SET_OUTPUT = new WsDestination("/mpd/output/change", "SET_OUTPUT");
+
     private constructor(private destination: string, private type: string) {}
 
     getDestination() {

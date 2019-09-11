@@ -26,7 +26,7 @@ public class MpdOutputController {
     @MessageMapping("/outputs")
     @SendToUser(REPLY_QUEUE)
     public SockJsResponse<List<MpdOutput>> playlist() {
-        return new SockJsResponse<>(ResponseType.PLAYLIST, outputsService.outputs());
+        return new SockJsResponse<>(ResponseType.OUTPUT, outputsService.outputs());
     }
 
     /**
@@ -34,7 +34,7 @@ public class MpdOutputController {
      */
     @MessageMapping("/output/change")
     @MpdErrorType(type = ResponseType.OUTPUT)
-    public void add(MpdOutput output) {
+    public void saveOutput(MpdOutput output) {
         outputsService.save(output);
     }
 

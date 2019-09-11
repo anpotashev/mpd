@@ -1,6 +1,7 @@
 import {DEFAULT_TIMEOUT, WS_REQUEST, WsDestination} from "constants/Socks";
 import {ON_SOCKS_CONNECTED, ON_SOCKS_DISCONNECTED, SEND_MESSAGE, SOCKS_CONNECT} from "constants/ActionTypes";
 import {ISendMessagePayload} from "redux/SockJSMiddleware";
+import {IOutput} from "../../reducers/Outputs";
 
 
 //websocket-соенинеие с бэком установлено
@@ -206,6 +207,27 @@ export const setSingle = (newState: boolean) => {
             type: WsDestination.SET_SINGLE,
             msg: newState
 
+        }
+    }
+};
+
+export const getOutputs = (timeout: number = DEFAULT_TIMEOUT) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.GET_OUTPUTS,
+            timeout: timeout,
+            msg: {}
+        }
+    }
+};
+
+export const saveOutput = (output: IOutput) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.SET_OUTPUT,
+            msg: output
         }
     }
 };

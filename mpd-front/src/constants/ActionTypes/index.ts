@@ -11,6 +11,7 @@ export const PLAYLIST = 'PLAYLIST';
 export const STATUS = 'STATUS';
 export const TREE = 'TREE';
 export const STREAM_URL = 'STREAM_URL';
+export const OUTPUT = 'OUTPUT';
 
 
 

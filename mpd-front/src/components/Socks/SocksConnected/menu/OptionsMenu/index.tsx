@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     }, dispatch);
 
 const OptionsMenuComponent = (props: IStreamMenuProps) => {
-    return props.status.requestStatus === LOADING.loaded ? <NavDropdown title="Option" id="basic-nav-dropdown">
+    return props.status.requestStatus === LOADING.loaded ? <NavDropdown title="Options" id="basic-nav-dropdown">
             <MenuItem onClick={() => props.random(!props.status.random)}><CheckedUncheckedElement
                 checked={props.status.random}>Random</CheckedUncheckedElement></MenuItem>
             <MenuItem onClick={() => props.single(!props.status.single)}><CheckedUncheckedElement
