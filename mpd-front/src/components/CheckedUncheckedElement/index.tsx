@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 export interface ICheckedUncheckedElementProps {
-    checked: boolean;
+    checked: boolean | undefined;
     children: any;
 }
 

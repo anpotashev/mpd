@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-public class IdleEventServiceImpl {
+public class IdleEventServiceImpl implements IdleEventService {
 
     @Autowired
     private ApplicationContext context;
@@ -51,8 +51,8 @@ public class IdleEventServiceImpl {
     @Autowired
     private WsSubscribersService wsSubscribersService;
 
-    @EventListener
-    private void processIdleEvent(MpdIdleType type) {
+    @Override
+    public void processIdleEvent(MpdIdleType type) {
         MpdIdleAction action = registr.getOrDefault(type, null);
         if (action == null) {
             return;

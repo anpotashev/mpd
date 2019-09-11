@@ -3,10 +3,10 @@ import {FAILED_SUFFIX, LOADING, PROCESSING_SUFFIX, SUCCESS_SUFFIX} from "../../r
 import {CONNECTION_STATE, STATUS} from "../../constants/ActionTypes";
 
 export interface IStatusReducer extends ILoading {
-    volume: any | undefined;
-    repeat: any | undefined;
-    random: any | undefined;
-    single: any | undefined;
+    volume?: boolean;
+    repeat?: boolean;
+    random?: boolean;
+    single?: boolean;
     consume: any | undefined;
     playlist: any | undefined;
     playlistlength: any | undefined;
@@ -22,10 +22,10 @@ export interface IStatusReducer extends ILoading {
 
 const defaultValue : IStatusReducer = {
     requestStatus: LOADING.notLoading,
-    volume: null,
-    repeat: null,
-    random: null,
-    single: null,
+    volume: undefined,
+    repeat: undefined,
+    random: undefined,
+    single: undefined,
     consume: null,
     playlist: null,
     playlistlength: null,
@@ -41,10 +41,10 @@ const defaultValue : IStatusReducer = {
 
 const loading : IStatusReducer = {
     requestStatus: LOADING.loading,
-    volume: null,
-    repeat: null,
-    random: null,
-    single: null,
+    volume: undefined,
+    repeat: undefined,
+    random: undefined,
+    single: undefined,
     consume: null,
     playlist: null,
     playlistlength: null,

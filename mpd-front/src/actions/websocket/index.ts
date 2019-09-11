@@ -171,3 +171,41 @@ export const getStreamUrl = (timeout: number = DEFAULT_TIMEOUT) => {
         }
     }
 };
+
+export const setConsume = (newState: boolean) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.SET_CONSUME,
+            msg: newState
+        }
+    }
+};
+export const setRandom = (newState: boolean) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.SET_RANDOM,
+            msg: newState
+        }
+    }
+};
+export const setRepeat = (newState: boolean) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.SET_REPEAT,
+            msg: newState
+        }
+    }
+};
+export const setSingle = (newState: boolean) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.SET_SINGLE,
+            msg: newState
+
+        }
+    }
+};

@@ -25,6 +25,10 @@ export class WsDestination {
     static UPDATE_DB = new WsDestination("/mpd/updateDb", "UPDATE_DB");
     static GET_STREAM_URL = new WsDestination("/mpd/streamPlayer", "GET_STREAM_URL");
 
+    static SET_REPEAT = new WsDestination("/mpd/status/repeat", "SET_REPEAT");
+    static SET_CONSUME = new WsDestination("/mpd/status/consume", "SET_CONSUME");
+    static SET_RANDOM = new WsDestination("/mpd/status/random", "SET_RANDOM");
+    static SET_SINGLE = new WsDestination("/mpd/status/single", "SET_SINGLE");
 
     private constructor(private destination: string, private type: string) {}
 
