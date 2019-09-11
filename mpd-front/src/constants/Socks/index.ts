@@ -32,6 +32,12 @@ export class WsDestination {
 
     static GET_OUTPUTS = new WsDestination("/mpd/outputs", "GET_OUTPUTS");
     static SET_OUTPUT = new WsDestination("/mpd/output/change", "SET_OUTPUT");
+    static STORED_PLAYLISTS = new WsDestination("/mpd/storedPlaylist", "STORED_PLAYLISTS");
+    static STORED_PLAYLISTS_LOAD = new WsDestination("/mpd/storedPlaylist/load", "STORED_PLAYLISTS_LOAD");
+    static STORED_PLAYLISTS_ADD = new WsDestination("/mpd/storedPlaylist/add", "STORED_PLAYLISTS_ADD");
+    static STORED_PLAYLISTS_RM = new WsDestination("/mpd/storedPlaylist/rm", "STORED_PLAYLISTS_ADD");
+    static STORED_PLAYLISTS_SAVE = new WsDestination("/mpd/storedPlaylist/save", "STORED_PLAYLISTS_ADD");
+    static STORED_PLAYLISTS_RENAME = new WsDestination("/mpd/storedPlaylist/rename", "STORED_PLAYLISTS_ADD");
 
     private constructor(private destination: string, private type: string) {}
 

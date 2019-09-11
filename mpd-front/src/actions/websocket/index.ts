@@ -19,6 +19,7 @@ export const socksConnect = () => {
     return {type: SOCKS_CONNECT};
 };
 
+//Отправить сообщение. Не использовать вне middleware.
 export const sendMessage = (payload: ISendMessagePayload) => {
     return {
         type: SEND_MESSAGE,
@@ -29,6 +30,7 @@ export const sendMessage = (payload: ISendMessagePayload) => {
     }
 };
 
+//Запрос текущего плейлиста
 export const playlistRequest = (timeout: number = DEFAULT_TIMEOUT) => {
     return {
         type: WS_REQUEST,
@@ -40,6 +42,7 @@ export const playlistRequest = (timeout: number = DEFAULT_TIMEOUT) => {
     }
 };
 
+//Очистить текущий плейлист
 export const clearPlaylist = () => {
     return {
         type: WS_REQUEST,
@@ -50,6 +53,7 @@ export const clearPlaylist = () => {
     }
 };
 
+//Перемешать текущий плейлист
 export const shufflePlaylist = () => {
     return {
         type: WS_REQUEST,
@@ -60,7 +64,7 @@ export const shufflePlaylist = () => {
     }
 };
 
-
+//Отправить команду плейеру
 export const playerRequest = (cmd: string) => {
     return {
         type: WS_REQUEST,
@@ -228,6 +232,62 @@ export const saveOutput = (output: IOutput) => {
         payload: {
             type: WsDestination.SET_OUTPUT,
             msg: output
+        }
+    }
+};
+
+export const getStoredPlaylists = (timeout: number = DEFAULT_TIMEOUT) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.STORED_PLAYLISTS,
+            timeout: timeout,
+            msg: {}
+        }
+    }
+};
+export const loadStoredPlaylist = (playlist: string) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.STORED_PLAYLISTS_LOAD,
+            msg: {storedPlaylist: playlist}
+        }
+    }
+};
+export const addStoredPlaylist = (playlist: string, pos: number) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.STORED_PLAYLISTS_ADD,
+            msg: {storedPlaylist: playlist, pos: pos}
+        }
+    }
+};
+export const saveStoredPlaylist = (name: string) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.STORED_PLAYLISTS_SAVE,
+            msg: {name: name}
+        }
+    }
+};
+export const rmStoredPlaylist = (name: string) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.STORED_PLAYLISTS_RM,
+            msg: {name: name}
+        }
+    }
+};
+export const renameStoredPlaylist = (oldName: string, newName: string) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.STORED_PLAYLISTS_RENAME,
+            msg: {oldName: oldName, newName: newName}
         }
     }
 };

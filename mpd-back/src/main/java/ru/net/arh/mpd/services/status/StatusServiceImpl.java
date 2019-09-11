@@ -3,6 +3,7 @@ package ru.net.arh.mpd.services.status;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.connection.ConnectionService;
 import ru.net.arh.mpd.model.MpdCommand;
@@ -22,8 +23,9 @@ public class StatusServiceImpl implements StatusService {
     private ConnectionService connectionService;
 
     @Override
+    @ThrowIfNotConnected
     @Cacheable(cacheNames = CacheNames.Constants.STATUS)
-    @MpdIdleEventMethod(types = {MpdIdleType.STATUS, MpdIdleType.PLAYLIST, MpdIdleType.PLAYER, MpdIdleType.OPTIONS}, eventType = MpdEventType.STATUS_CHANGED)
+    @MpdIdleEventMethod(types = {MpdIdleType.PLAYLIST, MpdIdleType.PLAYER, MpdIdleType.OPTIONS}, eventType = MpdEventType.STATUS_CHANGED)
     public MpdStatus status() {
         return MpdAnswersParser.parse(
                 MpdStatus.class,
@@ -34,6 +36,7 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
+    @ThrowIfNotConnected
     public MpdShortStatus songTime() {
         MpdStatus status = MpdAnswersParser.parse(
                 MpdStatus.class,

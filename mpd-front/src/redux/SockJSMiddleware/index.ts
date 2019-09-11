@@ -23,6 +23,7 @@ const topics: string[] = [
     , "/topic/tree"
     , "/topic/songTime"
     , "/topic/output"
+    , "/topic/storedPlaylists"
 ];
 
 export const socketMiddleware = (function () {
@@ -50,6 +51,7 @@ export const socketMiddleware = (function () {
 
     const processError = (store: Store, msg: IMessage) => {
         let body = JSON.parse(msg.body);
+        console.warn(body.type + ": ", body.msg);
         store.dispatch({type: WS_FAILED,
             payload: body
         });

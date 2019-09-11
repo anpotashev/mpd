@@ -20,7 +20,13 @@ export {onSocketConnected,
     setRepeat,
     setSingle,
     getOutputs,
-    saveOutput
+    saveOutput,
+    getStoredPlaylists,
+    addStoredPlaylist,
+    loadStoredPlaylist,
+    renameStoredPlaylist,
+    rmStoredPlaylist,
+    saveStoredPlaylist
 } from './websocket';
 
 export {

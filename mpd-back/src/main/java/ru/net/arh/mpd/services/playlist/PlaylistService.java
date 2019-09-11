@@ -1,5 +1,6 @@
 package ru.net.arh.mpd.services.playlist;
 
+import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.model.playlist.Playlist;
 import ru.net.arh.mpd.model.playlist.PlaylistItem;
 
@@ -117,4 +118,23 @@ public interface PlaylistService {
      * @param position
      */
     void addStored(String value, Integer position);
+
+    /**
+     * Удалить сохраненный плейлист по его имени
+     * @param name имя плейлиста
+     */
+    void rmStored(String name);
+
+    /**
+     * Сохранить текущий плейлист в списке сохраненных
+     * @param name - имя нового плейлиста
+     */
+    void saveStored(String name);
+
+    /**
+     * переименовать сохраненный плейлист
+     * @param oldName - старое имя
+     * @param newName - новое имя
+     */
+    void renameStored(String oldName, String newName);
 }

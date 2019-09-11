@@ -9,6 +9,9 @@ import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.model.sockjs.SockJsResponse;
 import ru.net.arh.mpd.model.tree.TreeItem;
 import ru.net.arh.mpd.services.tree.MpdTreeService;
+import ru.net.arh.mpd.validation.MapKeys;
+
+import java.util.Map;
 
 import static ru.net.arh.mpd.web.MpdWsController.REPLY_QUEUE;
 
@@ -44,7 +47,7 @@ public class MpdTreeController {
     @MessageMapping("/updateDb")
     @MpdErrorType(type = ResponseType.UPDATE_DB)
     @SendToUser(REPLY_QUEUE)
-    public void update(String path) {
-        treeService.update(path);
+    public void update(@MapKeys(keys = "path") Map<String, String> map) {
+        treeService.update(map.get("path"));
     }
 }

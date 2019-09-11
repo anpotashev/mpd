@@ -1,0 +1,1 @@
+SET "MPD_CONFIG=%cd%"\custom"
