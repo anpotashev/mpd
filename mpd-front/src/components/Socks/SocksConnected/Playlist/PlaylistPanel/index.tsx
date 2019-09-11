@@ -2,6 +2,7 @@ import * as React from 'react';
 import {bindActionCreators} from "redux";
 import * as Actions from "actions";
 import {connect} from "react-redux";
+import {Player} from "../../Player";
 
 interface IPlaylistPanelProps {
     clearPlaylist: Function;
@@ -24,6 +25,7 @@ const PlaylistPanelComponent = (props: IPlaylistPanelProps) => <div text-align="
             onClick={() => props.shufflePlaylist()}>
         <span className="glyphicon glyphicon-random" aria-hidden="true"></span>
     </button>
+    <Player/>
 </div>;
 
 

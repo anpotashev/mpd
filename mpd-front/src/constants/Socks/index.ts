@@ -23,6 +23,7 @@ export class WsDestination {
     static PLAYER_PLAYID = new WsDestination("/mpd/player/playid", "PLAYER_PLAYID");
     static TREE = new WsDestination("/mpd/tree", "TREE");
     static UPDATE_DB = new WsDestination("/mpd/updateDb", "UPDATE_DB");
+    static GET_STREAM_URL = new WsDestination("/mpd/streamPlayer", "GET_STREAM_URL");
 
 
     private constructor(private destination: string, private type: string) {}

@@ -13,5 +13,10 @@ export {onSocketConnected,
     addFileToCurrentPlaylist,
     clearPlaylist,
     shufflePlaylist,
-    updateDb
+    updateDb,
+    getStreamUrl
 } from './websocket';
+
+export {
+    changeStreaming
+} from './other';

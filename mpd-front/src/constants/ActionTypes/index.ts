@@ -10,3 +10,8 @@ export const CONNECTION_STATE = 'CONNECTION_STATE';
 export const PLAYLIST = 'PLAYLIST';
 export const STATUS = 'STATUS';
 export const TREE = 'TREE';
+export const STREAM_URL = 'STREAM_URL';
+
+
+
+export const CHANGE_STREAMING = 'CHANGE_STREAMING';

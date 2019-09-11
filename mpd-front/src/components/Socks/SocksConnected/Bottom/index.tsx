@@ -3,7 +3,7 @@ import { Tree } from '../Tree';
 import SplitterLayout from 'react-splitter-layout';
 // import StoredPlaylists from 'src/components/StoredPlaylists';
 import { Playlist } from '../Playlist';
-import { LeftPanel, LeftPanel_Element } from '../LeftPanel';
+import { LeftPanel, LeftPanelElement } from '../LeftPanel';
 import 'react-splitter-layout/lib/index.css';
 
 export const Bottom = () => <>
@@ -16,10 +16,10 @@ export const Bottom = () => <>
     </SplitterLayout></>;
 
 const left = () => <LeftPanel>
-    <LeftPanel_Element id="first" title="Tree" default={true}>
+    <LeftPanelElement id="first" title="Tree" default={true}>
         <Tree />
-    </LeftPanel_Element>
-    <LeftPanel_Element id="second" title="Playlists">
+    </LeftPanelElement>
+    <LeftPanelElement id="second" title="Playlists">
         {/*<StoredPlaylists/>*/}
-    </LeftPanel_Element>
+    </LeftPanelElement>
 </LeftPanel>;

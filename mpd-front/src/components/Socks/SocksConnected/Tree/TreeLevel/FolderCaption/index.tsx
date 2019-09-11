@@ -18,7 +18,7 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     }, dispatch);
 
 const FolderCaptionComponent = (props: IFolderCaptionProps) => <span className="dropdown">
-    <button className="dropdown-toggle" role="button"
+    <button className="dropdown-toggle"
         data-toggle="dropdown">{props.title}</button>
     <ul className="dropdown-menu">
         <li><button className="dropdown-item"

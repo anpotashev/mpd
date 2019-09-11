@@ -148,6 +148,7 @@ export const addFileToCurrentPlaylist = (path: String, pos?: number) => {
         }
     }
 };
+
 export const updateDb = (path: String) => {
     return {
         type: WS_REQUEST,
@@ -156,6 +157,17 @@ export const updateDb = (path: String) => {
             msg: {
                 path: path
             }
+        }
+    }
+};
+
+export const getStreamUrl = (timeout: number = DEFAULT_TIMEOUT) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.GET_STREAM_URL,
+            timeout: timeout,
+            msg: {}
         }
     }
 };

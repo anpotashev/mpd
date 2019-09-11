@@ -3,3 +3,4 @@ mpdserver:
   defaultport: 6600
   defaultpassword: 12345678
   defaultpinginterval: 15000
+  defaultStreamUrl: http://localhost:8000/mpd.mp3
