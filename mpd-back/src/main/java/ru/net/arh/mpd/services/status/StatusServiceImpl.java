@@ -23,7 +23,7 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     @Cacheable(cacheNames = CacheNames.Constants.STATUS)
-    @MpdIdleEventMethod(types = {MpdIdleType.STATUS, MpdIdleType.PLAYLIST, MpdIdleType.PLAYER}, eventType = MpdEventType.STATUS_CHANGED)
+    @MpdIdleEventMethod(types = {MpdIdleType.STATUS, MpdIdleType.PLAYLIST, MpdIdleType.PLAYER, MpdIdleType.OPTIONS}, eventType = MpdEventType.STATUS_CHANGED)
     public MpdStatus status() {
         return MpdAnswersParser.parse(
                 MpdStatus.class,

@@ -17,6 +17,8 @@ public class EventsServiceImpl implements EventsService {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired IdleEventService idleEventService;
+
     @Override
     public void onConnect() {
         cacheManager.getCacheNames().stream()
@@ -31,6 +33,6 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     public void onIdle(String system) {
-        publisher.publishEvent(MpdIdleType.fromString(system));
+        idleEventService.processIdleEvent(MpdIdleType.fromString(system));
     }
 }

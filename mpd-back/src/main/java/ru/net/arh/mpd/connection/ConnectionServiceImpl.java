@@ -19,19 +19,15 @@ import java.util.stream.Collectors;
 @Service
 public class ConnectionServiceImpl implements ConnectionService {
 
+    @Autowired
+    private ConnectionSettings connectionSettings;
+    @Autowired
+    private EventsService eventsService;
 
-    private final ConnectionSettings connectionSettings;
-    private final EventsService eventsService;
     @Getter
     private boolean connected = false;
-    private MpdReaderWriter rw, idleRw;
 
-    @Autowired
-    public ConnectionServiceImpl(
-            ConnectionSettings connectionSettings, EventsService eventsService) {
-        this.connectionSettings = connectionSettings;
-        this.eventsService = eventsService;
-    }
+    private MpdReaderWriter rw, idleRw;
 
     public void connect() {
         if (connected) {

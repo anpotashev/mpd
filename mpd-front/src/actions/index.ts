@@ -14,7 +14,11 @@ export {onSocketConnected,
     clearPlaylist,
     shufflePlaylist,
     updateDb,
-    getStreamUrl
+    getStreamUrl,
+    setConsume,
+    setRandom,
+    setRepeat,
+    setSingle
 } from './websocket';
 
 export {
