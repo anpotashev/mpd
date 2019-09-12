@@ -1,4 +1,4 @@
-***middleware (src/redux/SockJSMiddleware/index.ts***:
+***middleware (src/redux/SockJSMiddleware/index.tsx***:
 
 * Запрос:
 ```

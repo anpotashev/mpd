@@ -3,6 +3,7 @@ package ru.net.arh.mpd.services.tree;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.connection.ConnectionService;
 import ru.net.arh.mpd.model.MpdCommand;
@@ -35,8 +36,9 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     }
 
     @Override
+    @ThrowIfNotConnected
     @Cacheable(cacheNames = CacheNames.Constants.TREE)
-    @MpdIdleEventMethod(types = {MpdIdleType.TREE}, eventType = MpdEventType.TREE_CHANGED)
+    @MpdIdleEventMethod(types = {MpdIdleType.DATABASE}, eventType = MpdEventType.TREE_CHANGED)
     public TreeItem tree() {
         List<String> list = connectionService.sendCommand(new MpdCommand(Command.LISTALL));
         TreeItem root = mpdListAllParser.parse(list);
@@ -44,8 +46,9 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     }
 
     @Override
+    @ThrowIfNotConnected
     @Cacheable(cacheNames = CacheNames.Constants.FULL_TREE)
-    @MpdIdleEventMethod(types = {MpdIdleType.TREE}, eventType = MpdEventType.FULL_TREE_CHANGED)
+    @MpdIdleEventMethod(types = {MpdIdleType.DATABASE}, eventType = MpdEventType.FULL_TREE_CHANGED)
     public TreeItem fullTree() {
         List<String> list = connectionService.sendCommand(new MpdCommand(Command.LISTALLINFO));
         TreeItem root = mpdListAllParser.parse(list);
@@ -57,6 +60,7 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     }
 
     @Cacheable(cacheNames = CacheNames.Constants.TREE)
+    @ThrowIfNotConnected
     public List<TreeItem> children(final String path) {
         MpdCommand mpdCommand = new MpdCommand(Command.LSINFO);
         mpdCommand.addParam(path);
@@ -66,6 +70,7 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     }
 
     @Override
+    @ThrowIfNotConnected
     public void update(String path) {
         MpdCommand command = new MpdCommand(Command.UPDATE);
         command.addParam(path);
@@ -73,6 +78,7 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     }
 
     @Override
+    @ThrowIfNotConnected
     public void add(String path) {
         MpdCommand command = new MpdCommand(Command.LISTALL);
         command.addParam(path);

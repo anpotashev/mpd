@@ -23,9 +23,9 @@ const FileCaptionComponent = (props: IFileCaptionProps) => <li className="tree-l
         <button className="dropdown-toggle"
            data-toggle="dropdown">{props.title}</button>
         <ul className="dropdown-menu">
-            <li><button className="dropdown-item"
+            <li><button className="dropdown-item nowrap"
                 onClick={e => props.addToPlaylist(props.path, 0)}>add to current playlist at first</button></li>
-            <li><button className="dropdown-item"
+            <li><button className="dropdown-item nowrap"
                 onClick={e => props.addToPlaylist(props.path)}>add to current playlist at last</button></li>
         </ul>
       </span>

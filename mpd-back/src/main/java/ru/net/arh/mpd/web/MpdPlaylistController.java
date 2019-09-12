@@ -4,16 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import ru.net.arh.mpd.model.MpdErrorType;
 import ru.net.arh.mpd.model.playlist.AddRequest;
 import ru.net.arh.mpd.model.playlist.Playlist;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.model.sockjs.SockJsResponse;
 import ru.net.arh.mpd.services.playlist.PlaylistService;
+import ru.net.arh.mpd.validation.MapKeys;
+
+import java.util.Map;
 
 import static ru.net.arh.mpd.web.MpdWsController.REPLY_QUEUE;
 
 @Controller
+@Validated
 public class MpdPlaylistController {
 
     @Autowired
@@ -31,11 +36,11 @@ public class MpdPlaylistController {
 
     @MessageMapping("/playlist/add")
     @MpdErrorType(type = ResponseType.PLAYLIST_ADD)
-    public void add(AddRequest request) {
-        if (request.getPos() == null) {
-            playlistService.add(request.getPath());
+    public void add(@MapKeys(keys = {"path"}) Map<String, Object> map) {
+        if (map.get("pos") == null) {
+            playlistService.add((String)map.get("path"));
         } else {
-            playlistService.addToPos(request.getPath(), request.getPos());
+            playlistService.addToPos((String)map.get("path"), (Integer) map.get("pos"));
         }
     }
 
@@ -65,8 +70,12 @@ public class MpdPlaylistController {
      */
     @MessageMapping("/playlist/shuffle")
     @MpdErrorType(type = ResponseType.PLAYLIST_CLEAR)
-    public void shuffle() {
-        playlistService.shuffle();
+    public void shuffle(Map<String, Integer> map) {
+        if (map.containsKey("from") && map.containsKey("to")) {
+            playlistService.shuffle(map.get("from"), map.get("to"));
+        } else {
+            playlistService.shuffle();
+        }
     }
 
 

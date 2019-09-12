@@ -5,6 +5,7 @@ import SplitterLayout from 'react-splitter-layout';
 import { Playlist } from '../Playlist';
 import { LeftPanel, LeftPanelElement } from '../LeftPanel';
 import 'react-splitter-layout/lib/index.css';
+import {StoredPlaylists} from "../StoredPlaylists";
 
 export const Bottom = () => <>
     <SplitterLayout
@@ -20,6 +21,6 @@ const left = () => <LeftPanel>
         <Tree />
     </LeftPanelElement>
     <LeftPanelElement id="second" title="Playlists">
-        {/*<StoredPlaylists/>*/}
+        <StoredPlaylists/>
     </LeftPanelElement>
 </LeftPanel>;

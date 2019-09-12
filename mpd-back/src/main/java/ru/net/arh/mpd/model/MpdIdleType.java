@@ -5,8 +5,20 @@ package ru.net.arh.mpd.model;
  */
 public enum MpdIdleType {
 
-    PLAYER("player"), PLAYLIST("playlist"), TREE("tree"), STATUS("status"), OUTPUT("output")
-    , OPTIONS("options");
+    DATABASE("database"),
+    STATUS("status"),
+    UPDATE("update"),
+    STORED_PLAYLIST("stored_playlist"),
+    PLAYLIST("playlist"),
+    PLAYER("player"),
+    MIXER("mixer"),
+    OUTPUT("output"),
+    OPTIONS("options"),
+    PARTITION("partition"),
+    STICKER("sticker"),
+    SUBSCRIPTION("subscription"),
+    MESSAGE("message")
+    ;
 
     private final String text;
 

@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.model.MpdIdleType;
 import ru.net.arh.mpd.model.events.MpdEvent;
@@ -100,11 +101,9 @@ public class IdleEventServiceImpl implements IdleEventService {
      * Если у метода присутствует аннотация @Cacheable, то возвращает имена кэшей из нее В противном случае, возвращает пустой массив
      */
     private String[] getCacheNames(Method method) {
-        Cacheable cacheableAnnotation = method.getAnnotation(Cacheable.class);
+        Cacheable cacheableAnnotation = AnnotationUtils.findAnnotation(method, Cacheable.class);
         return cacheableAnnotation != null
-                ? (cacheableAnnotation.cacheNames().length > 0 // т.к. в @Cacheable используется @AliasFor
-                           ? cacheableAnnotation.cacheNames() // А это сприговая аннотация
-                           : cacheableAnnotation.value())
+                ? cacheableAnnotation.cacheNames()
                 : new String[]{};
     }
 

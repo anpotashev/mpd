@@ -75,7 +75,11 @@ public class MpdCommand {
         REPEAT("repeat"),
         SINGLE("single"),
         CONSUME("consume"),
-        LOAD("load");
+        LOAD("load"),
+        RM("rm"),
+        SAVE("save"),
+        RENAME("rename")
+        ;
 
         private String str;
 

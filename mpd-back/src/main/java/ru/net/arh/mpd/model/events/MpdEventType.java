@@ -10,7 +10,8 @@ public enum MpdEventType {
     , FULL_TREE_CHANGED(ResponseType.FULL_TREE, "/topic/fullTree")
     , TREE_CHANGED(ResponseType.TREE, "/topic/tree")
     , OUTPUT(ResponseType.OUTPUT, "/topic/output")
-    , SONG_TIME(ResponseType.SONG_TIME, "/topic/songTime");
+    , SONG_TIME(ResponseType.SONG_TIME, "/topic/songTime")
+    , STORED_PLAYLISTS(ResponseType.STORED_PLAYLISTS, "/topic/storedPlaylists");
 
     @Getter
     private final ResponseType responseType;

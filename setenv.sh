@@ -1,0 +1,1 @@
+MPD_CONFIG=`pwd`/custom

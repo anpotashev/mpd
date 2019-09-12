@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import ru.net.arh.mpd.model.MpdErrorType;
 import ru.net.arh.mpd.model.exception.MpdException;
 import ru.net.arh.mpd.model.sockjs.MpdSockJsError;
+import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class MpdExceptionHandler {
@@ -16,8 +17,8 @@ public class MpdExceptionHandler {
      * пользователю отправляется сообщение об ошибке.
      */
     @SendToUser("/queue/error")
-    @MessageExceptionHandler(MpdException.class)
-    public MpdSockJsError handleMpdException(MpdException e, HandlerMethod handlerMethod) {
+    @MessageExceptionHandler({MpdException.class, ConstraintViolationException.class})
+    public MpdSockJsError handleMpdException(Exception e, HandlerMethod handlerMethod) {
         MpdErrorType methodAnnotation = handlerMethod.getMethodAnnotation(MpdErrorType.class);
         if (methodAnnotation == null) {
             return null;

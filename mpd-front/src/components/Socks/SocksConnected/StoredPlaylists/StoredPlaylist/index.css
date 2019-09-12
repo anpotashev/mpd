@@ -19,18 +19,3 @@
 .span-li {
   padding-right: 2px;
 }
-
-button {
-  background: none!important;
-  border: none;
-  padding: auto;
-  /*optional*/
-  font-family: arial, sans-serif;
-  /*input has OS specific font-family*/
-  color: #069;
-  cursor: pointer;
-}
-
-.nowrap {
-  white-space:nowrap;
-}

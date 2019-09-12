@@ -6,6 +6,7 @@ import Playlist from "./Playlist";
 import Tree from "./Tree";
 import Stream from "./Stream";
 import Outputs from "./Outputs";
+import StoredPlaylists from "./StoredPlaylists";
 import {LOADING} from "../redux/SockJSMiddleware2";
 
 const reducers = combineReducers({
@@ -15,7 +16,8 @@ const reducers = combineReducers({
     status: Status,
     tree: Tree,
     stream: Stream,
-    outputs: Outputs
+    outputs: Outputs,
+    storedPlaylists: StoredPlaylists
 });
 export default reducers;
 

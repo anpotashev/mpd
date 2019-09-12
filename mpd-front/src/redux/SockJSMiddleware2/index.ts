@@ -35,7 +35,7 @@ export const socketMiddleware2 = (function () {
         // инициируем проверку факта получения ответа через timeout милисекунд
         if (payload.timeout) {
             if (!processing.includes(payload.type.getType())) {
-                // processing.push(payload.type.getType());
+                processing.push(payload.type.getType());
             }
             store.dispatch(function (dispatch: Dispatch) {
                 dispatch({type: payload.type.getType() + PROCESSING_SUFFIX});

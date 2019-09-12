@@ -3,6 +3,7 @@ package ru.net.arh.mpd.services.outputs;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.connection.ConnectionService;
 import ru.net.arh.mpd.model.MpdCommand;
@@ -24,6 +25,7 @@ public class OutputsServiceImpl implements OutputsService {
     private ConnectionService connectionService;
 
     @Override
+    @ThrowIfNotConnected
     @Cacheable(cacheNames = {CacheNames.Constants.OUTPUT})
     @MpdIdleEventMethod(types = {MpdIdleType.OUTPUT}, eventType = MpdEventType.OUTPUT)
     public List<MpdOutput> outputs() {
@@ -34,6 +36,7 @@ public class OutputsServiceImpl implements OutputsService {
     }
 
     @Override
+    @ThrowIfNotConnected
     public void save(MpdOutput output) {
         MpdCommand command = new MpdCommand(output.isEnabled()
                                                     ? Command.ENABLE_OUTPUT
