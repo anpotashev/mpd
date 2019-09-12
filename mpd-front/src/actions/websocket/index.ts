@@ -75,6 +75,16 @@ export const playerRequest = (cmd: string) => {
     }
 };
 
+export const playerSeek = (songPos: number, seekPos: number) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.PLAYER_SEEK,
+            msg: { songPos: songPos, seekPos: seekPos }
+        }
+    }
+};
+
 export const statusRequest = (timeout: number = DEFAULT_TIMEOUT) => {
     return {
         type: WS_REQUEST,

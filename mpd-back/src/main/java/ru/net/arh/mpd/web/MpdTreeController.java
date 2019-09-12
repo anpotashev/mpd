@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import ru.net.arh.mpd.model.MpdErrorType;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.model.sockjs.SockJsResponse;
@@ -16,6 +17,7 @@ import java.util.Map;
 import static ru.net.arh.mpd.web.MpdWsController.REPLY_QUEUE;
 
 @Controller
+@Validated
 public class MpdTreeController {
 
     @Autowired

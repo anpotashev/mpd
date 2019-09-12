@@ -13,6 +13,7 @@ export const TREE = 'TREE';
 export const STREAM_URL = 'STREAM_URL';
 export const OUTPUT = 'OUTPUT';
 export const STORED_PLAYLISTS = 'STORED_PLAYLISTS';
+export const SONG_TIME = 'SONG_TIME';
 
 
 

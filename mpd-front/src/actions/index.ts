@@ -26,7 +26,8 @@ export {onSocketConnected,
     loadStoredPlaylist,
     renameStoredPlaylist,
     rmStoredPlaylist,
-    saveStoredPlaylist
+    saveStoredPlaylist,
+    playerSeek
 } from './websocket';
 
 export {
