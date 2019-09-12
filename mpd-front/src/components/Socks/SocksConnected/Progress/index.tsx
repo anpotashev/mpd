@@ -27,10 +27,6 @@ const matDispatchToProps = (dispatch: any) => bindActionCreators(
 
 class DummyProgress extends React.Component<ProgressProps, ProgressState> {
 
-    constructor(props: ProgressProps) {
-        super(props);
-    }
-
     state: ProgressState = {
         tooltipText: ''
     };

@@ -31,7 +31,7 @@ class RenameItem extends React.Component<IRenameProps, IRenameState> {
                      className="glyphicon glyphicon-floppy-save"
                      aria-label="Left Align"
                      onClick={() => this.props.renameStoredPlaylist(this.props.oldName, this.state.newName)}
-                     disabled={this.state.newName.length == 0 || this.props.oldName == this.state.newName}
+                     disabled={this.state.newName.length === 0 || this.props.oldName === this.state.newName}
             ></button>
         </>;
     }

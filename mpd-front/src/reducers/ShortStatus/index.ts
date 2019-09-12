@@ -1,5 +1,5 @@
-import {FAILED_SUFFIX, LOADING, PROCESSING_SUFFIX, SUCCESS_SUFFIX} from "../../redux/SockJSMiddleware2";
-import {CONNECTION_STATE, SONG_TIME, STATUS} from "../../constants/ActionTypes";
+import {SUCCESS_SUFFIX} from "redux/SockJSMiddleware2";
+import {CONNECTION_STATE, SONG_TIME} from "constants/ActionTypes";
 
 export interface IShortStatusReducer {
     songPos: number;

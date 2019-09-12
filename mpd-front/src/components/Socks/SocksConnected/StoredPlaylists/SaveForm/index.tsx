@@ -30,7 +30,7 @@ class SaveForm extends React.Component<ISaveFormProps, ISaveFormState> {
                      className="glyphicon glyphicon-floppy-save"
                      aria-label="Left Align"
                      onClick={() => this.props.save(this.state.text)}
-                     disabled={this.state.text.length == 0}
+                     disabled={this.state.text.length === 0}
             />
         </>;
     }

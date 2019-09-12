@@ -39,7 +39,14 @@ dependencies {
 
     runtimeOnly project(':mpd-front')
 
-    runtime group: 'org.webjars', name: 'sockjs-client', version: '1.1.2'
+    implementation("org.webjars:sockjs-client:1.1.2") {transitive = false}
+    implementation("org.webjars.npm:jplayer:2.9.2") {transitive = false}
+    implementation("org.webjars:jquery:3.2.1") {transitive = false}
+    implementation("org.webjars.npm:react-dom:16.0.0") {transitive = false}
+    implementation("org.webjars.npm:react:16.0.0") {transitive = false}
+    implementation("org.webjars:bootstrap:3.4.1") {transitive = false}
+
+
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
     implementation group: 'com.google.guava', name: 'guava', version: '28.0-jre'
