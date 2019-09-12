@@ -1,0 +1,20 @@
+.progress {
+  text-align:center;
+  height: 25px;
+}
+.progress-value {
+  position:absolute;
+  right:0;
+  left:0;
+  color: white;
+  font-size: 18px;
+  text-shadow:
+      -1px -1px 0 black,
+      1px -1px 0 black,
+      -1px 1px 0 black,
+      1px 1px 0 black;
+}
+
+.paused {
+  background: #ccc;
+}

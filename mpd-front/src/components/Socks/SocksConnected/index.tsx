@@ -8,6 +8,7 @@ import {bindActionCreators} from 'redux';
 import * as Actions from "actions";
 import {Bottom} from "./Bottom";
 import StreamPlayer from './StreamPlayer';
+import Progress from './Progress';
 
 interface ISockConnectedProps {
     connectionState: IMpdConnection;
@@ -29,7 +30,7 @@ const SocksConnectedComponent = (props: ISockConnectedProps) => <Loading request
                 <Menu/>
                 {props.connectionState.connected ? <>
                     <StreamPlayer/>
-                    {/*<Player/>*/}
+                    <Progress/>
                     <Bottom/></> : <></> }
     </></Loading>;
 

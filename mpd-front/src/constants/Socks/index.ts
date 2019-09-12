@@ -13,6 +13,7 @@ export const WS_REQUEST = 'WS_REQUEST';
 export class WsDestination {
     static CONNECTION_STATE = new WsDestination("/mpd/connectionState", "CONNECTION_STATE");
     static PLAYER = new WsDestination("/mpd/player", "PLAYER");
+    static PLAYER_SEEK = new WsDestination("/mpd/player/seek", "PLAYER_SEEK");
     static PLAYLIST = new WsDestination("/mpd/playlist", "PLAYLIST");
     static PLAYLIST_ADD = new WsDestination("/mpd/playlist/add", "PLAYLIST_ADD");
     static PLAYLIST_ADD_FILE = new WsDestination("/mpd/playlist/addFile", "PLAYLIST_ADD_FILE");
