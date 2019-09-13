@@ -6,7 +6,6 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import ru.net.arh.mpd.model.MpdErrorType;
-import ru.net.arh.mpd.model.playlist.AddRequest;
 import ru.net.arh.mpd.model.playlist.Playlist;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.model.sockjs.SockJsResponse;
@@ -47,11 +46,11 @@ public class MpdPlaylistController {
 
     @MessageMapping("/playlist/addFile")
     @MpdErrorType(type = ResponseType.PLAYLIST_ADD_FILE)
-    public void addFile(AddRequest request) {
-        if (request.getPos() == null) {
-            playlistService.addFile(request.getPath());
+    public void addFile(@MapKeys(keys = {"path"}) Map<String, Object> map) {
+        if (map.containsKey("pos")) {
+            playlistService.addFileToPos((String)map.get("path"), (Integer) map.get("pos"));
         } else {
-            playlistService.addFileToPos(request.getPath(), request.getPos());
+            playlistService.addFile((String) map.get("path"));
         }
     }
 
@@ -69,7 +68,7 @@ public class MpdPlaylistController {
      * Перемешать текущий плейлист
      */
     @MessageMapping("/playlist/shuffle")
-    @MpdErrorType(type = ResponseType.PLAYLIST_CLEAR)
+    @MpdErrorType(type = ResponseType.PLAYLIST_SHUFFLE)
     public void shuffle(Map<String, Integer> map) {
         if (map.containsKey("from") && map.containsKey("to")) {
             playlistService.shuffle(map.get("from"), map.get("to"));

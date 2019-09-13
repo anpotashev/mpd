@@ -22,6 +22,11 @@ public enum ResponseType {
     , STORED_PLAYLIST_RM
     , STORED_PLAYLIST_SAVE
     , STORED_PLAYLIST_RENAME
+    , RANDOM
+    , REPEAT
+    , SINGLE
+    , CONSUME
+    , PLAYLIST_SHUFFLE
     ;
 
 }

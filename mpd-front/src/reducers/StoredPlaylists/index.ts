@@ -8,26 +8,12 @@ export interface IStoredPlaylistReducer extends ILoading {
     playlists: IStoredPlaylist[];
 }
 
-
 interface IStoredPlaylist {
     name: string;
     playlistItems: IPlaylistItem[]
 
 }
-// export interface IPlaylistItem {
-//     file: string;
-//     time: number;
-//     artist: string;
-//     title: string;
-//     album: string;
-//     track: string;
-//     pos: number;
-//     id: number;
-// }
 
-// export interface IPlaylist {
-//     items: IPlaylistItem[];
-// }
 const initValue: IStoredPlaylistReducer = {
     requestStatus: LOADING.notLoading,
     playlists: []

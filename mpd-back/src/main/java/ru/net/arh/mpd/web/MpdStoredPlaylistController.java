@@ -33,15 +33,14 @@ public class MpdStoredPlaylistController {
         return new SockJsResponse<>(ResponseType.STORED_PLAYLISTS, service.storedPlaylists());
     }
 
-
     /**
      * Запрос детальной информации о сохраненном плейлисте по его имени
      */
     @MpdErrorType(type = ResponseType.STORED_PLAYLIST)
     @MessageMapping("/storedPlaylist/info")
     @SendToUser(REPLY_QUEUE)
-    public SockJsResponse<Playlist> storedPlaylist(String name) {
-        return new SockJsResponse<>(ResponseType.STORED_PLAYLISTS, service.storedPlaylist(name));
+    public SockJsResponse<Playlist> storedPlaylist(@MapKeys(keys = {"name"}) Map<String, String> map) {
+        return new SockJsResponse<>(ResponseType.STORED_PLAYLISTS, service.storedPlaylist(map.get("name")));
     }
 
     @MpdErrorType(type = ResponseType.STORED_PLAYLIST_LOAD)

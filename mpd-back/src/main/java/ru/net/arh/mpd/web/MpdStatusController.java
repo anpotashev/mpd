@@ -32,21 +32,25 @@ public class MpdStatusController {
     }
 
     @MessageMapping("/status/repeat")
+    @MpdErrorType(type = ResponseType.REPEAT)
     public void repeat(boolean newState) {
         settingService.repeat(newState);
     }
 
     @MessageMapping("/status/consume")
+    @MpdErrorType(type = ResponseType.CONSUME)
     public void consume(boolean newState) {
         settingService.consume(newState);
     }
 
     @MessageMapping("/status/random")
+    @MpdErrorType(type = ResponseType.RANDOM)
     public void random(boolean newState) {
         settingService.random(newState);
     }
 
     @MessageMapping("/status/single")
+    @MpdErrorType(type = ResponseType.SINGLE)
     public void single(boolean newState) {
         settingService.single(newState);
     }

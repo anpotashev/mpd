@@ -32,7 +32,7 @@
 **WebSocket API:**
 
 Запрос:
-```elixir
+```js
 {
     <REQUEST>
 }
@@ -40,7 +40,7 @@
 
 Ответы об ошибках:
 
-```python
+```js
 { 
     type: <TYPE1>_FAILED, 
     msg: <текст ошибки>
@@ -54,6 +54,10 @@ Success ответ:
     payload: <RESPONSE>
 }
 ```
+
+RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных действий. 
+
+Отсутсвие значения в таблице для TYPE1, означает, что запрос не предполагает ответа в случае успеха.
 
  - Запрос состояния соединения:
 
@@ -77,39 +81,263 @@ Success ответ:
  
  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
  |---|---|---|---|---|
- | /output/change | `{id: 1, name: 'my output', enabled: true }` |  | OUTPUT |  |
+ | /mpd/output/change | `{id: 1, name: 'my output', enabled: true }` |  | OUTPUT |  |
 
  - Плейер. Начать воспроизведение трека по id / позиции в плейлисте / позиции в плейлисте с перемоткой на время
 
  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
  |---|---|---|---|---|
- | /player/playid | `12` |  | PLAYER |  |
- | /player/playpos | `14` |  | PLAYER |  |
- | /player/seek | `{songPos: 12, seekPos: 123}` |  | PLAYER |  |
+ | /mpd/player/playid | `12` |  | PLAYER |  |
+ | /mpd/player/playpos | `14` |  | PLAYER |  |
+ | /mpd/player/seek | `{songPos: 12, seekPos: 123}` |  | PLAYER |  |
  
  - Плейер. Управление.
  
  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
  |---|---|---|---|---|
- | /player/playid | `{cmd: 'PLAY'}` |  | PLAYER |  |
+ | /mpd/player/playid | `{}` |  | PLAYER |  |
  
- - Плейлист
+ - Получить текущий плейлист
  
-//todo
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+  |---|---|---|---|---|
+  | /mpd/playlist | `{cmd: 'PLAY'}` | PLAYLIST | PLAYLIST | см под таблицей |
+ 
+  ```js
+ {
+   "playlistItems": [
+     {
+       "file": "Андрей Вербицкий - Безжалостный край (Дмитрий Полонецкий)/01_Prolog.mp3",
+       "time": 471,
+       "artist": "Вербицкий Андрей",
+       "title": "Пролог",
+       "album": "Хроники Зареченска. Книга 1. Безжалостный край",
+       "track": "1",
+       "pos": 0,
+       "id": 3326
+     },
+     {
+       "file": "Андрей Вербицкий - Безжалостный край (Дмитрий Полонецкий)/02_Glava_01_01.mp3",
+       "time": 996,
+       "artist": "Вербицкий Андрей",
+       "title": "Глава_01_01",
+       "album": "Хроники Зареченска. Книга 1. Безжалостный край",
+       "track": "2",
+       "pos": 1,
+       "id": 3327
+     },
+     ...
+      ]
+  }
+ ```
+ 
+ - Добавить в текущий плейлист папку/файл
+ 
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+  |---|---|---|---|---|
+  | /mpd/playlist/add | `{path: '/music/rock', pos: 12}` <sup>*</sup> |  | PLAYLIST_ADD |  |
+  | /mpd/playlist/addFile | `{path: 'PLAY', pos: 12}` <sup>*</sup> |  | PLAYLIST_ADD_FILE |  |
+ <sup>*</sup> - поле pos не является обязательным. При отсутствии вставка производится в конец плейлиста.
+ 
+ - Очистить текущий плейлист
+ 
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+  |---|---|---|---|---|
+  | /mpd/playlist/clear | `{}` |  | PLAYLIST_CLEAR |  |
+ 
+ - Перемешать текущий плейлист
+ 
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+  |---|---|---|---|---|
+  | /mpd/playlist/shuffle | `{from: 10, to: 20}` <sup>*</sup> |  | PLAYLIST_SHUFFLE |  |
+  <sup>*</sup> from и to не являются обязательными. При отстуствии перемешивается весь плейлист.
+ 
+ - Статус. Получить текущий статус
+ 
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+  |---|---|---|---|---|
+  | /mpd/status | `{}` | STATUS | STATUS | см под таблицей |
+ 
+ ```js
+{
+  volume: -1,
+  repeat: false,
+  random: false,
+  single: false,
+  consume: false,
+  playlist: "4302",
+  playlistlength: 57,
+  xfade: 0,
+  state: "play",
+  song: 4,
+  songid: 3330,
+  bitrate: 160,
+  audio: "44100:24:2",
+  nextsong: 5,
+  nextsongid: 3331
+}
+```
+ 
+ - Изменить параметры воспроизведения random|single|repeat|consume 
 
- - Статус.
+  
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+ |---|---|---|---|---|
+ | /mpd/status/random | `true` |  | RANDOM |  |
+ | /mpd/status/single | `true` |  | SINGLE |  |
+ | /mpd/status/repeat | `true` |  | REPEAT |  |
+ | /mpd/status/consume | `true` |  | CONSUME |  |
  
- - Сохраненные плейлисты
+ - Получить список сохраненных плейлистов
  
- - Стриминг аудио
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+  |---|---|---|---|---|
+  | /mpd/storedPlaylist | `{}` | STORED_PLAYLISTS | STORED_PLAYLISTS | см под таблицей |
  
- - Дерево музыкальной коллекции
+ ```js
+ [
+   {
+     "playlistItems": [
+       {
+         "file": "Андрей Вербицкий - Безжалостный край (Дмитрий Полонецкий)/01_Prolog.mp3",
+         "time": 471,
+         "artist": "Вербицкий Андрей",
+         "title": "Пролог",
+         "album": "Хроники Зареченска. Книга 1. Безжалостный край",
+         "track": "1",
+         "pos": 0,
+         "id": 0
+       },
+       ...
+       {
+         "file": "Андрей Вербицкий - Безжалостный край (Дмитрий Полонецкий)/57_Epilog.mp3",
+         "time": 470,
+         "artist": "Вербицкий Андрей",
+         "title": "Эпилог",
+         "album": "Хроники Зареченска. Книга 1. Безжалостный край",
+         "track": "57",
+         "pos": 0,
+         "id": 0
+       }
+     ],
+     "name": "Хроники Зареченска 1",
+     "lastModified": "2019-09-12 04:38:07"
+   },
+   ...
+ ]
+ ```
+ 
+ - Получить детальную информацию о сохраненном плейлисте
+
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+  |---|---|---|---|---|
+  | /mpd/storedPlaylist/info | `{name: 'rock'}` | STORED_PLAYLIST | STORED_PLAYLIST | см под таблицей |
+ 
+   ```js
+  {
+    "playlistItems": [
+      {
+        "file": "Андрей Вербицкий - Безжалостный край (Дмитрий Полонецкий)/01_Prolog.mp3",
+        "time": 471,
+        "artist": "Вербицкий Андрей",
+        "title": "Пролог",
+        "album": "Хроники Зареченска. Книга 1. Безжалостный край",
+        "track": "1",
+        "pos": 0,
+        "id": 3326
+      },
+      {
+        "file": "Андрей Вербицкий - Безжалостный край (Дмитрий Полонецкий)/02_Glava_01_01.mp3",
+        "time": 996,
+        "artist": "Вербицкий Андрей",
+        "title": "Глава_01_01",
+        "album": "Хроники Зареченска. Книга 1. Безжалостный край",
+        "track": "2",
+        "pos": 1,
+        "id": 3327
+      },
+      ...
+      ]
+  }
+  ```
+ - Установить сохранный плейлист в качестве текущего / добавить в текущий плейлист
+ 
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+ |---|---|---|---|---|
+ | /mpd/storedPlaylist/load | `{storedPlaylist : 'some playlist'}` |  | STORED_PLAYLIST_LOAD |  |
+ | /mpd/storedPlaylist/add | `{storedPlaylist : 'some playlist', pos: 12}`  | <sup>*</sup> | STORED_PLAYLIST_ADD |  |
+ 
+ <sup>*</sup> - поле pos не является обязательным. При отсутствии вставка производится в конец плейлиста.
+  
+ - Удалить сохраненный плейлист / сохранить текущий / переименовать сохраненный
+ 
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+  |---|---|---|---|---|
+  | /mpd/storedPlaylist/rm | `{name : 'some playlist'}` |  | STORED_PLAYLIST_RM |  |
+  | /mpd/storedPlaylist/save | `{name : 'some playlist'}` |  | STORED_PLAYLIST_SAVE |  |
+  | /mpd/storedPlaylist/rename | `{oldName : 'some old name playlist', newName: 'some new name playlist' }` |  | STORED_PLAYLIST_RENAME |  |
+  
+ 
+ - Стриминг аудио. Получить url-стриминга
+ 
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+ |---|---|---|---|---|
+ | /mpd/streamPlayer | `{}` | STREAM_URL |  | 'http://localhost:8000/mpd.mp3' |
+
+ - Получить дерево музыкальной коллекции
+ 
+   | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+   |---|---|---|---|---|
+   | /mpd/tree | `{}` | TREE | TREE | см под таблицей |
+ 
+ ```js
+{
+  "children": [
+    {
+      "file": "Call@8 800 555-17-(88005551744)_20180503153100.mp3"
+    },
+    {
+      "file": "Наутилус_Помпилиус_-_Дыхание(1).mp3"
+    },...
+    {
+      "directory": "(Audiobook_Rus_2009)_Geiman_Amerikanskie_Bogi_by_Lutz_Records",
+      "children": [
+        {
+          "directory": "part1",
+          "children": [
+            {
+              "file": "01-01-001.mp3"
+            },
+            ...
+            ]
+        }
+        ]
+        ...
+     }
+     ]
+  }
+```
+ 
+ 
+ - Получить дерево музыкальной коллекции (детальная информация)
+ 
+   | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+   |---|---|---|---|---|
+   | /mpd/fullTree | `{}` | FULL_TREE | FULL_TREE | todo |
+   
+   *** не рекомендуется к использованию, т.к. возвращает очнь много данных
+ 
+ - Отправить запрос на mpd-сервер на обновление информации о музыкальной коллекции
+ 
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
+  |---|---|---|---|---|
+  | /mpd/updateDb | `{path: '/music/rock/123/'}` |  | UPDATE_DB |  |
  
  Сервис обновления информации о текущем времени воспроизведения.
  Отправляет уведомления по шедулеру (2-а раза в секунду). Отправка осуществляется, только если установлен коннект и воспроизведение в режиме "play"
  Отправляет уведомления в топик `/topic/songTime` Формат сообщения:
  
- ```javascript
+ ```js
 {
     songPos: 12,
     playing: true,
