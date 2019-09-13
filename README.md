@@ -48,7 +48,7 @@
 ```
 
 Success ответ (отправляется в /user/queue/reply). 
-Для сервисов, которые реагируют на idle-события, происходит отправка в topic без запроса со стороны пользователя.
+Для сервисов, которые реагируют на idle-события, происходит отправка в <TOPIC> без запроса со стороны пользователя.
 ```js
 {
     type: <TYPE2>,
@@ -56,53 +56,53 @@ Success ответ (отправляется в /user/queue/reply).
 }
 ```
 
-RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных действий. 
+TOPIC, RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных действий. 
 
 Отсутсвие значения в таблице для TYPE1, означает, что запрос не предполагает ответа в случае успеха.
 
  - Запрос состояния соединения:
 
-| topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-|---|---|---|---|---|
-| /mpd/connectionState | `{}` | CONNECTION_STATE | CONNECTION_STATE | true |
+| topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+|---|---|---|---|---|---|
+| /mpd/connectionState | `{}` | CONNECTION_STATE | CONNECTION_STATE | true | /topic/connection
 
  - Изменение состояния соединения:
-
-| topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-|---|---|---|---|---|
+ 
+| topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+|---|---|---|---|---|---|
 | /mpd/connectionState | true |  | CHANGE_CONNECTION_STATE |  |
 
  - Запрос устройств вывода звука:
  
- | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
- |---|---|---|---|---|
- | /mpd/connectionState | `{}` | OUTPUT | OUTPUT | `{ [ {id: 1, name: 'my output', enabled: true }, {id: 2, name: 'my output2', enabled: true } ] }` |
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+ |---|---|---|---|---|---|
+ | /mpd/connectionState | `{}` | OUTPUT | OUTPUT | `{ [ {id: 1, name: 'my output', enabled: true }, {id: 2, name: 'my output2', enabled: true } ] }` | /topic/output
 
  - Включение/отключение устройства вывода звука:
  
- | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
- |---|---|---|---|---|
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+ |---|---|---|---|---|---|
  | /mpd/output/change | `{id: 1, name: 'my output', enabled: true }` |  | OUTPUT |  |
 
  - Плейер. Начать воспроизведение трека по id / позиции в плейлисте / позиции в плейлисте с перемоткой на время
 
- | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
- |---|---|---|---|---|
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+ |---|---|---|---|---|---|
  | /mpd/player/playid | `12` |  | PLAYER |  |
  | /mpd/player/playpos | `14` |  | PLAYER |  |
  | /mpd/player/seek | `{songPos: 12, seekPos: 123}` |  | PLAYER |  |
  
  - Плейер. Управление.
  
- | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
- |---|---|---|---|---|
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+ |---|---|---|---|---|---|
  | /mpd/player/playid | `{}` |  | PLAYER |  |
  
  - Получить текущий плейлист
  
-  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-  |---|---|---|---|---|
-  | /mpd/playlist | `{cmd: 'PLAY'}` | PLAYLIST | PLAYLIST | см под таблицей |
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
+  | /mpd/playlist | `{cmd: 'PLAY'}` | PLAYLIST | PLAYLIST | см под таблицей | /topic/playlist
  
   ```js
  {
@@ -134,30 +134,30 @@ RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных д�
  
  - Добавить в текущий плейлист папку/файл
  
-  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-  |---|---|---|---|---|
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
   | /mpd/playlist/add | `{path: '/music/rock', pos: 12}` <sup>*</sup> |  | PLAYLIST_ADD |  |
   | /mpd/playlist/addFile | `{path: 'PLAY', pos: 12}` <sup>*</sup> |  | PLAYLIST_ADD_FILE |  |
  <sup>*</sup> - поле pos не является обязательным. При отсутствии вставка производится в конец плейлиста.
  
  - Очистить текущий плейлист
  
-  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-  |---|---|---|---|---|
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
   | /mpd/playlist/clear | `{}` |  | PLAYLIST_CLEAR |  |
  
  - Перемешать текущий плейлист
  
-  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-  |---|---|---|---|---|
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
   | /mpd/playlist/shuffle | `{from: 10, to: 20}` <sup>*</sup> |  | PLAYLIST_SHUFFLE |  |
   <sup>*</sup> from и to не являются обязательными. При отстуствии перемешивается весь плейлист.
  
  - Статус. Получить текущий статус
  
-  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-  |---|---|---|---|---|
-  | /mpd/status | `{}` | STATUS | STATUS | см под таблицей |
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
+  | /mpd/status | `{}` | STATUS | STATUS | см под таблицей | /topic/status
  
  ```js
 {
@@ -182,8 +182,8 @@ RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных д�
  - Изменить параметры воспроизведения random|single|repeat|consume 
 
   
- | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
- |---|---|---|---|---|
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+ |---|---|---|---|---|---|
  | /mpd/status/random | `true` |  | RANDOM |  |
  | /mpd/status/single | `true` |  | SINGLE |  |
  | /mpd/status/repeat | `true` |  | REPEAT |  |
@@ -191,9 +191,9 @@ RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных д�
  
  - Получить список сохраненных плейлистов
  
-  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-  |---|---|---|---|---|
-  | /mpd/storedPlaylist | `{}` | STORED_PLAYLISTS | STORED_PLAYLISTS | см под таблицей |
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
+  | /mpd/storedPlaylist | `{}` | STORED_PLAYLISTS | STORED_PLAYLISTS | см под таблицей | /topic/storedPlaylists
  
  ```js
  [
@@ -230,8 +230,8 @@ RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных д�
  
  - Получить детальную информацию о сохраненном плейлисте
 
-  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-  |---|---|---|---|---|
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
   | /mpd/storedPlaylist/info | `{name: 'rock'}` | STORED_PLAYLIST | STORED_PLAYLIST | см под таблицей |
  
    ```js
@@ -263,17 +263,17 @@ RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных д�
   ```
  - Установить сохранный плейлист в качестве текущего / добавить в текущий плейлист
  
- | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
- |---|---|---|---|---|
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+ |---|---|---|---|---|---|
  | /mpd/storedPlaylist/load | `{storedPlaylist : 'some playlist'}` |  | STORED_PLAYLIST_LOAD |  |
- | /mpd/storedPlaylist/add | `{storedPlaylist : 'some playlist', pos: 12}`  | <sup>*</sup> | STORED_PLAYLIST_ADD |  |
+ | /mpd/storedPlaylist/add | `{storedPlaylist : 'some playlist', pos: 12}`  <sup>*</sup> |  | STORED_PLAYLIST_ADD |  |
  
  <sup>*</sup> - поле pos не является обязательным. При отсутствии вставка производится в конец плейлиста.
   
  - Удалить сохраненный плейлист / сохранить текущий / переименовать сохраненный
  
-  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-  |---|---|---|---|---|
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
   | /mpd/storedPlaylist/rm | `{name : 'some playlist'}` |  | STORED_PLAYLIST_RM |  |
   | /mpd/storedPlaylist/save | `{name : 'some playlist'}` |  | STORED_PLAYLIST_SAVE |  |
   | /mpd/storedPlaylist/rename | `{oldName : 'some old name playlist', newName: 'some new name playlist' }` |  | STORED_PLAYLIST_RENAME |  |
@@ -281,15 +281,15 @@ RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных д�
  
  - Стриминг аудио. Получить url-стриминга
  
- | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
- |---|---|---|---|---|
+ | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+ |---|---|---|---|---|---|
  | /mpd/streamPlayer | `{}` | STREAM_URL |  | 'http://localhost:8000/mpd.mp3' |
 
  - Получить дерево музыкальной коллекции
  
-   | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-   |---|---|---|---|---|
-   | /mpd/tree | `{}` | TREE | TREE | см под таблицей |
+   | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+   |---|---|---|---|---|---|
+   | /mpd/tree | `{}` | TREE | TREE | см под таблицей | /topic/tree
  
  ```js
 {
@@ -322,16 +322,16 @@ RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретных д�
  
  - Получить дерево музыкальной коллекции (детальная информация)
  
-   | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-   |---|---|---|---|---|
-   | /mpd/fullTree | `{}` | FULL_TREE | FULL_TREE | todo |
+   | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+   |---|---|---|---|---|---|
+   | /mpd/fullTree | `{}` | FULL_TREE | FULL_TREE | todo | /topic/fullTree
    
    *** не рекомендуется к использованию, т.к. возвращает очнь много данных
  
  - Отправить запрос на mpd-сервер на обновление информации о музыкальной коллекции
  
-  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE |
-  |---|---|---|---|---|
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
   | /mpd/updateDb | `{path: '/music/rock/123/'}` |  | UPDATE_DB |  |
  
  Сервис обновления информации о текущем времени воспроизведения.
