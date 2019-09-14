@@ -17,6 +17,8 @@ export class WsDestination {
     static PLAYLIST = new WsDestination("/mpd/playlist", "PLAYLIST");
     static PLAYLIST_ADD = new WsDestination("/mpd/playlist/add", "PLAYLIST_ADD");
     static PLAYLIST_ADD_FILE = new WsDestination("/mpd/playlist/addFile", "PLAYLIST_ADD_FILE");
+    static DELETE_FROM_PLAYLIST = new WsDestination("/mpd/playlist/remove", "DELETE_FROM_PLAYLIST");
+    static MOVE_IN_PLAYLIST = new WsDestination("/mpd/playlist/move", "DELETE_FROM_PLAYLIST");
     static CLEAR_PLAYLIST = new WsDestination("/mpd/playlist/clear", "CLEAR_PLAYLIST");
     static SHUFFLE_PLAYLIST = new WsDestination("/mpd/playlist/shuffle", "TREE");
     static CHANGE_CONNECTION_STATE = new WsDestination("/mpd/connectionState/change", "CHANGE_CONNECTION_STATE");

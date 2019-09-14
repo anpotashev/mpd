@@ -30,6 +30,10 @@ public class MpdCommand {
         params.add(param);
     }
 
+    public void addParam(int param) {
+        params.add(param + "");
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(command.str);

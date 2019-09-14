@@ -265,7 +265,7 @@ export const loadStoredPlaylist = (playlist: string) => {
         }
     }
 };
-export const addStoredPlaylist = (playlist: string, pos: number) => {
+export const addStoredPlaylist = (playlist: string, pos?: number) => {
     return {
         type: WS_REQUEST,
         payload: {
@@ -298,6 +298,26 @@ export const renameStoredPlaylist = (oldName: string, newName: string) => {
         payload: {
             type: WsDestination.STORED_PLAYLISTS_RENAME,
             msg: {oldName: oldName, newName: newName}
+        }
+    }
+};
+
+export const deleteFromPlaylist = (pos: number) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.DELETE_FROM_PLAYLIST,
+            msg: {pos: pos}
+        }
+    }
+};
+
+export const moveInPlaylist = (from: number, to: number) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.MOVE_IN_PLAYLIST,
+            msg: {from: from, to: to}
         }
     }
 };

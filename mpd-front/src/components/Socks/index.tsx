@@ -8,6 +8,7 @@ import * as Actions from "actions";
 export interface IProps {
     socksConnected: boolean;
     socksConnect: Function;
+    captureObject: Function;
 }
 
 const mapStateToProps = (state: any) => {
@@ -18,15 +19,19 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     {
-        socksConnect: Actions.playlistRequest
+        socksConnect: Actions.playlistRequest,
+        captureObject: Actions.captureObject
     }, dispatch);
 
 class Socks extends React.Component<IProps> {
 
     render() {
-        return this.props.socksConnected
+        return <div
+            onMouseUp={event => this.props.captureObject({path:'', type:'none'})}
+        >{this.props.socksConnected
             ? <SocksConnected/>
-            : <SocksNotConnected/>
+            : <SocksNotConnected/>}
+        </div>
     }
 
 }

@@ -27,9 +27,13 @@ export {onSocketConnected,
     renameStoredPlaylist,
     rmStoredPlaylist,
     saveStoredPlaylist,
-    playerSeek
+    playerSeek,
+    deleteFromPlaylist,
+    moveInPlaylist
 } from './websocket';
 
 export {
-    changeStreaming
+    changeStreaming,
+    captureObject,
+    releaseObject
 } from './other';

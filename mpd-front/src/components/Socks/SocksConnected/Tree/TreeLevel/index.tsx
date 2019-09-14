@@ -3,6 +3,9 @@ import { FolderCaption } from './FolderCaption';
 import { FileCaption } from './FileCaption';
 import './index.css';
 import {ITreeElement} from "reducers/Tree";
+import {bindActionCreators} from "redux";
+import * as Actions from "actions";
+import {connect} from "react-redux";
 
 const openClass = 'glyphicon glyphicon-folder-open span-li';
 const closedClass = 'glyphicon glyphicon-folder-close span-li';
@@ -13,13 +16,20 @@ export interface ITreeLevelProps {
     open: boolean;
     element: ITreeElement;
     path: string;
+    catpureOject: Function;
 }
 
 interface ITreeLevelState {
     open: boolean;
 }
 
-export default class TreeLevel extends React.Component<ITreeLevelProps, ITreeLevelState> {
+const mapDispatchToProps = (dispatch: any) => bindActionCreators(
+    {
+      catpureOject: Actions.captureObject
+    }, dispatch);
+
+
+class TreeLevel extends React.Component<ITreeLevelProps, ITreeLevelState> {
 
   state = {
     open: this.props.open
@@ -32,7 +42,9 @@ export default class TreeLevel extends React.Component<ITreeLevelProps, ITreeLev
   }
 
   render() {
-    return <ul className="tree-ul">
+    return <ul className="tree-ul"
+               onMouseDown={e => { e.stopPropagation(); this.props.catpureOject({path: this.props.path, type: 'directory'})}}
+    >
       {this.printCaption()}
       {this.printChildren()}
     </ul>
@@ -68,6 +80,7 @@ export default class TreeLevel extends React.Component<ITreeLevelProps, ITreeLev
                           ? this.props.path + '/'
                           : '')                          
             + t.directory}
+                      catpureOject={this.props.catpureOject}
     />
   }
 
@@ -78,3 +91,5 @@ export default class TreeLevel extends React.Component<ITreeLevelProps, ITreeLev
   }
 
 }
+
+export default connect(null, mapDispatchToProps)(TreeLevel);

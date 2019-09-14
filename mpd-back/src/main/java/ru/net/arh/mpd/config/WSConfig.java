@@ -33,6 +33,10 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+        //todo поиграться с максимальным размером
+//        registry.setMessageSizeLimit(200000); // default : 64 * 1024
+//        registry.setSendTimeLimit(20 * 10000); // default : 10 * 10000
+//        registry.setSendBufferSizeLimit(3* 512 * 1024); // default : 512 * 1024
         registry.addDecoratorFactory(new WebSocketHandlerDecoratorFactory() {
             @Override
             public WebSocketHandler decorate(WebSocketHandler handler) {

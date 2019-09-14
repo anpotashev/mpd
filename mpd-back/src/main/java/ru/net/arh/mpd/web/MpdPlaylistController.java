@@ -77,5 +77,18 @@ public class MpdPlaylistController {
         }
     }
 
+    @MessageMapping("/playlist/remove")
+    @MpdErrorType(type = ResponseType.PLAYLIST_RM)
+    public void rm(@MapKeys(keys = {"pos"}) Map<String, Integer> map) {
+        playlistService.delete(map.get("pos"));
+    }
+
+
+    @MessageMapping("/playlist/move")
+    @MpdErrorType(type = ResponseType.PLAYLIST_MOVE)
+    public void move(@MapKeys(keys = {"from", "to"}) Map<String, Integer> map) {
+        playlistService.move(map.get("from"), map.get("to"));
+    }
+
 
 }

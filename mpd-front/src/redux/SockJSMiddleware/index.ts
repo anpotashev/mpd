@@ -19,7 +19,6 @@ const topics: string[] = [
     "/topic/connection"
     , "/topic/playlist"
     , "/topic/status"
-    , "/topic/fullTree"
     , "/topic/tree"
     , "/topic/songTime"
     , "/topic/output"
