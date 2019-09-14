@@ -265,7 +265,7 @@ export const loadStoredPlaylist = (playlist: string) => {
         }
     }
 };
-export const addStoredPlaylist = (playlist: string, pos: number) => {
+export const addStoredPlaylist = (playlist: string, pos?: number) => {
     return {
         type: WS_REQUEST,
         payload: {

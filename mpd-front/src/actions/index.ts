@@ -31,5 +31,7 @@ export {onSocketConnected,
 } from './websocket';
 
 export {
-    changeStreaming
+    changeStreaming,
+    captureObject,
+    releaseObject
 } from './other';

@@ -8,6 +8,7 @@ import Stream from "./Stream";
 import Outputs from "./Outputs";
 import ShortStatus from "./ShortStatus";
 import StoredPlaylists from "./StoredPlaylists";
+import CapturedObject from "./Dnd";
 import {LOADING} from "../redux/SockJSMiddleware2";
 
 const reducers = combineReducers({
@@ -19,7 +20,8 @@ const reducers = combineReducers({
     stream: Stream,
     outputs: Outputs,
     storedPlaylists: StoredPlaylists,
-    shortStatus: ShortStatus
+    shortStatus: ShortStatus,
+    capturedObject: CapturedObject
 });
 export default reducers;
 

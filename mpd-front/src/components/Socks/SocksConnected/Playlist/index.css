@@ -5,3 +5,14 @@
 .othersong {
     font-size: small;
 }
+
+.full {
+    height: 100%;
+    width: 100%;
+}
+
+.dragging {
+    cursor: -webkit-grabbing;
+    cursor:    -moz-grabbing;
+    cursor:         grabbing;
+}

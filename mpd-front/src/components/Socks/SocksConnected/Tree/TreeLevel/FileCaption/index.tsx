@@ -8,16 +8,20 @@ export interface IFileCaptionProps {
     path: string;
     title: string;
     addToPlaylist: Function;
+    catpureOject: Function;
 }
 
 
 const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     {
-        addToPlaylist: Actions.addFileToCurrentPlaylist
+        addToPlaylist: Actions.addFileToCurrentPlaylist,
+        catpureOject: Actions.captureObject
     }, dispatch);
 
 
-const FileCaptionComponent = (props: IFileCaptionProps) => <li className="tree-li-file"><span
+const FileCaptionComponent = (props: IFileCaptionProps) => <li className="tree-li-file"
+                                                               onMouseDown={e => { e.stopPropagation(); props.catpureOject({path:props.path, type:'file'})}}
+><span
     className="glyphicon glyphicon-file"/>
   <span className="dropdown">
         <button className="dropdown-toggle"

@@ -18,3 +18,4 @@ export const SONG_TIME = 'SONG_TIME';
 
 
 export const CHANGE_STREAMING = 'CHANGE_STREAMING';
+export const CAPTURE_PATH = 'CAPTURE_PATH';
