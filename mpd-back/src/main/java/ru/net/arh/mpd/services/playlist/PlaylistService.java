@@ -46,6 +46,11 @@ public interface PlaylistService {
     void delete(PlaylistItem item);
 
     /**
+     * Удалить объект item из текущего плейлиста по его позиции.
+     */
+    void delete(int pos);
+
+    /**
      * Переместить трек с позиции from на позицию to.
      *
      * @param from

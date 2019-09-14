@@ -301,3 +301,23 @@ export const renameStoredPlaylist = (oldName: string, newName: string) => {
         }
     }
 };
+
+export const deleteFromPlaylist = (pos: number) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.DELETE_FROM_PLAYLIST,
+            msg: {pos: pos}
+        }
+    }
+};
+
+export const moveInPlaylist = (from: number, to: number) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.MOVE_IN_PLAYLIST,
+            msg: {from: from, to: to}
+        }
+    }
+};

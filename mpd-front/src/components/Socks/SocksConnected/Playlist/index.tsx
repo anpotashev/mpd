@@ -2,7 +2,7 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 import * as Actions from 'actions';
 import {bindActionCreators} from 'redux';
-import {IPlaylistReducer} from "reducers/Playlist";
+import {IPlaylistItem, IPlaylistReducer} from "reducers/Playlist";
 import {Table} from "react-bootstrap";
 import Loading from "components/Loading";
 import {IStatusReducer} from "reducers/Status";
@@ -20,6 +20,7 @@ interface IPlaylistProps {
     addDir: Function;
     addFile: Function;
     releaseObject: Function;
+    move: Function;
     // items: IPlaylistItem[];
 }
 
@@ -38,7 +39,8 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
         addDir: Actions.addToCurrentPlaylist,
         addFile: Actions.addFileToCurrentPlaylist,
         captureObject: Actions.captureObject,
-        releaseObject: Actions.releaseObject
+        releaseObject: Actions.releaseObject,
+        move: Actions.moveInPlaylist
     }, dispatch);
 
 const timeFormatter = (time: number) => {
@@ -48,14 +50,25 @@ const timeFormatter = (time: number) => {
     return out;
 };
 
+function canProcessReleaseAction(value: IPlaylistItem, capturedObject: ICapturedObject) : boolean {
+  return capturedObject.type === 'pos' && capturedObject.pos !== value.pos
+}
+
+function getClassName(props: IPlaylistProps, value: IPlaylistItem, capturedObject: ICapturedObject) {
+  let result = props.status.songid === value.id ? 'currentsong' : 'othersong';
+  if (canProcessReleaseAction(value, capturedObject)) {
+    result += ' dragging';
+  }
+  return result
+}
 
 const PlaylistComponent =
     (props: IPlaylistProps) => <Loading request={() => props.playlistRequest()} state={props.playlist}>
-        <div className={props.capturedObject.type!=='none' ? 'full dragging' : 'full'}
+        <div className={(props.capturedObject.type!=='none'&& props.capturedObject.type !=='pos') ? 'full dragging' : 'full'}
              onMouseUp={e => props.releaseObject(props.capturedObject)}
         >
           <PlaylistPanel/>
-          <Table>
+          <Table className="disable-select">
             <thead>
             <tr>
               <th>track</th>
@@ -67,9 +80,21 @@ const PlaylistComponent =
             </thead>
             <tbody>
             {props.playlist.items.map(value => <tr key={value.id}
-                                                   className={props.status.songid === value.id ? 'currentsong' : 'othersong'}
+                                                   className={getClassName(props, value, props.capturedObject)}
                                                    onDoubleClick={event1 => {props.playid(value.id)}}
-                                                   onMouseUp={e => {e.stopPropagation(); props.releaseObject(props.capturedObject, value.pos);}}
+                                                   onMouseUp={e => {
+                                                      e.stopPropagation();
+                                                      if (canProcessReleaseAction(value, props.capturedObject)) {
+                                                        props.releaseObject(props.capturedObject, value.pos);
+                                                      } else {
+                                                        props.captureObject({
+                                                          type: 'none',
+                                                          path: ''
+                                                        });
+                                                      }
+                                                   }}
+                                                   onMouseDown={e=>{e.stopPropagation();
+                                                   props.captureObject({path:'', type: 'pos', pos: value.pos})}}
             >
               <td>{value.track}</td>
               <td>{value.artist}</td>

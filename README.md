@@ -153,6 +153,18 @@ TOPIC, RESPONSE, TYPE1 и TYPE2 описаны ниже для конкретн�
   | /mpd/playlist/shuffle | `{from: 10, to: 20}` <sup>*</sup> |  | PLAYLIST_SHUFFLE |  |
   <sup>*</sup> from и to не являются обязательными. При отстуствии перемешивается весь плейлист.
  
+ - Удалить из текущего плейлиста
+  
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
+  | /mpd/playlist/remove | `{pos: 10}` |  | PLAYLIST_RM |  |
+ 
+ - Переместить трек на новую позицию
+ 
+  | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |
+  |---|---|---|---|---|---|
+  | /mpd/playlist/move | `{from: 10, to 15}` |  | PLAYLIST_MOVE |  |
+ 
  - Статус. Получить текущий статус
  
   | topic | REQUEST | TYPE1 | TYPE2 | RESPONSE | TOPIC |

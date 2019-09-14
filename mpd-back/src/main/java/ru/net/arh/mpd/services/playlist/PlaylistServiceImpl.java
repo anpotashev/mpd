@@ -94,6 +94,14 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     @ThrowIfNotConnected
+    public void delete(int pos) {
+        MpdCommand command = new MpdCommand(Command.DELETE);
+        command.addParam(pos);
+        connectionService.sendCommand(command);
+    }
+
+    @Override
+    @ThrowIfNotConnected
     public void move(int from, int to) {
         MpdCommand command = new MpdCommand(Command.MOVE);
         command.addParam(from + "");
