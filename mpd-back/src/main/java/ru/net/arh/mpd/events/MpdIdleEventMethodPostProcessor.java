@@ -32,6 +32,11 @@ public class MpdIdleEventMethodPostProcessor implements BeanPostProcessor {
         String[] cacheNames =  cacheableAnnotation != null
                 ? cacheableAnnotation.cacheNames()
                 : new String[]{};
+        try {
+            method = bean.getClass().getMethod(method.getName());
+        } catch (NoSuchMethodException e) { //impossible
+            e.printStackTrace();
+        }
         MpdIdleEventsParamStorage.add(bean, mpdEventType, method, types, cacheNames);
     }
 
