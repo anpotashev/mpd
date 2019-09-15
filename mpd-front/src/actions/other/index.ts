@@ -1,12 +1,11 @@
 import {CAPTURE_PATH, CHANGE_STREAMING} from "constants/ActionTypes";
-import {CapturedObjectType, ICapturedObject} from "../../reducers/Dnd";
+import {ICapturedObject} from "../../reducers/Dnd";
 import {
     addFileToCurrentPlaylist,
     addStoredPlaylist,
     addToCurrentPlaylist,
     deleteFromPlaylist, moveInPlaylist
 } from "../websocket";
-import {object} from "prop-types";
 
 export const changeStreaming = (newState: boolean) => {
     return {

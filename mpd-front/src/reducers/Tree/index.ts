@@ -27,7 +27,7 @@ export default function (state: ITreeReducer = initValue, action: any): ITreeRed
         case TREE + SUCCESS_SUFFIX:
             return {
                 requestStatus: LOADING.loaded,
-                root: {directory: "/", children: action.payload.children }
+                root: {directory: "/", children: action.payload.children || [] } //если  коллекция пуста
             };
         case TREE + PROCESSING_SUFFIX:
             return {
