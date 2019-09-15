@@ -11,6 +11,7 @@ interface IPlaylistPanelProps {
     shufflePlaylist: Function;
     capturedObject: ICapturedObject;
     releaseObject: Function;
+    captureObject: Function;
 };
 
 const mapStateToProps = (state: any) => {
@@ -23,7 +24,8 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     {
         clearPlaylist: Actions.clearPlaylist,
         shufflePlaylist: Actions.shufflePlaylist,
-      releaseObject: Actions.releaseObject
+        releaseObject: Actions.releaseObject,
+        captureObject: Actions.captureObject
     }, dispatch);
 
 
@@ -31,7 +33,12 @@ const PlaylistPanelComponent = (props: IPlaylistPanelProps) => <div text-align="
   <button type="button" className={props.capturedObject.type === 'pos' ? "btn btn-lg dragging" : "btn btn-lg"} aria-label="Left Align"
           onClick={() => props.clearPlaylist()}
           onMouseUp={e => {e.stopPropagation();
-            if(props.capturedObject.type==='pos') {props.releaseObject(props.capturedObject, -1);}
+            if(props.capturedObject.type==='pos') {props.releaseObject(props.capturedObject, -1);} else {
+              props.captureObject({
+                type: 'none',
+                path: ''
+              });
+            }
           }}
   >
     <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>
