@@ -51,6 +51,9 @@ const timeFormatter = (time: number) => {
 };
 
 function canProcessReleaseAction(value: IPlaylistItem, capturedObject: ICapturedObject) : boolean {
+  if (capturedObject.type === 'file') return true;
+  if (capturedObject.type === 'directory') return true;
+  if (capturedObject.type === 'playlist') return true;
   return capturedObject.type === 'pos' && capturedObject.pos !== value.pos
 }
 
