@@ -2,6 +2,7 @@ package ru.net.arh.mpd.config;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -11,6 +12,7 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
+import ru.net.arh.mpd.events.MpdIdleEventMethodPostProcessor;
 import ru.net.arh.mpd.web.LogginHandlerDecorator;
 
 @Configuration
@@ -43,5 +45,10 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
                 return new LogginHandlerDecorator(handler);
             }
         });
+    }
+
+    @Bean
+    public MpdIdleEventMethodPostProcessor mpdIdleEventMethodPostProcessor() {
+        return new MpdIdleEventMethodPostProcessor();
     }
 }
