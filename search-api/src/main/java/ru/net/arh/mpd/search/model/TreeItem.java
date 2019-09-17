@@ -1,9 +1,10 @@
 package ru.net.arh.mpd.search.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TreeItem {
+public class TreeItem implements Serializable {
 
     private boolean showChildren = false;
     private TreeItem parent;

@@ -23,15 +23,7 @@ public class SearchServiceImpl implements SearchService {
     private SearchApi searchApi;
 
     @Override
-    public List<TreeItem> search() {
-        return searchApi.search(not(
-                or(
-                        and(
-                                ALBUM.contains("123"),
-                                ARTIST.contains("fdasdffdsca")
-                        ),
-                        ARTIST.contains("fdsafdsa")
-                )
-        ));
+    public List<TreeItem> search(Condition condition) {
+        return searchApi.search(condition);
     }
 }

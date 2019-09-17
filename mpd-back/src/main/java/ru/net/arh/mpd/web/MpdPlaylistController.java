@@ -10,6 +10,7 @@ import ru.net.arh.mpd.model.playlist.Playlist;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.model.sockjs.SockJsResponse;
 import ru.net.arh.mpd.services.playlist.PlaylistService;
+import ru.net.arh.mpd.services.search.SearchService;
 import ru.net.arh.mpd.validation.MapKeys;
 
 import java.util.Map;
