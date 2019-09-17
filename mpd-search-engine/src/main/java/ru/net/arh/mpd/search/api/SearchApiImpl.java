@@ -5,9 +5,13 @@ import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.search.model.Condition;
 import ru.net.arh.mpd.search.model.TreeItem;
 import ru.net.arh.mpd.search.service.TreeService;
+import ru.net.arh.mpd.search.util.ConditionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SearchApiImpl implements SearchApi {
 
@@ -24,9 +28,20 @@ public class SearchApiImpl implements SearchApi {
         if (treeService.getTree() == null) {
             throw new RuntimeException("tree is null");
         }
-        //пока просто возвращаю дерево, завернутое в лист
-        ArrayList<TreeItem> result = new ArrayList<>();
-        result.add(treeService.getTree());
-        return result;
+        Predicate<TreeItem> predicate = ConditionUtil.getPredicate(searchCondition);
+        return stream(treeService.getTree())
+                .filter(treeItem -> treeItem.getFile() != null)
+                .filter(predicate)
+                .collect(Collectors.toList());
+    }
+
+    private Stream<TreeItem> stream(TreeItem treeItem) {
+        if (treeItem.getFile() != null) {
+            return Stream.of(treeItem);
+        } else {
+            return treeItem.getChildren().stream()
+                    .map(child -> stream(child))
+                    .reduce(Stream.of(treeItem), Stream::concat);
+        }
     }
 }

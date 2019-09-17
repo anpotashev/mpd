@@ -16,7 +16,7 @@ public class PredicateCondition extends Condition {
     private List<Condition> conditions;
     private PredicateType type;
 
-    enum PredicateType {
+    public enum PredicateType {
         AND,
         OR,
         NOT

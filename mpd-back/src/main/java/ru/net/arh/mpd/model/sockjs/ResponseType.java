@@ -29,6 +29,7 @@ public enum ResponseType {
     , PLAYLIST_SHUFFLE
     , PLAYLIST_RM
     , PLAYLIST_MOVE
+    , SEARCH
     ;
 
 }

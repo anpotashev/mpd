@@ -24,8 +24,6 @@ public class MpdPlaylistController {
     @Autowired
     private PlaylistService playlistService;
 
-    @Autowired private SearchService searchService;
-
     /**
      * Запрос текущего плейлиста
      */
@@ -39,7 +37,6 @@ public class MpdPlaylistController {
     @MessageMapping("/playlist/add")
     @MpdErrorType(type = ResponseType.PLAYLIST_ADD)
     public void add(@MapKeys(keys = {"path"}) Map<String, Object> map) {
-        searchService.search();
         if (map.get("pos") == null) {
             playlistService.add((String)map.get("path"));
         } else {
