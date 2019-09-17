@@ -42,7 +42,7 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/stomp")
                 .setAllowedOrigins("*").withSockJS().setClientLibraryUrl("/webjars/sockjs-client/1.1.2/sockjs.js");
         RequestUpgradeStrategy upgradeStrategy = new TomcatRequestUpgradeStrategy();
-        registry.addEndpoint("/stomp")
+        registry.addEndpoint("/javaclient")
                 .setHandshakeHandler(new DefaultHandshakeHandler(upgradeStrategy))
                 .setAllowedOrigins("*");
     }
