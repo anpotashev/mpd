@@ -5,6 +5,7 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.stereotype.Component;
+import ru.net.arh.mpd.search.model.SockJSResponse;
 
 import java.lang.reflect.Type;
 
@@ -13,13 +14,14 @@ public class MyStompSessionHandler implements StompSessionHandler {
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
         session.subscribe("/topic/fullTree", this);
+        session.subscribe("/topic/connection", this);
         session.subscribe("/user/queue/reply", this);
         session.send("/mpd/fullTree", null);
     }
 
     @Override
     public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-        System.out.println("here");
+
     }
 
     @Override
@@ -29,7 +31,7 @@ public class MyStompSessionHandler implements StompSessionHandler {
 
     @Override
     public Type getPayloadType(StompHeaders headers) {
-        return null;
+        return SockJSResponse.class;
     }
 
     @Override
