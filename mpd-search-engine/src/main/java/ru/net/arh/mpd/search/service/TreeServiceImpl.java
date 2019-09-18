@@ -13,12 +13,14 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 import ru.net.arh.mpd.search.model.StompEvent;
 import ru.net.arh.mpd.search.model.TreeItem;
+import ru.net.arh.mpd.search.util.TreeItemUtil;
 
 import javax.websocket.ContainerProvider;
 import javax.websocket.DeploymentException;
 import javax.websocket.WebSocketContainer;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class TreeServiceImpl implements TreeService {
@@ -35,7 +37,7 @@ public class TreeServiceImpl implements TreeService {
     private WebSocketStompClient stompClient;
 
     @Getter
-    private TreeItem tree;
+    private List<TreeItem> items;
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() throws IOException, DeploymentException, InterruptedException {
@@ -55,7 +57,7 @@ public class TreeServiceImpl implements TreeService {
 
     @EventListener(condition = "#event.type == T(ru.net.arh.mpd.search.model.EventType).SOCKS_DISCONNECTED")
     private void onSocksDiconnect(StompEvent event) {
-        this.tree = null;
+        this.items = null;
         scheduler.schedule(new Runnable() {
             @Override
             public void run() {
@@ -67,13 +69,13 @@ public class TreeServiceImpl implements TreeService {
     @EventListener(condition = "#event.type == T(ru.net.arh.mpd.search.model.EventType).CONNECTION_STATE")
     private void onConnectionStateChanged(StompEvent event) {
         if (!(Boolean) event.getBody()) {
-            this.tree = null;
+            this.items = null;
         }
     }
 
     @EventListener(condition = "#event.type == T(ru.net.arh.mpd.search.model.EventType).FULL_TREE")
     private void onFullTreeGet(StompEvent event) {
-        this.tree = (TreeItem) event.getBody();
+        this.items = TreeItemUtil.setPathConvertToListAndRemoveDirs((TreeItem) event.getBody());
     }
 
 }

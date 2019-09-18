@@ -12,8 +12,8 @@ import {SUCCESS_SUFFIX} from "../../redux/SockJSMiddleware2";
 export interface IBaseSearchCondition {
 }
 
-type Id3Tag = 'ARTIST' | 'ALBUM';
-type Operation = 'START_WITH' | 'CONTAINS';
+type Id3Tag = 'ARTIST' | 'ALBUM' | 'TITLE';
+type Operation = 'START_WITH' | 'CONTAINS' | 'REGEX';
 type PredicateType = 'AND' | 'OR' | 'NOT';
 
 export interface SearchCondition extends IBaseSearchCondition {
@@ -42,7 +42,6 @@ export default function (state: Conditions = emptyConditions, action: any): Cond
     let conditions = state.conditions;
     switch (action.type) {
         case SAVE_CONDITION:
-            console.log('saving...', JSON.stringify(action, null,2));
             let lookup = conditions.find(value => value.name===action.name);
             if (lookup !== undefined) {
                 console.log('found');
@@ -52,7 +51,6 @@ export default function (state: Conditions = emptyConditions, action: any): Cond
                 conditions.push({name: action.payload.name, condition: action.payload.condition});
             }
             let result = {conditions: conditions, isEditing: false};
-            console.log("new props ", JSON.stringify(result, null,2));
             return result;
         case REMOVE_CONDITION:
             let index = conditions.findIndex(value => value.name===action.name);

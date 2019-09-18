@@ -9,7 +9,6 @@ import ru.net.arh.mpd.search.util.ConditionUtil;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SearchApiImpl implements SearchApi {
 
@@ -23,23 +22,14 @@ public class SearchApiImpl implements SearchApi {
 
     @Override
     public List<TreeItem> search(Condition searchCondition) {
-        if (treeService.getTree() == null) {
+        if (treeService.getItems() == null) {
             throw new RuntimeException("tree is null");
         }
         Predicate<TreeItem> predicate = ConditionUtil.getPredicate(searchCondition);
-        return stream(treeService.getTree())
+        return treeService.getItems().stream()
                 .filter(treeItem -> treeItem.getFile() != null)
                 .filter(predicate)
                 .collect(Collectors.toList());
     }
 
-    private Stream<TreeItem> stream(TreeItem treeItem) {
-        if (treeItem.getFile() != null) {
-            return Stream.of(treeItem);
-        } else {
-            return treeItem.getChildren().stream()
-                    .map(child -> stream(child))
-                    .reduce(Stream.of(treeItem), Stream::concat);
-        }
-    }
 }

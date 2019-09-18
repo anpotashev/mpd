@@ -30,18 +30,10 @@ public class ConditionUtil {
                 Id3Tag id3Tag = searchCondition.getId3Tag();
                 Id3Predicate operation = searchCondition.getOperation();
                 String value = searchCondition.getValue();
-                return operation.getFunction().apply(field(treeItem, id3Tag), value);
+                return operation.getFunction().apply(id3Tag.getAttributeValue(treeItem), value);
             };
         }
 
     }
 
-    private static String field(TreeItem item, Id3Tag tag) {
-        switch (tag) {
-            case ALBUM:
-                return item.getAlbum();
-            default: //case ARTIST:
-                return item.getArtist();
-        }
-    }
 }

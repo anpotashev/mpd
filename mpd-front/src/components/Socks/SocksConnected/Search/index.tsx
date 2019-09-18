@@ -29,7 +29,6 @@ class SearchComponent extends React.Component<ISearchProps, any> {
         showWindow: false,
     };
     render() {
-        console.log('1111', JSON.stringify(this.props.conditions, null, 2));
         return <>
             <Label>Search</Label>
             {this.props.conditions.conditions.map((value, key) => <div key={key}><Label>{value.name}</Label><Button onClick={() => {this.props.search(value.condition)}}>search</Button></div>)}

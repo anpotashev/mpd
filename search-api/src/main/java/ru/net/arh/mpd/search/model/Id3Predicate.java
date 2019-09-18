@@ -7,7 +7,8 @@ import java.util.function.BiFunction;
 public enum Id3Predicate {
 
     CONTAINS ((s, s2) -> s!=null && s.toLowerCase().contains(s2.toLowerCase())),
-    START_WITH ((s, s2) -> s!=null && s.toLowerCase().startsWith(s2.toLowerCase()))
+    START_WITH ((s, s2) -> s!=null && s.toLowerCase().startsWith(s2.toLowerCase())),
+    REGEX ((s, s2) -> s!=null && s.matches(s2))
     ;
 
     @Getter

@@ -54,10 +54,7 @@ class EditComponentWindow extends React.Component<EditComponentWindowProps, {tex
                     cols={50}
                     rows={10}
                     value={this.state.text}
-                    onChange={e => {
-                        console.log('change', e);
-                        this.setState({text: e.target.value})
-                    }}
+                    onChange={e => this.setState({text: e.target.value})}
                 ></textarea>
             </Modal.Body>
 

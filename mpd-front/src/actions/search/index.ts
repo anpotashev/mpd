@@ -9,7 +9,6 @@ import {IBaseSearchCondition} from "../../reducers/Search";
 import {WS_REQUEST, WsDestination} from "../../constants/Socks";
 
 export const saveSearchCondition = (name: string, condition: IBaseSearchCondition) => {
-    console.log(condition);
     return {
         type: SAVE_CONDITION,
         payload: {
