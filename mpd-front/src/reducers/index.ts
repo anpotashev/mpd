@@ -9,6 +9,7 @@ import Outputs from "./Outputs";
 import ShortStatus from "./ShortStatus";
 import StoredPlaylists from "./StoredPlaylists";
 import CapturedObject from "./Dnd";
+import Search from "./Search";
 import {LOADING} from "../redux/SockJSMiddleware2";
 
 const reducers = combineReducers({
@@ -21,7 +22,8 @@ const reducers = combineReducers({
     outputs: Outputs,
     storedPlaylists: StoredPlaylists,
     shortStatus: ShortStatus,
-    capturedObject: CapturedObject
+    capturedObject: CapturedObject,
+    search: Search
 });
 export default reducers;
 

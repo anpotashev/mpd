@@ -2,6 +2,7 @@ import {DEFAULT_TIMEOUT, WS_REQUEST, WsDestination} from "constants/Socks";
 import {ON_SOCKS_CONNECTED, ON_SOCKS_DISCONNECTED, SEND_MESSAGE, SOCKS_CONNECT} from "constants/ActionTypes";
 import {ISendMessagePayload} from "redux/SockJSMiddleware";
 import {IOutput} from "../../reducers/Outputs";
+import {IBaseSearchCondition} from "../../reducers/Search";
 
 
 //websocket-соенинеие с бэком установлено
@@ -318,6 +319,16 @@ export const moveInPlaylist = (from: number, to: number) => {
         payload: {
             type: WsDestination.MOVE_IN_PLAYLIST,
             msg: {from: from, to: to}
+        }
+    }
+};
+
+export const search = (condition: IBaseSearchCondition) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.SEARCH,
+            msg: condition
         }
     }
 };

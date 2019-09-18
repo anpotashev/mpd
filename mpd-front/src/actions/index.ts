@@ -29,7 +29,8 @@ export {onSocketConnected,
     saveStoredPlaylist,
     playerSeek,
     deleteFromPlaylist,
-    moveInPlaylist
+    moveInPlaylist,
+    search,
 } from './websocket';
 
 export {
@@ -37,3 +38,13 @@ export {
     captureObject,
     releaseObject
 } from './other';
+
+export {hideNewConditionWindow,
+    removeSearchCondition,
+    renameSearchCondition,
+    saveSearchCondition,
+    showNewConditionWindow,
+    startEdit,
+    cancelEdit
+
+} from './search'

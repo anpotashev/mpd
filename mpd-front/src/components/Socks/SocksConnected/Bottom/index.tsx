@@ -6,6 +6,7 @@ import { Playlist } from '../Playlist';
 import { LeftPanel, LeftPanelElement } from '../LeftPanel';
 import 'react-splitter-layout/lib/index.css';
 import {StoredPlaylists} from "../StoredPlaylists";
+import SearchComponent from "../Search";
 
 export const Bottom = () => <>
     <SplitterLayout
@@ -22,5 +23,8 @@ const left = () => <LeftPanel>
     </LeftPanelElement>
     <LeftPanelElement id="second" title="Playlists">
         <StoredPlaylists/>
+    </LeftPanelElement>
+    <LeftPanelElement id="third" title="Search">
+        <SearchComponent/>
     </LeftPanelElement>
 </LeftPanel>;

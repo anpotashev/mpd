@@ -27,6 +27,7 @@ export class WsDestination {
     static TREE = new WsDestination("/mpd/tree", "TREE");
     static UPDATE_DB = new WsDestination("/mpd/updateDb", "UPDATE_DB");
     static GET_STREAM_URL = new WsDestination("/mpd/streamPlayer", "GET_STREAM_URL");
+    static SEARCH = new WsDestination("/mpd/search", "SEARCH");
 
     static SET_REPEAT = new WsDestination("/mpd/status/repeat", "SET_REPEAT");
     static SET_CONSUME = new WsDestination("/mpd/status/consume", "SET_CONSUME");
