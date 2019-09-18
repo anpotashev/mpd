@@ -25,7 +25,21 @@ export interface EditComponentWindowProps {
 
 class EditComponentWindow extends React.Component<EditComponentWindowProps, {text:string}> {
     state = {
-        text: ''
+        text: '{\n' +
+            '  "conditions": [\n' +
+            '    {\n' +
+            '      "id3Tag": "ARTIST",\n' +
+            '      "operation": "CONTAINS",\n' +
+            '      "value": "Кристи"\n' +
+            '    },\n' +
+            '    {\n' +
+            '      "id3Tag": "ARTIST",\n' +
+            '      "operation": "START_WITH",\n' +
+            '      "value": "Lumen"\n' +
+            '    }\n' +
+            '  ],\n' +
+            '  "type": "OR"\n' +
+            '}'
     };
     render() {
 

@@ -1,13 +1,11 @@
 package ru.net.arh.mpd.search.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.search.model.Condition;
 import ru.net.arh.mpd.search.model.TreeItem;
 import ru.net.arh.mpd.search.service.TreeService;
 import ru.net.arh.mpd.search.util.ConditionUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;

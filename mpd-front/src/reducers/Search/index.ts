@@ -1,5 +1,13 @@
 import {IPlaylistReducer} from "../Playlist";
-import {SAVE_CONDITION, REMOVE_CONDITION, RENAME_CONDITION, START_EDIT, CANCEL_EDIT} from "constants/ActionTypes";
+import {
+    SAVE_CONDITION,
+    REMOVE_CONDITION,
+    RENAME_CONDITION,
+    START_EDIT,
+    CANCEL_EDIT,
+    SEARCH
+} from "constants/ActionTypes";
+import {SUCCESS_SUFFIX} from "../../redux/SockJSMiddleware2";
 
 export interface IBaseSearchCondition {
 }
@@ -59,6 +67,9 @@ export default function (state: Conditions = emptyConditions, action: any): Cond
             return {conditions: conditions, isEditing: true};
         case CANCEL_EDIT:
             return {conditions: conditions, isEditing: false};
+    }
+    if (action.type === SEARCH + SUCCESS_SUFFIX) {
+        console.log('search result: ', JSON.stringify(action.payload, null, 2));
     }
     return state;
 }

@@ -1,11 +1,6 @@
 package ru.net.arh.mpd.search.util;
 
-import ru.net.arh.mpd.search.model.Condition;
-import ru.net.arh.mpd.search.model.Id3Predicate;
-import ru.net.arh.mpd.search.model.Id3Tag;
-import ru.net.arh.mpd.search.model.PredicateCondition;
-import ru.net.arh.mpd.search.model.SearchCondition;
-import ru.net.arh.mpd.search.model.TreeItem;
+import ru.net.arh.mpd.search.model.*;
 
 import java.util.List;
 import java.util.function.Predicate;
