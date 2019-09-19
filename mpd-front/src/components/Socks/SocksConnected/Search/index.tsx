@@ -1,10 +1,12 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
+import {connect, Provider} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as Actions from "actions";
 import {Button, Label, Modal} from "react-bootstrap";
 import {Conditions, NamedSearchCondition} from "../../../../reducers/Search";
 import EditComponentWindow from "./EditConditionWindow";
+import Socks from "../../index";
+import SearchConditionConstructor from "../../../SearchConditionConstructor";
 
 const mapStateToProps = (state: any) => {
     return {
@@ -33,7 +35,8 @@ class SearchComponent extends React.Component<ISearchProps, any> {
             <Label>Search</Label>
             {this.props.conditions.conditions.map((value, key) => <div key={key}><Label>{value.name}</Label><Button onClick={() => {this.props.search(value.condition)}}>search</Button></div>)}
             <Button onClick={()=>this.props.startEditing()}>New</Button>
-            <EditComponentWindow/>
+            <SearchConditionConstructor/>
+            {/*<EditComponentWindow/>*/}
         </>
     }
 }
