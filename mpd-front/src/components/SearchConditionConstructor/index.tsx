@@ -41,6 +41,9 @@ interface NullCondition extends IBaseSearchCondition {
     asdf: any
 }
 
+/**
+ * TODO!!! Кошмар который при этом работает.
+ */
 class SearchConditionConstructor extends React.Component<SearchConditionConstructorProps, ISearchConditionConstructorState> {
 
     state = {
@@ -50,30 +53,7 @@ class SearchConditionConstructor extends React.Component<SearchConditionConstruc
             value: ''
         },
         selectedElement: undefined,
-        condition: JSON.parse("{\n" +
-            "\"type\": \"NOT\",\n" +
-            " \"conditions\": [\n" +
-            " {\n" +
-            "  \"conditions\": [\n" +
-            "    {\n" +
-            "      \"id3Tag\": \"ALBUM\",\n" +
-            "      \"operation\": \"CONTAINS\",\n" +
-            "      \"value\": \"asdf\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id3Tag\": \"ALBUM\",\n" +
-            "      \"operation\": \"CONTAINS\",\n" +
-            "      \"value\": \"asdf\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id3Tag\": \"ALBUM\",\n" +
-            "      \"operation\": \"START_WITH\",\n" +
-            "      \"value\": \"afdsafdsa\"\n" +
-            "    }\n" +
-            "  ],\n" +
-            "  \"type\": \"OR\"\n" +
-            "}]\n" +
-            " }"),
+        condition: {asdf: ''},
         parentElement: undefined,
         name: '12345'
     };
@@ -116,6 +96,8 @@ class SearchConditionConstructor extends React.Component<SearchConditionConstruc
                                     <option>ARTIST</option>
                                     <option>ALBUM</option>
                                     <option>TITLE</option>
+                                    <option>ALBUM_ARTIST</option>
+                                    <option>GENRE</option>
                                 </FormControl>
                             </Col>
                             <Col>
@@ -127,7 +109,7 @@ class SearchConditionConstructor extends React.Component<SearchConditionConstruc
                                 <Col>
                                 <FormControl componentClass="input" onChange={this.handleValue.bind(this)}/>
                                 </Col>
-                                <Col><Button disabled={this.state.selectedElement === undefined} onClick={() => {this.addSearchCondition()}}>add</Button></Col>
+                                <Col><Button disabled={this.state.selectedElement === undefined || this.state.searchCondition.value.length===0} onClick={() => {this.addSearchCondition()}}>add</Button></Col>
                             </Col>
                         </Row>
                     </Form>

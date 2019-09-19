@@ -1,6 +1,7 @@
-package ru.net.arh.mpd.search.api;
+package ru.net.arh.mpd.search.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.net.arh.mpd.search.api.SearchApi;
 import ru.net.arh.mpd.search.model.Condition;
 import ru.net.arh.mpd.search.model.TreeItem;
 import ru.net.arh.mpd.search.service.TreeService;
@@ -15,7 +16,6 @@ public class SearchApiImpl implements SearchApi {
     @Autowired
     private TreeService treeService;
 
-    //@Autowired
     public SearchApiImpl(TreeService treeService) {
         this.treeService = treeService;
     }

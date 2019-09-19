@@ -11,7 +11,7 @@ import {SUCCESS_SUFFIX} from "../../redux/SockJSMiddleware2";
 export interface IBaseSearchCondition {
 }
 
-export type Id3Tag = 'ARTIST' | 'ALBUM' | 'TITLE';
+export type Id3Tag = 'ARTIST' | 'ALBUM' | 'TITLE' | 'ALBUM_ARTIST' | 'GENRE';
 export type Operation = 'START_WITH' | 'CONTAINS' | 'REGEX';
 export type PredicateType = 'AND' | 'OR' | 'NOT';
 

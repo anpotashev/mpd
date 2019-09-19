@@ -54,6 +54,7 @@ function canProcessReleaseAction(value: IPlaylistItem, capturedObject: ICaptured
   if (capturedObject.type === 'file') return true;
   if (capturedObject.type === 'directory') return true;
   if (capturedObject.type === 'playlist') return true;
+  if (capturedObject.type === 'search') return true;
   return capturedObject.type === 'pos' && capturedObject.pos !== value.pos
 }
 

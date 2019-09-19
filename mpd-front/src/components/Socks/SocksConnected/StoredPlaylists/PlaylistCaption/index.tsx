@@ -9,11 +9,6 @@ export interface IPlaylistCaptionProps {
     loadStoredPlaylist: Function;
     rmStoredPlaylist: Function;
     renameStoredPlaylist: Function;
-    // addStoredPlaylistToPlaylist: any;
-    // addStoredPlaylistToPlaylistFirst: any;
-    // setStoredPlaylistAsCurrentPlaylist: any;
-    // clearStoredPlaylist: any;
-    // removeStoredPlaylist: any;
 }
 
 

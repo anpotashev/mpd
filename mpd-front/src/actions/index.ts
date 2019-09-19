@@ -31,6 +31,7 @@ export {onSocketConnected,
     deleteFromPlaylist,
     moveInPlaylist,
     search,
+    addSearch,
 } from './websocket';
 
 export {

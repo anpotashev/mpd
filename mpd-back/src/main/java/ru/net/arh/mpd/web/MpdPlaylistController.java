@@ -1,5 +1,7 @@
 package ru.net.arh.mpd.web;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SendToUser;
@@ -9,6 +11,7 @@ import ru.net.arh.mpd.model.MpdErrorType;
 import ru.net.arh.mpd.model.playlist.Playlist;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.model.sockjs.SockJsResponse;
+import ru.net.arh.mpd.search.model.Condition;
 import ru.net.arh.mpd.services.playlist.PlaylistService;
 import ru.net.arh.mpd.services.search.SearchService;
 import ru.net.arh.mpd.validation.MapKeys;
@@ -24,6 +27,8 @@ public class MpdPlaylistController {
     @Autowired
     private PlaylistService playlistService;
 
+    @Autowired
+    private SearchService searchService;
     /**
      * Запрос текущего плейлиста
      */
@@ -91,5 +96,17 @@ public class MpdPlaylistController {
         playlistService.move(map.get("from"), map.get("to"));
     }
 
+    @MessageMapping("playlist/add/search")
+    @MpdErrorType(type = ResponseType.PLAYLIST_ADD_SEARCH)
+    public void addSearchToPlaylist(AddSearchRequest searchRequest) {
+        playlistService.addAll(searchService.search(searchRequest.getCondition()), searchRequest.getPosition());
+    }
+
+    @Getter
+    @Setter
+    public static class AddSearchRequest {
+        private Condition condition;
+        private Integer position;
+    }
 
 }

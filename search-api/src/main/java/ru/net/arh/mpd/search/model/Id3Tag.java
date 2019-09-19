@@ -6,7 +6,8 @@ public enum Id3Tag {
     ARTIST(s -> s.getArtist()),
     ALBUM(s -> s.getAlbum()),
     TITLE(s -> s.getTitle()),
-
+    ALBUM_ARTIST(s -> s.getAlbumArtist()),
+    GENRE(s -> s.getGenre())
     ;
 
     public String getAttributeValue(TreeItem treeItem) {

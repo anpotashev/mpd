@@ -16,11 +16,3 @@ task initCustom(type: Copy) {
     rename 'mpd.properties.template', 'mpd.properties'
 }
 
-task setEnv(type: Exec) {
-//    workingDir "$projectDir"
-    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
-        commandLine 'cmd', '/c', 'setenv.bat'
-    } else {
-        commandLine 'sh', '-c', './setenv.sh'
-    }
-}

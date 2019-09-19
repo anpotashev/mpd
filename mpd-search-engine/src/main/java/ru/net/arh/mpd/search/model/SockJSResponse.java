@@ -14,8 +14,7 @@ public class SockJSResponse<T> {
     @JsonTypeId
     private String type;
 
-
-    @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type", visible = true)
+    @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "type")
     @JsonSubTypes({
             @JsonSubTypes.Type(value = TreeItem.class, name = "FULL_TREE"),
             @JsonSubTypes.Type(value = Boolean.class, name = "CONNECTION_STATE")

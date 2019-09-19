@@ -30,15 +30,15 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
 
 
 const PlaylistPanelComponent = (props: IPlaylistPanelProps) => <div text-align="center">
-  <button type="button" className={props.capturedObject.type === 'pos' ? "btn btn-lg dragging" : "btn btn-lg"} aria-label="Left Align"
+  <button type="button" className={props.capturedObject.type === 'pos' || props.capturedObject.type === 'search' ? "btn btn-lg dragging" : "btn btn-lg"} aria-label="Left Align"
           onClick={() => props.clearPlaylist()}
           onMouseUp={e => {e.stopPropagation();
-            if(props.capturedObject.type==='pos') {props.releaseObject(props.capturedObject, -1);} else {
+            if(props.capturedObject.type==='pos'|| props.capturedObject.type === 'search') {props.releaseObject(props.capturedObject, -1);}
               props.captureObject({
                 type: 'none',
                 path: ''
               });
-            }
+
           }}
   >
     <span className="glyphicon glyphicon-trash" aria-hidden="true"></span>

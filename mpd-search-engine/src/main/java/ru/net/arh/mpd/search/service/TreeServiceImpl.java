@@ -22,12 +22,15 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Импелментация сервиса, в основу которого положено взаимодействие с приложением mpd-back по ws протоколу.
+ */
 @Service
 public class TreeServiceImpl implements TreeService {
 
     private static final int MAX_TEXT_MESSAGE_BUFFER_SIZE=20*1024*1024;
 
-    @Value("${ws.address:ws://localhost:8080/javaclient}")
+    @Value("${mpdback.ws.address}")
     private String URL;
     @Autowired
     private MyStompSessionHandler sessionHandler;

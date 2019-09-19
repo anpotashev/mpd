@@ -332,3 +332,13 @@ export const search = (condition: IBaseSearchCondition) => {
         }
     }
 };
+
+export const addSearch = (condition: IBaseSearchCondition, pos?: number) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.PLAYLIST_ADD_SEARCH,
+            msg: {condition: condition, pos: pos}
+        }
+    }
+};

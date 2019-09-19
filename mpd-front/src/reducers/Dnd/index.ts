@@ -1,11 +1,13 @@
 import {CAPTURE_PATH} from "constants/ActionTypes";
+import {IBaseSearchCondition} from "../Search";
 
-export type CapturedObjectType = 'file' | 'directory' | 'playlist' | 'pos' | 'none'
+export type CapturedObjectType = 'file' | 'directory' | 'playlist' | 'pos' | 'search' | 'none'
 
 export interface ICapturedObject {
   path: string;
   type: CapturedObjectType;
   pos?: number;
+  searchCondition?: IBaseSearchCondition;
 }
 
 const defaultValue : ICapturedObject = {
