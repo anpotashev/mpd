@@ -42,13 +42,19 @@ public class MpdAnswersParser {
                 .collect(Collectors.toList());
     }
 
+    public static final String UTF8_BOM = "\uFEFF";
+    private static String removeBom(String s) {
+        return s.startsWith(UTF8_BOM)
+                ? s.substring(1)
+                : s;
+    }
     private static <T> T parse(Class<T> clazz, List<String> list, Map<String, Field> fieldsMap) {
         try {
             T result = clazz.newInstance();
             for (String line : list) {
                 for (Entry<String, Field> entry : fieldsMap.entrySet()) {
                     if (line.startsWith(entry.getKey())) {
-                        setFieldValue(result, entry.getValue(), line.substring(entry.getKey().length()).trim());
+                        setFieldValue(result, entry.getValue(), removeBom(line.substring(entry.getKey().length()).trim()));
                         break;
                     }
                 }
