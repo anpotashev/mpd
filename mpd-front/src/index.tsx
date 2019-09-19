@@ -18,5 +18,4 @@ store.dispatch(socksConnect());
 ReactDOM.render(<><Provider store={store}>
     <Socks/>
 </Provider>
-    {/*<SearchConditionConstructor/>*/}
     </>, document.getElementById('root'));

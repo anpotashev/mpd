@@ -1,4 +1,3 @@
-import {IPlaylistReducer} from "../Playlist";
 import {
     SAVE_CONDITION,
     REMOVE_CONDITION,
@@ -36,16 +35,16 @@ export interface Conditions {
     isEditing: boolean;
 }
 
-const emptyConditions = {conditions: [], isEditing: false}
+const emptyConditions = {conditions: [], isEditing: false};
 
 export default function (state: Conditions = emptyConditions, action: any): Conditions {
     let conditions = state.conditions;
     switch (action.type) {
         case SAVE_CONDITION:
-            let lookup = conditions.find(value => value.name===action.name);
+            let lookup = conditions.find(value => value.name===action.payload.name);
             if (lookup !== undefined) {
                 console.log('found');
-                lookup.name = action.newName;
+                lookup.condition = action.payload.condition;
             } else {
                 console.log('not found');
                 conditions.push({name: action.payload.name, condition: action.payload.condition});
