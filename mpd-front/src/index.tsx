@@ -9,11 +9,14 @@ import {socksConnect} from 'actions';
 import {socketMiddleware2} from "./redux/SockJSMiddleware2";
 import {composeWithDevTools} from "redux-devtools-extension";
 import thunk from "redux-thunk";
+import SearchConditionConstructor from "./components/SearchConditionConstructor";
 
 export const store = createStore(reducers, composeWithDevTools(applyMiddleware(socketMiddleware, socketMiddleware2, thunk)));
 
 store.dispatch(socksConnect());
 
-ReactDOM.render(<Provider store={store}>
+ReactDOM.render(<><Provider store={store}>
     <Socks/>
-</Provider>, document.getElementById('root'));
+</Provider>
+    {/*<SearchConditionConstructor/>*/}
+    </>, document.getElementById('root'));
