@@ -7,6 +7,7 @@ import {
     SEARCH
 } from "constants/ActionTypes";
 import {SUCCESS_SUFFIX} from "../../redux/SockJSMiddleware2";
+import {getArrayCookie, setArrayCookie} from "../../lib/cookie";
 
 export interface IBaseSearchCondition {
 }
@@ -35,7 +36,10 @@ export interface Conditions {
     isEditing: boolean;
 }
 
-const emptyConditions = {conditions: [], isEditing: false};
+const loadFromCookie = () => getArrayCookie("conditions");
+const saveInCookie = (conditions: IBaseSearchCondition[]) => setArrayCookie("conditions", conditions, {expires: 10000});
+
+const emptyConditions = loadFromCookie() === undefined ? {conditions: [], isEditing: false} : {conditions: loadFromCookie(), isEditing: false};
 
 export default function (state: Conditions = emptyConditions, action: any): Conditions {
     let conditions = state.conditions;
@@ -43,22 +47,23 @@ export default function (state: Conditions = emptyConditions, action: any): Cond
         case SAVE_CONDITION:
             let lookup = conditions.find(value => value.name===action.payload.name);
             if (lookup !== undefined) {
-                console.log('found');
                 lookup.condition = action.payload.condition;
             } else {
-                console.log('not found');
                 conditions.push({name: action.payload.name, condition: action.payload.condition});
             }
             let result = {conditions: conditions, isEditing: false};
+            saveInCookie(conditions);
             return result;
         case REMOVE_CONDITION:
             let index = conditions.findIndex(value => value.name===action.name);
             conditions.splice(index, 1);
+            saveInCookie(conditions);
             return {conditions: conditions, isEditing: false};
         case RENAME_CONDITION:
-            let find = conditions.find(value => value.name===action.name);
+            let find = conditions.find(value => value.name===action.payload.name);
             if (find !== undefined)
-                find.name = action.newName;
+                find.name = action.payload.newName;
+            saveInCookie(conditions);
             return {conditions: conditions, isEditing: false};
         case START_EDIT:
             return {conditions: conditions, isEditing: true};
@@ -70,39 +75,3 @@ export default function (state: Conditions = emptyConditions, action: any): Cond
     }
     return state;
 }
-/**
- * {
-  "conditions": [
-    {
-      "id3Tag": "ALBUM",
-      "operation": "CONTAINS",
-      "value": "asdf"
-    },
-    {
-      "id3Tag": "ALBUM",
-      "operation": "START_WITH",
-      "value": "afdsafdsa"
-    }
-  ],
-  "type": "OR"
-}
- {
-"type": "NOT",
- "conditions": [
- {
-  "conditions": [
-    {
-      "id3Tag": "ALBUM",
-      "operation": "CONTAINS",
-      "value": "asdf"
-    },
-    {
-      "id3Tag": "ALBUM",
-      "operation": "START_WITH",
-      "value": "afdsafdsa"
-    }
-  ],
-  "type": "OR"
-}]
- }
- */
