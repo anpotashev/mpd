@@ -1,9 +1,9 @@
 mpdserver:
-  defaulthost: 192.168.1.110
+  defaulthost: localhost
   defaultport: 6600
   defaultpassword: 12345678
   defaultpinginterval: 15000
-  defaultStreamUrl: http://192.168.1.110:18000/mpd.mp3
+  defaultStreamUrl: http://localhost:8000/mpd.mp3
 
 searchEngine:
   url: http://localhost:9090/search

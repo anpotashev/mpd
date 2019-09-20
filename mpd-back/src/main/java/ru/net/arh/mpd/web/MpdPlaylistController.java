@@ -99,14 +99,14 @@ public class MpdPlaylistController {
     @MessageMapping("playlist/add/search")
     @MpdErrorType(type = ResponseType.PLAYLIST_ADD_SEARCH)
     public void addSearchToPlaylist(AddSearchRequest searchRequest) {
-        playlistService.addAll(searchService.search(searchRequest.getCondition()), searchRequest.getPosition());
+        playlistService.addAll(searchService.search(searchRequest.getCondition()), searchRequest.getPos());
     }
 
     @Getter
     @Setter
     public static class AddSearchRequest {
         private Condition condition;
-        private Integer position;
+        private Integer pos;
     }
 
 }
