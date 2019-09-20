@@ -2,6 +2,7 @@ package ru.net.arh.mpd.search.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @AllArgsConstructor
+@EqualsAndHashCode
 public class PredicateCondition extends Condition {
 
     private List<Condition> conditions;
