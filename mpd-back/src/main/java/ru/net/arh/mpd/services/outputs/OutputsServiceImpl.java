@@ -31,18 +31,16 @@ public class OutputsServiceImpl implements OutputsService {
     public List<MpdOutput> outputs() {
         return MpdAnswersParser.parseAll(
                 MpdOutput.class,
-                connectionService.sendCommand(new MpdCommand(Command.OUTPUTS))
+                connectionService.sendCommand(Command.OUTPUTS.build())
         );
     }
 
     @Override
     @ThrowIfNotConnected
     public void save(MpdOutput output) {
-        MpdCommand command = new MpdCommand(output.isEnabled()
-                                                    ? Command.ENABLE_OUTPUT
-                                                    : Command.DISABLE_OUTPUT
-        );
-        command.addParam(output.getId() + "");
+        MpdCommand command = output.isEnabled()
+                ? Command.ENABLE_OUTPUT.build(output.getId() + "")
+                : Command.DISABLE_OUTPUT.build(output.getId() + "");
         connectionService.sendCommand(command);
     }
 

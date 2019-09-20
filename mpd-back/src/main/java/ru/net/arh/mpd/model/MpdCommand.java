@@ -91,5 +91,9 @@ public class MpdCommand {
             this.str = str;
         }
 
+        public MpdCommand build(String...params) {
+            return new MpdCommand(this, params);
+        }
+
     }
 }

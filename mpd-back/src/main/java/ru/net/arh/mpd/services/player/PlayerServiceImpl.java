@@ -1,12 +1,10 @@
 package ru.net.arh.mpd.services.player;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.connection.ConnectionService;
-import ru.net.arh.mpd.model.MpdCommand;
 import ru.net.arh.mpd.model.MpdCommand.Command;
 import ru.net.arh.mpd.model.player.PlayerCommand;
 
@@ -23,56 +21,49 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     @ThrowIfNotConnected
     public void play() {
-        connectionService.sendCommand(new MpdCommand(Command.PLAY));
+        connectionService.sendCommand(Command.PLAY.build());
     }
 
     @Override
     @ThrowIfNotConnected
     public void pause() {
-        connectionService.sendCommand(new MpdCommand(Command.PAUSE));
+        connectionService.sendCommand(Command.PAUSE.build());
     }
 
     @Override
     @ThrowIfNotConnected
     public void stop() {
-        connectionService.sendCommand(new MpdCommand(Command.STOP));
+        connectionService.sendCommand(Command.STOP.build());
     }
 
     @Override
     @ThrowIfNotConnected
     public void prev() {
-        connectionService.sendCommand(new MpdCommand(Command.PREV));
+        connectionService.sendCommand(Command.PREV.build());
     }
 
     @Override
     @ThrowIfNotConnected
     public void next() {
-        connectionService.sendCommand(new MpdCommand(Command.NEXT));
+        connectionService.sendCommand(Command.NEXT.build());
     }
 
     @Override
     @ThrowIfNotConnected
     public void playPos(int songPos) {
-        MpdCommand command = new MpdCommand(Command.PLAY);
-        command.addParam(songPos + "");
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(Command.PLAY.build(songPos + ""));
     }
 
     @Override
     @ThrowIfNotConnected
     public void playId(int id) {
-        MpdCommand command = new MpdCommand(Command.PLAY_ID);
-        command.addParam(id + "");
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(Command.PLAY_ID.build(id + ""));
     }
 
     @Override
     @ThrowIfNotConnected
     public void seek(int songPos, int seekPos) {
-        MpdCommand command = new MpdCommand(Command.SEEK);
-        command.addParam(songPos + "");
-        command.addParam(seekPos + "");
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(Command.SEEK.build(songPos+"", seekPos+""));
     }
 
     @Override

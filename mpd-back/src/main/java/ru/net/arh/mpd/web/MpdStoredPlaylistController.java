@@ -53,11 +53,7 @@ public class MpdStoredPlaylistController {
     @MpdErrorType(type = ResponseType.STORED_PLAYLIST_ADD)
     @MessageMapping("/storedPlaylist/add")
     public void addStored(@MapKeys(keys = {"storedPlaylist"}) Map<String, Object> map) {
-        if (map.containsKey("pos")) {
-            service.addStored((String) map.get("storedPlaylist"), (Integer) map.get("pos"));
-        } else {
-            service.addStored((String) map.get("storedPlaylist"));
-        }
+        service.addStored((String) map.get("storedPlaylist"), (Integer) map.getOrDefault("pos", null));
     }
 
     @MpdErrorType(type = ResponseType.STORED_PLAYLIST_RM)

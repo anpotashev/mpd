@@ -29,9 +29,7 @@ public class StatusServiceImpl implements StatusService {
     public MpdStatus status() {
         return MpdAnswersParser.parse(
                 MpdStatus.class,
-                connectionService.sendCommand(
-                        new MpdCommand(MpdCommand.Command.STATUS)
-                )
+                connectionService.sendCommand(MpdCommand.Command.STATUS.build())
         );
     }
 
@@ -41,7 +39,7 @@ public class StatusServiceImpl implements StatusService {
         MpdStatus status = MpdAnswersParser.parse(
                 MpdStatus.class,
                 connectionService.sendCommand(
-                        new MpdCommand(MpdCommand.Command.STATUS)
+                        MpdCommand.Command.STATUS.build()
                 )
         );
         MpdShortStatus result = new MpdShortStatus();

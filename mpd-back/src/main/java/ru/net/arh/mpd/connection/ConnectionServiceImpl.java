@@ -13,12 +13,15 @@ import ru.net.arh.mpd.model.exception.MpdException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class ConnectionServiceImpl implements ConnectionService {
 
+    private static final int MAX_COMMANDS_COUNT = 250;
     @Autowired
     private ConnectionSettings connectionSettings;
     @Autowired
@@ -42,6 +45,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             eventsService.onConnect();
         } catch (IOException e) {
             disconnect();
+            throw new MpdException(e.getMessage());
         }
     }
 
@@ -92,6 +96,12 @@ public class ConnectionServiceImpl implements ConnectionService {
     public List<String> sendCommands(List<MpdCommand> commands) {
         if (!connected) {
             throw new MpdException("Not connected");
+        }
+        if (commands.size()>MAX_COMMANDS_COUNT) {
+            AtomicInteger counter = new AtomicInteger(0);
+            commands.stream()
+                    .collect(Collectors.groupingBy(i -> counter.getAndIncrement() / MAX_COMMANDS_COUNT))
+                    .values().stream().forEach(cmd -> sendCommands(cmd));
         }
         try {
             return send(
