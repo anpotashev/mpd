@@ -3,9 +3,12 @@
 Проект представляет собой websocket API для взаимодействия с mpd-сервером.
 Имеется фронтовая часть на typescript (react+redux).
 
-Проект состоит из двух модулей: mpd-back и mpd-front
+Проект состоит из 4-х модулей: mpd-back, mpd-front, search-api b mpd-search-engine
 
-Описание пакетов в бэк-модуле:
+mpd-api - общие классы (модель, интерфейсы) для mpd-back и mpd-search-engine
+mpd-search-engine - модуль поиска. Работает отдельным приложением (RPС over http)
+
+Описание пакетов в mpd-back:
  - ru.net.arh.mpd:
    - aop - аспекты
    - cache - кэш
