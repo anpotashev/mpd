@@ -1,2 +1,3 @@
 rootProject.name = 'mpd'
-include 'mpd-back', 'mpd-front'
+include 'mpd-back', 'mpd-front', 'mpd-search-engine', 'search-api'
+

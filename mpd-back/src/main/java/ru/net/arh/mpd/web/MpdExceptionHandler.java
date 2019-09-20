@@ -26,4 +26,9 @@ public class MpdExceptionHandler {
         return new MpdSockJsError(methodAnnotation.type().name() + "_FAILED", e.getMessage());
     }
 
+    @MessageExceptionHandler(Exception.class)
+    public void handleOther(Exception e) {
+        throw new MpdException(e.getMessage());
+    }
+
 }

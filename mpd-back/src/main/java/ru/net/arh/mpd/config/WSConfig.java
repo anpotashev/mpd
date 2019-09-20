@@ -1,10 +1,12 @@
 package ru.net.arh.mpd.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -12,7 +14,11 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
+import org.springframework.web.socket.server.RequestUpgradeStrategy;
+import org.springframework.web.socket.server.standard.TomcatRequestUpgradeStrategy;
+import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 import ru.net.arh.mpd.events.MpdIdleEventMethodPostProcessor;
+import ru.net.arh.mpd.search.api.SearchApi;
 import ru.net.arh.mpd.web.LogginHandlerDecorator;
 
 @Configuration
@@ -22,6 +28,9 @@ import ru.net.arh.mpd.web.LogginHandlerDecorator;
 @EnableScheduling
 public class WSConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Value("${searchEngine.url:http://localhost:9090/search}")
+    private String searchEngineUrl;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker("/topic", "/queue");
@@ -30,7 +39,12 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/stomp").setAllowedOrigins("*").withSockJS().setClientLibraryUrl("/webjars/sockjs-client/1.1.2/sockjs.js");
+        registry.addEndpoint("/stomp")
+                .setAllowedOrigins("*").withSockJS().setClientLibraryUrl("/webjars/sockjs-client/1.1.2/sockjs.js");
+        RequestUpgradeStrategy upgradeStrategy = new TomcatRequestUpgradeStrategy();
+        registry.addEndpoint("/javaclient")
+                .setHandshakeHandler(new DefaultHandshakeHandler(upgradeStrategy))
+                .setAllowedOrigins("*");
     }
 
     @Override
@@ -50,5 +64,13 @@ public class WSConfig implements WebSocketMessageBrokerConfigurer {
     @Bean
     public MpdIdleEventMethodPostProcessor mpdIdleEventMethodPostProcessor() {
         return new MpdIdleEventMethodPostProcessor();
+    }
+
+    @Bean
+    public HttpInvokerProxyFactoryBean invoker() {
+        HttpInvokerProxyFactoryBean invoker = new HttpInvokerProxyFactoryBean();
+        invoker.setServiceUrl(searchEngineUrl);
+        invoker.setServiceInterface(SearchApi.class);
+        return invoker;
     }
 }

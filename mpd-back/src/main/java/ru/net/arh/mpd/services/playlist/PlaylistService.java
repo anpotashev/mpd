@@ -3,6 +3,7 @@ package ru.net.arh.mpd.services.playlist;
 import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.model.playlist.Playlist;
 import ru.net.arh.mpd.model.playlist.PlaylistItem;
+import ru.net.arh.mpd.search.model.TreeItem;
 
 import java.util.List;
 
@@ -142,4 +143,12 @@ public interface PlaylistService {
      * @param newName - новое имя
      */
     void renameStored(String oldName, String newName);
+
+    /**
+     * Добавить в текущий плейлист лист треков в указанную позицию.
+     * Если не задана, то добавляются в конец
+     * @param items
+     */
+    void addAll(List<TreeItem> items, Integer pos);
+
 }

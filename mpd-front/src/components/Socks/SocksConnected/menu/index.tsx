@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {StreamingMenu} from "./StreamMenu";
 import {OptionsMenu} from "./OptionsMenu";
 import {OutputsMenu} from "./OutputsMenu";
+import {AboutMenu} from "./AboutMenu";
 
 interface IMenuPanelProps {
     connected: boolean;
@@ -24,6 +25,7 @@ export const MenuComponent = (props: IMenuPanelProps) => <Navbar>
             {props.connected && <><StreamingMenu/><OptionsMenu/>
             <OutputsMenu/>
             </>}
+            <AboutMenu/>
         </Nav>
     </Navbar.Collapse>
 </Navbar>;

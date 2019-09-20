@@ -1,11 +1,12 @@
 import {CAPTURE_PATH, CHANGE_STREAMING} from "constants/ActionTypes";
 import {ICapturedObject} from "../../reducers/Dnd";
 import {
-    addFileToCurrentPlaylist,
+    addFileToCurrentPlaylist, addSearch,
     addStoredPlaylist,
     addToCurrentPlaylist,
     deleteFromPlaylist, moveInPlaylist
 } from "../websocket";
+import {removeSearchCondition} from "../search";
 
 export const changeStreaming = (newState: boolean) => {
     return {
@@ -17,6 +18,7 @@ export const changeStreaming = (newState: boolean) => {
 };
 
 export const captureObject = (object: ICapturedObject) => {
+    console.log('caputuring...' , object);
     return {
         type: CAPTURE_PATH,
         payload: object
@@ -31,6 +33,11 @@ export const releaseObject = (object: ICapturedObject, pos?: number) => {
             return addToCurrentPlaylist(object.path, pos);
         case 'playlist':
             return addStoredPlaylist(object.path, pos);
+        case 'search':
+            if (pos===-1) {
+                return removeSearchCondition(object.path);
+            }
+            return addSearch(object.searchCondition!, pos);
         case 'pos':
             if (pos===-1) { // Позицию -1 отправляет кнопка trash
                 return deleteFromPlaylist(object.pos===undefined? -1 : object.pos); // undefined быть не может.

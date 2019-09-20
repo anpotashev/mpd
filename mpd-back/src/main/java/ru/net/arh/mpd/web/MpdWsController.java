@@ -1,5 +1,6 @@
 package ru.net.arh.mpd.web;
 
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -23,7 +24,7 @@ public class MpdWsController {
         template.convertAndSend(
                 event.getType().getDestionation(),
                 new SockJsResponse<>(event.getType().getResponseType(), event.getBody())
-        );
+                , ImmutableMap.of("TYPE", event.getType()));
     }
 
 }

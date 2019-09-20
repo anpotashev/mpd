@@ -17,6 +17,7 @@ export class WsDestination {
     static PLAYLIST = new WsDestination("/mpd/playlist", "PLAYLIST");
     static PLAYLIST_ADD = new WsDestination("/mpd/playlist/add", "PLAYLIST_ADD");
     static PLAYLIST_ADD_FILE = new WsDestination("/mpd/playlist/addFile", "PLAYLIST_ADD_FILE");
+    static PLAYLIST_ADD_SEARCH = new WsDestination("/mpd/playlist/add/search", "PLAYLIST_ADD_SEARCH");
     static DELETE_FROM_PLAYLIST = new WsDestination("/mpd/playlist/remove", "DELETE_FROM_PLAYLIST");
     static MOVE_IN_PLAYLIST = new WsDestination("/mpd/playlist/move", "DELETE_FROM_PLAYLIST");
     static CLEAR_PLAYLIST = new WsDestination("/mpd/playlist/clear", "CLEAR_PLAYLIST");
@@ -27,6 +28,7 @@ export class WsDestination {
     static TREE = new WsDestination("/mpd/tree", "TREE");
     static UPDATE_DB = new WsDestination("/mpd/updateDb", "UPDATE_DB");
     static GET_STREAM_URL = new WsDestination("/mpd/streamPlayer", "GET_STREAM_URL");
+    static SEARCH = new WsDestination("/mpd/search", "SEARCH");
 
     static SET_REPEAT = new WsDestination("/mpd/status/repeat", "SET_REPEAT");
     static SET_CONSUME = new WsDestination("/mpd/status/consume", "SET_CONSUME");

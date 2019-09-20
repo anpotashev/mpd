@@ -14,8 +14,18 @@ export const STREAM_URL = 'STREAM_URL';
 export const OUTPUT = 'OUTPUT';
 export const STORED_PLAYLISTS = 'STORED_PLAYLISTS';
 export const SONG_TIME = 'SONG_TIME';
+export const SEARCH = 'SEARCH';
 
 
 
 export const CHANGE_STREAMING = 'CHANGE_STREAMING';
 export const CAPTURE_PATH = 'CAPTURE_PATH';
+
+
+//Search
+export const SAVE_CONDITION='SAVE_CONDITION';
+export const REMOVE_CONDITION='REMOVE_CONDITION';
+export const RENAME_CONDITION='RENAME_CONDITION';
+export const SHOW_NEW_CONDITION_WINDOW='SHOW_NEW_CONDITION_WINDOW';
+export const START_EDIT='START_EDIT';
+export const CANCEL_EDIT='CANCEL_EDIT';

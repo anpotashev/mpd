@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.connection.ConnectionService;
@@ -213,6 +214,29 @@ public class PlaylistServiceImpl implements PlaylistService {
     @ThrowIfNotConnected
     public void renameStored(String oldName, String newName) {
         connectionService.sendCommand(new MpdCommand(Command.RENAME, oldName, newName));
+    }
+
+     void addAll(List<ru.net.arh.mpd.search.model.TreeItem> items) {
+    }
+
+    @Override
+    @ThrowIfNotConnected
+    public void addAll(List<ru.net.arh.mpd.search.model.TreeItem> items, Integer pos) {
+        if (CollectionUtils.isEmpty(items)) return;
+        if (pos == null) {
+            List<MpdCommand> commands = items.stream()
+                    .map(item -> new MpdCommand(Command.ADD, item.getPath()))
+                    .collect(Collectors.toList());
+            connectionService.sendCommands(commands);
+            return;
+        }
+        final AtomicInteger currentPosition = new AtomicInteger(pos);
+        List<MpdCommand> commands = items.stream()
+                .map(item -> new MpdCommand(Command.ADD_ID, item.getPath(),
+                        currentPosition.getAndIncrement() + ""
+                ))
+                .collect(Collectors.toList());
+        connectionService.sendCommands(commands);
     }
 
 
