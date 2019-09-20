@@ -9,13 +9,13 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -42,7 +42,8 @@ public class MpdAnswersParser {
                 .collect(Collectors.toList());
     }
 
-    public static final String UTF8_BOM = "\uFEFF";
+    private static final String UTF8_BOM = "\uFEFF";
+
     private static String removeBom(String s) {
         return s.startsWith(UTF8_BOM)
                 ? s.substring(1)
@@ -128,19 +129,20 @@ public class MpdAnswersParser {
      * Группирует массив строк в массив массивов строк. Строка начинающаяся с "beginLine" служит индикатором начала нового элемента
      */
     private static List<List<String>> groupList(List<String> answer, String... beginLine) {
-        List<List<String>> result = new ArrayList<>();
-        for (String line : answer) {
-            if (line.startsWith(OK)) {
-                return result;
-            }
-            Boolean isNew = Arrays.stream(beginLine).map(s -> line.startsWith(s))
-                    .reduce(false, (a, b) -> a || b);
-            if (isNew) {
-                result.add(new ArrayList<>());
-            }
-            result.get(result.size() - 1).add(line);
-        }
-        throw new MpdException("got result without 'OK' at the end");
+        AtomicInteger counter = new AtomicInteger(0);
+        return new ArrayList(
+                answer.stream()
+                        .filter(s -> !s.startsWith("OK"))
+                        .collect(
+                                groupingBy(
+                                        s -> counter.addAndGet(isNew(s, beginLine) ? 1: 0)
+                                        , LinkedHashMap::new
+                                        , Collectors.toList()
+                                )
+                        ).values());
     }
 
+    private static boolean isNew(String value, String...values) {
+        return Arrays.stream(values).map(value::startsWith).reduce(Boolean::logicalOr).get();
+    }
 }
