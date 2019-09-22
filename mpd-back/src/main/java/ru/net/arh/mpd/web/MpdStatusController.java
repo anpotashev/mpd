@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import ru.net.arh.mpd.model.MpdErrorType;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.model.sockjs.SockJsResponse;
+import ru.net.arh.mpd.model.status.MpdShortStatus;
+import ru.net.arh.mpd.model.status.MpdSongTime;
 import ru.net.arh.mpd.model.status.MpdStatus;
 import ru.net.arh.mpd.services.setting.SettingService;
 import ru.net.arh.mpd.services.status.StatusService;
@@ -29,6 +31,13 @@ public class MpdStatusController {
     @MpdErrorType(type = ResponseType.STATUS)
     public SockJsResponse<MpdStatus> status() {
         return new SockJsResponse<>(ResponseType.STATUS, statusService.status());
+    }
+
+    @MessageMapping("/status/short")
+    @SendToUser(REPLY_QUEUE)
+    @MpdErrorType(type = ResponseType.SONG_TIME)
+    public SockJsResponse<MpdShortStatus> shortStatus() {
+        return new SockJsResponse<>(ResponseType.SONG_TIME, statusService.songTime());
     }
 
     @MessageMapping("/status/repeat")

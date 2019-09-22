@@ -10,7 +10,7 @@ interface IWsRequestPayload {
 
 interface IWsResponsePayload {
     type: string;
-    payload: any | undefined;
+    payload: any;
 }
 
 
@@ -51,7 +51,7 @@ export const socketMiddleware2 = (function () {
         let index = processing.indexOf(payload.type);
         if (index !== -1) {
             processing.splice(index, 1);
-            store.dispatch({type: payload.type + FAILED_SUFFIX});
+            store.dispatch({type: payload.type + FAILED_SUFFIX, payload: 'timeout getting answer'});
         }
     };
 
@@ -67,12 +67,12 @@ export const socketMiddleware2 = (function () {
     };
 
     const processFailedRequest = (store: any, action: any) => {
-        let payload: IWsResponsePayload = action.payload;
+        let payload = action.payload;
         let index = processing.indexOf(payload.type);
         if (index !== -1) processing.splice(index, 1);
         store.dispatch({
             type: payload.type + FAILED_SUFFIX,
-            payload: payload.payload
+            payload: payload.msg
         });
     };
 

@@ -2,8 +2,7 @@ package ru.net.arh.mpd.model;
 
 import lombok.EqualsAndHashCode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -13,25 +12,55 @@ import static com.google.common.collect.Lists.newArrayList;
 @EqualsAndHashCode
 public class MpdCommand {
 
+    private static Map<Command, MpdCommand> cache = new HashMap<>();
+
     private Command command;
 
     private List<String> params = new ArrayList<>();
 
-    public MpdCommand(Command command) {
+    private MpdCommand(Command command) {
         this.command = command;
     }
 
-    public MpdCommand(Command command, String... params) {
-        this(command);
-        this.params = newArrayList(params);
+    public static MpdCommand of(Command command) {
+        if (command.acceptParam) {
+            return new MpdCommand(command);
+        }
+        if (!cache.containsKey(command)) {
+            cache.putIfAbsent(command, new MpdCommand(command));
+        }
+        return cache.get(command);
     }
 
-    public void addParam(String param) {
-        params.add(param);
+    public MpdCommand add(String param) {
+        this.addParam(param);
+        return this;
+    }
+    public MpdCommand add(String...params) {
+        Arrays.stream(params).forEach(this::add);
+        return this;
     }
 
-    public void addParam(int param) {
-        params.add(param + "");
+    public MpdCommand add(boolean param) {
+        return this.add(param ? "1" : "0");
+    }
+
+    public MpdCommand add(int param) {
+        return this.add(param + "");
+    }
+
+    public MpdCommand add(int...params) {
+        Arrays.stream(params).forEach(this::add);
+        return this;
+    }
+
+    private void addParam(String param) {
+        if (this.command.acceptParam) {
+            params.add(param);
+            return;
+        }
+        //Попали сюда,значит косяк в сырцах
+        throw new Error("Command " + command + " doesn't accept parameters");
     }
 
     @Override
@@ -43,26 +72,21 @@ public class MpdCommand {
         return builder.toString();
     }
 
-    public void addParam(boolean value) {
-        addParam(value ? "1" : "0");
-    }
-
-
     public enum Command {
-        PLAY("play"),
-        PAUSE("pause"),
-        STOP("stop"),
-        PREV("previous"),
-        NEXT("next"),
+        PLAY("play", false),
+        PAUSE("pause", false),
+        STOP("stop", false),
+        PREV("previous", false),
+        NEXT("next", false),
         PLAYLIST_INFO("playlistinfo"),
-        STATUS("status"),
-        LSINFO("lsinfo"),
-        IDLE("idle"),
-        PING("ping"),
+        STATUS("status", false),
+        LSINFO("lsinfo", false),
+        IDLE("idle", false),
+        PING("ping", false),
         ENABLE_OUTPUT("enableoutput"),
         DISABLE_OUTPUT("disableoutput"),
         OUTPUTS("outputs"),
-        CLEAR("clear"),
+        CLEAR("clear", false),
         DELETE("delete"),
         MOVE("move"),
         SHUFFLE("shuffle"),
@@ -86,13 +110,14 @@ public class MpdCommand {
         ;
 
         private String str;
+        private boolean acceptParam;
 
         Command(String str) {
-            this.str = str;
+            this(str, true);
         }
-
-        public MpdCommand build(String...params) {
-            return new MpdCommand(this, params);
+        Command(String str, boolean acceptParam) {
+            this.str = str;
+            this.acceptParam = acceptParam;
         }
 
     }

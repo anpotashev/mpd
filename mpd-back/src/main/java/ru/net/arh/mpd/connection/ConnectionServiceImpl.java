@@ -126,7 +126,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new MpdException("Not connected");
         }
         try {
-            return idleRw.sendCommand(new MpdCommand(Command.IDLE).toString());
+            return idleRw.sendCommand(MpdCommand.of(Command.IDLE).toString());
         } catch (IOException e) {
             disconnect();
             throw new MpdException("IOException on sending command 'idle'. Disconnected.");

@@ -4,10 +4,12 @@ import { bindActionCreators } from 'redux';
 import './index.css';
 import * as Actions from 'actions';
 import {IShortStatusReducer} from "reducers/ShortStatus";
+import Loading from "../../../Loading";
 
 interface ProgressProps {
     shortStatus: IShortStatusReducer;
     seek: Function;
+    requestShortStatus: Function;
 }
 
 interface ProgressState {
@@ -22,10 +24,11 @@ const mapStateToProps = (state: any) => {
 
 const matDispatchToProps = (dispatch: any) => bindActionCreators(
     {
-        seek: Actions.playerSeek
+        seek: Actions.playerSeek,
+        requestShortStatus: Actions.requestShortStatus
     }, dispatch);
 
-class DummyProgress extends React.Component<ProgressProps, ProgressState> {
+class Progress extends React.Component<ProgressProps, ProgressState> {
 
     state: ProgressState = {
         tooltipText: ''
@@ -88,7 +91,13 @@ class DummyProgress extends React.Component<ProgressProps, ProgressState> {
 
 
     render() {
-        if (this.props.shortStatus.songTime.full <= 0) {
+        return <Loading request={this.props.requestShortStatus} state={this.props.shortStatus}>
+            {this.inside()}
+        </Loading>
+    }
+
+    inside() {
+        if (this.props.shortStatus.songTime === null || this.props.shortStatus.songTime.full <= 0) {
             return this.stoppedComponent();
         }
         if (!this.props.shortStatus.playing) {
@@ -111,5 +120,5 @@ class DummyProgress extends React.Component<ProgressProps, ProgressState> {
     }
 }
 
-export default connect(mapStateToProps, matDispatchToProps)(DummyProgress );
+export default connect(mapStateToProps, matDispatchToProps)(Progress );
 

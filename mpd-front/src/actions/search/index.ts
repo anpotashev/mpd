@@ -3,10 +3,9 @@ import {
     REMOVE_CONDITION,
     RENAME_CONDITION,
     SHOW_NEW_CONDITION_WINDOW,
-    START_EDIT, CANCEL_EDIT
+    START_EDIT, CANCEL_EDIT, ADD_SEARCH_BY_NAME
 } from "constants/ActionTypes";
-import {IBaseSearchCondition} from "../../reducers/Search";
-import {WS_REQUEST, WsDestination} from "../../constants/Socks";
+import {IBaseSearchCondition} from "reducers/Search";
 
 export const saveSearchCondition = (name: string, condition: IBaseSearchCondition) => {
     return {
@@ -50,13 +49,26 @@ export const hideNewConditionWindow = () => {
         type: SHOW_NEW_CONDITION_WINDOW
     }
 };
-export const startEdit = () => {
+export const startEdit = (name?: string) => {
     return {
-        type: START_EDIT
+        type: START_EDIT,
+        payload: {
+            name: name
+        }
     }
 };
 export const cancelEdit = () => {
     return {
         type: CANCEL_EDIT
+    }
+};
+
+export const addSearchByName = (name: string, pos?: number) => {
+    return {
+        type: ADD_SEARCH_BY_NAME,
+        payload: {
+            name: name,
+            pos: pos
+        }
     }
 };

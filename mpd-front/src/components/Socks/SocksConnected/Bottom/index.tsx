@@ -18,13 +18,13 @@ export const Bottom = () => <>
     </SplitterLayout></>;
 
 const left = () => <LeftPanel>
-    <LeftPanelElement id="first" title="Tree" default={true}>
+    <LeftPanelElement id="first" title="Tree" default={true}  iconClass="glyphicon glyphicon-list-alt">
         <Tree />
     </LeftPanelElement>
-    <LeftPanelElement id="second" title="Playlists">
+    <LeftPanelElement id="second" title="Playlists" iconClass="glyphicon glyphicon-th-list">
         <StoredPlaylists/>
     </LeftPanelElement>
-    <LeftPanelElement id="third" title="Search">
+    <LeftPanelElement id="third" title="Search" iconClass="glyphicon glyphicon-search">
         <SearchComponent/>
     </LeftPanelElement>
 </LeftPanel>;

@@ -31,7 +31,7 @@ public class OutputsServiceImpl implements OutputsService {
     public List<MpdOutput> outputs() {
         return MpdAnswersParser.parseAll(
                 MpdOutput.class,
-                connectionService.sendCommand(Command.OUTPUTS.build())
+                connectionService.sendCommand(MpdCommand.of(Command.OUTPUTS))
         );
     }
 
@@ -39,8 +39,8 @@ public class OutputsServiceImpl implements OutputsService {
     @ThrowIfNotConnected
     public void save(MpdOutput output) {
         MpdCommand command = output.isEnabled()
-                ? Command.ENABLE_OUTPUT.build(output.getId() + "")
-                : Command.DISABLE_OUTPUT.build(output.getId() + "");
+                ? MpdCommand.of(Command.ENABLE_OUTPUT).add(output.getId())
+                : MpdCommand.of(Command.DISABLE_OUTPUT).add(output.getId() + "");
         connectionService.sendCommand(command);
     }
 

@@ -9,6 +9,7 @@ import * as Actions from "actions";
 import {Bottom} from "./Bottom";
 import StreamPlayer from './StreamPlayer';
 import Progress from './Progress';
+import {PlaylistPanel} from "./Playlist/PlaylistPanel";
 
 interface ISockConnectedProps {
     connectionState: IMpdConnection;
@@ -31,6 +32,7 @@ const SocksConnectedComponent = (props: ISockConnectedProps) => <Loading request
                 {props.connectionState.connected ? <>
                     <StreamPlayer/>
                     <Progress/>
+                    <PlaylistPanel/>
                     <Bottom/></> : <></> }
     </></Loading>;
 

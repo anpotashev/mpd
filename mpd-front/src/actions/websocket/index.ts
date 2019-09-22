@@ -181,7 +181,7 @@ export const getStreamUrl = (timeout: number = DEFAULT_TIMEOUT) => {
     return {
         type: WS_REQUEST,
         payload: {
-            type: WsDestination.GET_STREAM_URL,
+            type: WsDestination.STREAM_URL,
             timeout: timeout,
             msg: {}
         }
@@ -230,7 +230,7 @@ export const getOutputs = (timeout: number = DEFAULT_TIMEOUT) => {
     return {
         type: WS_REQUEST,
         payload: {
-            type: WsDestination.GET_OUTPUTS,
+            type: WsDestination.OUTPUT,
             timeout: timeout,
             msg: {}
         }
@@ -339,6 +339,17 @@ export const addSearch = (condition: IBaseSearchCondition, pos?: number) => {
         payload: {
             type: WsDestination.PLAYLIST_ADD_SEARCH,
             msg: {condition: condition, pos: pos}
+        }
+    }
+};
+
+export const requestShortStatus = (timeout: number = 1000) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.SONG_TIME,
+            timeout: timeout,
+            msg: {}
         }
     }
 };

@@ -40,7 +40,7 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     @Cacheable(cacheNames = CacheNames.Constants.TREE)
     @MpdIdleEventMethod(types = {MpdIdleType.DATABASE}, eventType = MpdEventType.TREE_CHANGED)
     public TreeItem tree() {
-        List<String> list = connectionService.sendCommand(Command.LISTALL.build());
+        List<String> list = connectionService.sendCommand(MpdCommand.of(Command.LISTALL));
         return mpdListAllParser.parse(list);
     }
 
@@ -49,7 +49,7 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     @Cacheable(cacheNames = CacheNames.Constants.FULL_TREE)
     @MpdIdleEventMethod(types = {MpdIdleType.DATABASE}, eventType = MpdEventType.FULL_TREE_CHANGED)
     public TreeItem fullTree() {
-        List<String> list = connectionService.sendCommand(Command.LISTALLINFO.build());
+        List<String> list = connectionService.sendCommand(MpdCommand.of(Command.LISTALLINFO));
         return  mpdListAllParser.parse(list);
     }
 
@@ -60,31 +60,24 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     @Cacheable(cacheNames = CacheNames.Constants.TREE)
     @ThrowIfNotConnected
     public List<TreeItem> children(final String path) {
-        MpdCommand mpdCommand = Command.LSINFO.build();
-        mpdCommand.addParam(path);
-        List<String> list = connectionService.sendCommand(mpdCommand);
-        List<TreeItem> children = MpdAnswersParser.parseAll(TreeItem.class, list);
-        return children;
+        List<String> list = connectionService.sendCommand(MpdCommand.of(Command.LSINFO).add(path));
+        return MpdAnswersParser.parseAll(TreeItem.class, list);
     }
 
     @Override
     @ThrowIfNotConnected
     public void update(String path) {
-        MpdCommand command = Command.UPDATE.build();
-        command.addParam(path);
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(MpdCommand.of(Command.UPDATE).add(path));
     }
 
     @Override
     @ThrowIfNotConnected
     public void add(String path) {
-        MpdCommand command = Command.LISTALL.build();
-        command.addParam(path);
         List<TreeItem> treeItems = MpdAnswersParser
-                .parseAll(TreeItem.class, connectionService.sendCommand(command));
+                .parseAll(TreeItem.class, connectionService.sendCommand(MpdCommand.of(Command.LISTALL).add(path)));
         List<MpdCommand> commands = treeItems.stream()
                 .filter(item -> item.getFile() != null)
-                .map(item -> Command.ADD.build(item.getFile()))
+                .map(item -> MpdCommand.of(Command.ADD).add(item.getFile()))
                 .collect(Collectors.toList());
         connectionService.sendCommands(commands);
     }

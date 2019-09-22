@@ -5,7 +5,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import ru.net.arh.mpd.model.MpdErrorType;
-import ru.net.arh.mpd.model.player.PlayerCmdRq;
 import ru.net.arh.mpd.model.player.PlayerCommand;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.services.player.PlayerService;

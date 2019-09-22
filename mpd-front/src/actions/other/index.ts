@@ -1,4 +1,4 @@
-import {CAPTURE_PATH, CHANGE_STREAMING} from "constants/ActionTypes";
+import {CAPTURE_PATH, CHANGE_STREAMING, CLEAR_ERRORS} from "constants/ActionTypes";
 import {ICapturedObject} from "../../reducers/Dnd";
 import {
     addFileToCurrentPlaylist, addSearch,
@@ -18,10 +18,14 @@ export const changeStreaming = (newState: boolean) => {
 };
 
 export const captureObject = (object: ICapturedObject) => {
-    console.log('caputuring...' , object);
     return {
         type: CAPTURE_PATH,
         payload: object
+    }
+};
+export const clearErrors = () => {
+    return {
+        type: CLEAR_ERRORS
     }
 };
 

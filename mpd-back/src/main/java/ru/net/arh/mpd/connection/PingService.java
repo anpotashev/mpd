@@ -25,7 +25,7 @@ public class PingService {
     @Scheduled(fixedDelayString = "${mpdserver.pinginterval:${mpdserver.defaultpinginterval}}")
     private void ping() {
         if (connectionService.isConnected()) {
-            connectionService.sendCommand(new MpdCommand(Command.PING));
+            connectionService.sendCommand(MpdCommand.of(Command.PING));
         }
     }
 }
