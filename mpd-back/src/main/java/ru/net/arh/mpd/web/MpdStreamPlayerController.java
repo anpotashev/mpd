@@ -16,7 +16,7 @@ import ru.net.arh.mpd.model.tree.TreeItem;
 @PropertySources({
     @PropertySource("classpath:/config/application.yaml")
     ,
-    @PropertySource(value = "file:${MPD_CONFIG}/mpd.properties", ignoreResourceNotFound = true)
+    @PropertySource(value = "file:./custom/mpd.properties", ignoreResourceNotFound = true)
 })
 public class MpdStreamPlayerController {
 
