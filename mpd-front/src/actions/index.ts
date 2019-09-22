@@ -32,12 +32,14 @@ export {onSocketConnected,
     moveInPlaylist,
     search,
     addSearch,
+    requestShortStatus
 } from './websocket';
 
 export {
     changeStreaming,
     captureObject,
-    releaseObject
+    releaseObject,
+    clearErrors
 } from './other';
 
 export {hideNewConditionWindow,
@@ -46,6 +48,7 @@ export {hideNewConditionWindow,
     saveSearchCondition,
     showNewConditionWindow,
     startEdit,
-    cancelEdit
+    cancelEdit,
+    addSearchByName
 
 } from './search'

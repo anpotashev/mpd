@@ -42,22 +42,14 @@ public class MpdPlaylistController {
     @MessageMapping("/playlist/add")
     @MpdErrorType(type = ResponseType.PLAYLIST_ADD)
     public void add(@MapKeys(keys = {"path"}) Map<String, Object> map) {
-        if (map.get("pos") == null) {
-            playlistService.add((String)map.get("path"));
-        } else {
-            playlistService.addToPos((String)map.get("path"), (Integer) map.get("pos"));
-        }
+        playlistService.addToPos((String)map.get("path"), (Integer) map.getOrDefault("pos", null));
     }
 
 
     @MessageMapping("/playlist/addFile")
     @MpdErrorType(type = ResponseType.PLAYLIST_ADD_FILE)
     public void addFile(@MapKeys(keys = {"path"}) Map<String, Object> map) {
-        if (map.containsKey("pos")) {
-            playlistService.addFileToPos((String)map.get("path"), (Integer) map.get("pos"));
-        } else {
-            playlistService.addFile((String) map.get("path"));
-        }
+        playlistService.addFileToPos((String)map.get("path"), (Integer) map.getOrDefault("pos", null));
     }
 
     /**
@@ -76,11 +68,7 @@ public class MpdPlaylistController {
     @MessageMapping("/playlist/shuffle")
     @MpdErrorType(type = ResponseType.PLAYLIST_SHUFFLE)
     public void shuffle(Map<String, Integer> map) {
-        if (map.containsKey("from") && map.containsKey("to")) {
-            playlistService.shuffle(map.get("from"), map.get("to"));
-        } else {
-            playlistService.shuffle();
-        }
+        playlistService.shuffle(map.getOrDefault("from", null), map.getOrDefault("to", null));
     }
 
     @MessageMapping("/playlist/remove")

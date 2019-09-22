@@ -1,6 +1,3 @@
-// declare const IS_PRODUCTION: boolean;
-
-// export const WS_ROOT = IS_PRODUCTION ? 'websocket' : '/ws';
 export const WS_ROOT = '/stomp';
 
 export const DEFAULT_TIMEOUT = 1000;
@@ -24,10 +21,11 @@ export class WsDestination {
     static SHUFFLE_PLAYLIST = new WsDestination("/mpd/playlist/shuffle", "TREE");
     static CHANGE_CONNECTION_STATE = new WsDestination("/mpd/connectionState/change", "CHANGE_CONNECTION_STATE");
     static STATUS = new WsDestination("/mpd/status", "STATUS");
+    static SONG_TIME = new WsDestination("/mpd/status/short", "SONG_TIME");
     static PLAYER_PLAYID = new WsDestination("/mpd/player/playid", "PLAYER_PLAYID");
     static TREE = new WsDestination("/mpd/tree", "TREE");
     static UPDATE_DB = new WsDestination("/mpd/updateDb", "UPDATE_DB");
-    static GET_STREAM_URL = new WsDestination("/mpd/streamPlayer", "GET_STREAM_URL");
+    static STREAM_URL = new WsDestination("/mpd/streamPlayer", "STREAM_URL");
     static SEARCH = new WsDestination("/mpd/search", "SEARCH");
 
     static SET_REPEAT = new WsDestination("/mpd/status/repeat", "SET_REPEAT");
@@ -35,7 +33,7 @@ export class WsDestination {
     static SET_RANDOM = new WsDestination("/mpd/status/random", "SET_RANDOM");
     static SET_SINGLE = new WsDestination("/mpd/status/single", "SET_SINGLE");
 
-    static GET_OUTPUTS = new WsDestination("/mpd/outputs", "GET_OUTPUTS");
+    static OUTPUT = new WsDestination("/mpd/outputs", "OUTPUT");
     static SET_OUTPUT = new WsDestination("/mpd/output/change", "SET_OUTPUT");
     static STORED_PLAYLISTS = new WsDestination("/mpd/storedPlaylist", "STORED_PLAYLISTS");
     static STORED_PLAYLISTS_LOAD = new WsDestination("/mpd/storedPlaylist/load", "STORED_PLAYLISTS_LOAD");

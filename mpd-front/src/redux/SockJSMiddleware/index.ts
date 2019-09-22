@@ -67,8 +67,8 @@ export const socketMiddleware = (function () {
             setTimeout(() => tryConnect(store), 5000);
         };
         client.onConnect = () => onOpen(store);
-        client.debug = console.log;
-        // client.debug = ()=>{};
+        // client.debug = console.log;
+        client.debug = ()=>{};
         client.activate();
     };
 

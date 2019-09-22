@@ -8,6 +8,7 @@ import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.connection.ConnectionService;
 import ru.net.arh.mpd.model.MpdCommand;
+import ru.net.arh.mpd.model.MpdCommand.Command;
 import ru.net.arh.mpd.model.MpdIdleType;
 import ru.net.arh.mpd.model.events.MpdEventType;
 import ru.net.arh.mpd.model.events.MpdIdleEventMethod;
@@ -22,6 +23,9 @@ public class StatusServiceImpl implements StatusService {
     @Autowired
     private ConnectionService connectionService;
 
+    @Autowired
+    private StatusService statusService;
+
     @Override
     @ThrowIfNotConnected
     @Cacheable(cacheNames = CacheNames.Constants.STATUS)
@@ -29,21 +33,15 @@ public class StatusServiceImpl implements StatusService {
     public MpdStatus status() {
         return MpdAnswersParser.parse(
                 MpdStatus.class,
-                connectionService.sendCommand(
-                        new MpdCommand(MpdCommand.Command.STATUS)
-                )
+                connectionService.sendCommand(MpdCommand.of(Command.STATUS))
         );
     }
 
     @Override
     @ThrowIfNotConnected
+    @MpdIdleEventMethod(eventType = MpdEventType.SONG_TIME, types = {MpdIdleType.PLAYLIST, MpdIdleType.PLAYER, MpdIdleType.OPTIONS})
     public MpdShortStatus songTime() {
-        MpdStatus status = MpdAnswersParser.parse(
-                MpdStatus.class,
-                connectionService.sendCommand(
-                        new MpdCommand(MpdCommand.Command.STATUS)
-                )
-        );
+        MpdStatus status = statusService.status();
         MpdShortStatus result = new MpdShortStatus();
         result.setSongTime(status.getTime());
         result.setSongPos(status.getSong());

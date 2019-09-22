@@ -6,9 +6,8 @@ import {IPlaylistItem, IPlaylistReducer} from "reducers/Playlist";
 import {Table} from "react-bootstrap";
 import Loading from "components/Loading";
 import {IStatusReducer} from "reducers/Status";
-import './index.css'
-import {PlaylistPanel} from "./PlaylistPanel";
-import {ICapturedObject} from "../../../../reducers/Dnd";
+import './index.css';
+import {ICapturedObject} from "reducers/Dnd";
 
 interface IPlaylistProps {
     playlist: IPlaylistReducer;
@@ -71,7 +70,10 @@ const PlaylistComponent =
         <div className={(props.capturedObject.type!=='none'&& props.capturedObject.type !=='pos') ? 'full dragging' : 'full'}
              onMouseUp={e => props.releaseObject(props.capturedObject)}
         >
-          <PlaylistPanel/>
+            <div>
+          {/*<PlaylistPanel/>*/}
+            </div>
+            <div>
           <Table className="disable-select">
             <thead>
             <tr>
@@ -108,6 +110,7 @@ const PlaylistComponent =
             </tr>)}
             </tbody>
           </Table>
+            </div>
         </div>
       </Loading>;
 export const Playlist = connect(mapStateToProps, mapDispatchToProps)(PlaylistComponent);

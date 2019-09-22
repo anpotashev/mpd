@@ -25,19 +25,12 @@ public interface PlaylistService {
     void clear();
 
     /**
-     * Добавить объект path в текущий плейлист.
-     *
-     * @param path
-     */
-    void add(String path);
-
-    /**
-     * Добавить объект path в текущий плейлист на указанную позицию.
+     * Добавить объект path в текущий плейлист на указанную позицию или в конец, если она null
      *
      * @param path
      * @param position
      */
-    void addToPos(String path, int position);
+    void addToPos(String path, Integer position);
 
     /**
      * Удалить объект item из текущего плейлиста.
@@ -69,17 +62,12 @@ public interface PlaylistService {
     void move(int fromStart, int fromEnd, int to);
 
     /**
-     * Перемешать текущий плейлист.
-     */
-    void shuffle();
-
-    /**
-     * Перемешать текущий плейлист с позиции start по позицию end.
+     * Перемешать текущий плейлист с позиции start по позицию end. Если они null, то перемешивает весь плейлист
      *
      * @param start
      * @param end
      */
-    void shuffle(int start, int end);
+    void shuffle(Integer start, Integer end);
 
     /**
      * Получить список сохраненных плейлистов.
@@ -97,13 +85,7 @@ public interface PlaylistService {
     Playlist storedPlaylist(String name);
 
     /**
-     * Добавить файл
-     *
-     * @param value
-     */
-    void addFile(String value);
-
-    /**
+     * Добавить файл в текущий плейлист в указанную позицию (в конец если она null)
      * @param value
      * @param position
      */
@@ -113,11 +95,6 @@ public interface PlaylistService {
      * @param value
      */
     void load(String value);
-
-    /**
-     * @param value
-     */
-    void addStored(String value);
 
     /**
      * @param value

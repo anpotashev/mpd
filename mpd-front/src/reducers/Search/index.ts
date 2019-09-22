@@ -34,6 +34,7 @@ export interface NamedSearchCondition {
 export interface Conditions {
     conditions: NamedSearchCondition[];
     isEditing: boolean;
+    editCondition?: NamedSearchCondition;
 }
 
 const loadFromCookie = () => getArrayCookie("conditions");
@@ -55,7 +56,7 @@ export default function (state: Conditions = emptyConditions, action: any): Cond
             saveInCookie(conditions);
             return result;
         case REMOVE_CONDITION:
-            let index = conditions.findIndex(value => value.name===action.name);
+            let index = conditions.findIndex(value => value.name===action.payload.name);
             conditions.splice(index, 1);
             saveInCookie(conditions);
             return {conditions: conditions, isEditing: false};
@@ -66,6 +67,18 @@ export default function (state: Conditions = emptyConditions, action: any): Cond
             saveInCookie(conditions);
             return {conditions: conditions, isEditing: false};
         case START_EDIT:
+            if (action.payload.name !== undefined) {
+                let condition4edit = conditions.find(value => value.name===action.payload.name);
+                if (condition4edit !== undefined) {
+                    return {
+                        conditions: conditions,
+                        isEditing: true,
+                        editCondition: {name: action.payload.name, condition: condition4edit}
+                    };
+                } else {
+                    return state;
+                }
+            }
             return {conditions: conditions, isEditing: true};
         case CANCEL_EDIT:
             return {conditions: conditions, isEditing: false};

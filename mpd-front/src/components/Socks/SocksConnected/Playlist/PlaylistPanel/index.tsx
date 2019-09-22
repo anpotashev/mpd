@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {Player} from "../../Player";
 import {ICapturedObject} from "reducers/Dnd";
 import '../index.css';
+import AddUrl from "./AddUrl";
 
 interface IPlaylistPanelProps {
     clearPlaylist: Function;
@@ -47,6 +48,7 @@ const PlaylistPanelComponent = (props: IPlaylistPanelProps) => <div text-align="
             onClick={() => props.shufflePlaylist()}>
         <span className="glyphicon glyphicon-random" aria-hidden="true"></span>
     </button>
+    <AddUrl/>
     <Player/>
 </div>;
 

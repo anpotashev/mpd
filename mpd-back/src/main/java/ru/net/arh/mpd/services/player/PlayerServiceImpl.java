@@ -1,6 +1,5 @@
 package ru.net.arh.mpd.services.player;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,56 +22,49 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     @ThrowIfNotConnected
     public void play() {
-        connectionService.sendCommand(new MpdCommand(Command.PLAY));
+        connectionService.sendCommand(MpdCommand.of(Command.PLAY));
     }
 
     @Override
     @ThrowIfNotConnected
     public void pause() {
-        connectionService.sendCommand(new MpdCommand(Command.PAUSE));
+        connectionService.sendCommand(MpdCommand.of(Command.PAUSE));
     }
 
     @Override
     @ThrowIfNotConnected
     public void stop() {
-        connectionService.sendCommand(new MpdCommand(Command.STOP));
+        connectionService.sendCommand(MpdCommand.of(Command.STOP));
     }
 
     @Override
     @ThrowIfNotConnected
     public void prev() {
-        connectionService.sendCommand(new MpdCommand(Command.PREV));
+        connectionService.sendCommand(MpdCommand.of(Command.PREV));
     }
 
     @Override
     @ThrowIfNotConnected
     public void next() {
-        connectionService.sendCommand(new MpdCommand(Command.NEXT));
+        connectionService.sendCommand(MpdCommand.of(Command.NEXT));
     }
 
     @Override
     @ThrowIfNotConnected
     public void playPos(int songPos) {
-        MpdCommand command = new MpdCommand(Command.PLAY);
-        command.addParam(songPos + "");
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(MpdCommand.of(Command.PLAY).add(songPos));
     }
 
     @Override
     @ThrowIfNotConnected
     public void playId(int id) {
-        MpdCommand command = new MpdCommand(Command.PLAY_ID);
-        command.addParam(id + "");
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(MpdCommand.of(Command.PLAY_ID).add(id));
     }
 
     @Override
     @ThrowIfNotConnected
     public void seek(int songPos, int seekPos) {
-        MpdCommand command = new MpdCommand(Command.SEEK);
-        command.addParam(songPos + "");
-        command.addParam(seekPos + "");
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(MpdCommand.of(Command.SEEK).add(songPos).add(seekPos));
     }
 
     @Override

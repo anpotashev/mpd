@@ -14,7 +14,8 @@ export const LeftPanelElement = (props: any) => <div className="panel panel-defa
   <div className="panel-heading">
     <h4 className="panel-title">
       <a data-toggle="collapse" data-parent="#accordion"
-         href={"#" + props.id}>{props.title}</a>
+         href={"#" + props.id}>{props.iconClass !== undefined && <span
+          className={props.iconClass}/>} {props.title}</a>
     </h4>
   </div>
   <div id={props.id}

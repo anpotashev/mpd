@@ -18,32 +18,24 @@ public class SettingServiceImpl implements SettingService {
     @Override
     @ThrowIfNotConnected
     public void random(boolean value) {
-        MpdCommand command = new MpdCommand(Command.RANDOM);
-        command.addParam(value);
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(MpdCommand.of(Command.RANDOM).add(value));
     }
 
     @Override
     @ThrowIfNotConnected
     public void repeat(boolean value) {
-        MpdCommand command = new MpdCommand(Command.REPEAT);
-        command.addParam(value);
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(MpdCommand.of(Command.REPEAT).add(value));
     }
 
     @Override
     @ThrowIfNotConnected
     public void single(boolean value) {
-        MpdCommand command = new MpdCommand(Command.SINGLE);
-        command.addParam(value);
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(MpdCommand.of(Command.SINGLE).add(value));
     }
 
     @Override
     @ThrowIfNotConnected
     public void consume(boolean value) {
-        MpdCommand command = new MpdCommand(Command.CONSUME);
-        command.addParam(value);
-        connectionService.sendCommand(command);
+        connectionService.sendCommand(MpdCommand.of(Command.CONSUME).add(value));
     }
 }
