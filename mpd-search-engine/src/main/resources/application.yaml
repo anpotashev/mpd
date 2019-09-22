@@ -2,4 +2,4 @@ server:
   port: 9090
 
 mpdback:
-  defaultAddress: ws://localhost:8080/javaclient
+  defaultAddress: ws://mpd-back:8087/javaclient

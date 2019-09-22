@@ -4,5 +4,5 @@ mpdserver.password: 12345678
 mpdserver.pingInterval: 15000
 mpdserver.streamUrl: http://localhost:8000/mpd.mp3
 
-searchEngine.url: http://localhost:9090/search
+searchEngine.url: http://mpd-search:9090/search
 
