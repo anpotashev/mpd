@@ -11,8 +11,8 @@ wrapper {
 }
 
 task initCustom(type: Copy) {
-    from 'mpd-back/src/main/resources/config/mpd.properties.template'
+    from 'mpd-back/src/main/resources/config/mpd.properties.template', 'mpd-search-engine/src/main/resources/mpd-search.properties.template'
     into 'custom'
-    rename 'mpd.properties.template', 'mpd.properties'
+    rename '(.+)\\.template', '$1'
 }
 
