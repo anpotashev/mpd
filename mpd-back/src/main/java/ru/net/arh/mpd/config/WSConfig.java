@@ -1,5 +1,7 @@
 package ru.net.arh.mpd.config;
 
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
@@ -26,9 +28,14 @@ import ru.net.arh.mpd.web.LogginHandlerDecorator;
 @EnableAutoConfiguration
 @EnableCaching
 @EnableScheduling
+@PropertySources({
+        @PropertySource("classpath:/config/application.yaml")
+        ,
+        @PropertySource(value = "file:./custom/mpd.properties", ignoreResourceNotFound = true)
+})
 public class WSConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Value("${searchEngine.url:http://localhost:9090/search}")
+    @Value("${searchEngine.url:${searchEngine.defaultUrl}}")
     private String searchEngineUrl;
 
     @Override

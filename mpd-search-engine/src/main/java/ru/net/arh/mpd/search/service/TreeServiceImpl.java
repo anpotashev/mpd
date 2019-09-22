@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.scheduling.TaskScheduler;
@@ -26,11 +28,16 @@ import java.util.List;
  * Импелментация сервиса, в основу которого положено взаимодействие с приложением mpd-back по ws протоколу.
  */
 @Service
+@PropertySources({
+        @PropertySource("classpath:application.yaml")
+        ,
+        @PropertySource(value = "file:./custom/mpd-search.properties", ignoreResourceNotFound = true)
+})
 public class TreeServiceImpl implements TreeService {
 
     private static final int MAX_TEXT_MESSAGE_BUFFER_SIZE=20*1024*1024;
 
-    @Value("${mpdback.ws.address}")
+    @Value("${mpdback.address:${mpdback.defaultAddress}}")
     private String URL;
     @Autowired
     private MyStompSessionHandler sessionHandler;

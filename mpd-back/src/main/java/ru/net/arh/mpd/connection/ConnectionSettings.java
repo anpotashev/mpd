@@ -17,15 +17,15 @@ import org.springframework.stereotype.Component;
 @PropertySources({
         @PropertySource("classpath:/config/application.yaml")
         ,
-        @PropertySource(value = "file:${MPD_CONFIG}/mpd.properties", ignoreResourceNotFound = true)
+        @PropertySource(value = "file:./custom/mpd.properties", ignoreResourceNotFound = true)
 })
 public class ConnectionSettings {
 
-    @Value("${mpdserver.host:${mpdserver.defaulthost}}")
+    @Value("${mpdserver.host:${mpdserver.defaultHost}}")
     private String host;
-    @Value("${mpdserver.port:${mpdserver.defaultport}}")
+    @Value("${mpdserver.port:${mpdserver.defaultPort}}")
     private Integer port;
-    @Value("${mpdserver.password:${mpdserver.defaultpassword}}")
+    @Value("${mpdserver.password:${mpdserver.defaultPassword}}")
     private String password = "";
 
 }
