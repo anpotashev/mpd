@@ -174,6 +174,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     private void addToPlaylist(List<String> paths, Integer pos) {
+        if (paths.isEmpty()) return;
         if (pos == null) {
             List<MpdCommand> commands = paths.stream()
                     .map(s->MpdCommand.of(Command.ADD).add(s))

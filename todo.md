@@ -20,7 +20,7 @@
  - [x] рефакторинг PlaylistService - объединить ряд методов
         - done + new MpdCommand(Command...) заменена на Command.<COMMAND>.build(...)
  - [ ] тесты
- - [ ] custom конфигурация
+ - [x] custom конфигурация
  - [ ] jenkins джоба на выкладку новой версии в "пром"
  - [x] добавить получение ошибки при ошибках установления соединения с mpd.
          - throw MpdEx в catch блоке
