@@ -1,6 +1,6 @@
 export const WS_ROOT = '/stomp';
 
-export const DEFAULT_TIMEOUT = 1000;
+export const DEFAULT_TIMEOUT = 3000;
 
 export const WS_SUCCESS = 'WS_SUCCESS';
 export const WS_FAILED = 'WS_FAILED';

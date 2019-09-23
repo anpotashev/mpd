@@ -343,7 +343,7 @@ export const addSearch = (condition: IBaseSearchCondition, pos?: number) => {
     }
 };
 
-export const requestShortStatus = (timeout: number = 1000) => {
+export const requestShortStatus = (timeout: number = DEFAULT_TIMEOUT) => {
     return {
         type: WS_REQUEST,
         payload: {
