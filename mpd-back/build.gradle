@@ -37,16 +37,16 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtime ('org.webjars:jquery:3.2.1')  { transitive = false }
-    runtime ('org.webjars.npm:jplayer:2.9.2')  { transitive = false }
-    runtime ('org.webjars.npm:react:16.9.0')  { transitive = false }
-    runtime ('org.webjars.npm:react-dom:16.9.0')  { transitive = false }
-    runtime ('org.webjars.npm:bootstrap:3.4.1')  { transitive = false }
-
+    runtimeOnly ('org.webjars:jquery:3.2.1')  { transitive = false }
+    runtimeOnly ('org.webjars.npm:jplayer:2.9.2')  { transitive = false }
+    runtimeOnly ('org.webjars.npm:react:16.9.0')  { transitive = false }
+    runtimeOnly ('org.webjars.npm:react-dom:16.9.0')  { transitive = false }
+    runtimeOnly ('org.webjars.npm:bootstrap:3.4.1')  { transitive = false }
+    runtimeOnly group: 'org.webjars', name: 'sockjs-client', version: '1.1.2'
     runtimeOnly project(':mpd-front')
+
     implementation project(':search-api')
 
-    runtime group: 'org.webjars', name: 'sockjs-client', version: '1.1.2'
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
     implementation group: 'com.google.guava', name: 'guava', version: '28.0-jre'
