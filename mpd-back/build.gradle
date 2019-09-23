@@ -37,6 +37,12 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+    runtime ('org.webjars:jquery:3.2.1')  { transitive = false }
+    runtime ('org.webjars.npm:jplayer:2.9.2')  { transitive = false }
+    runtime ('org.webjars.npm:react:16.9.0')  { transitive = false }
+    runtime ('org.webjars.npm:react-dom:16.9.0')  { transitive = false }
+    runtime ('org.webjars.npm:bootstrap:3.4.1')  { transitive = false }
+
     runtimeOnly project(':mpd-front')
     implementation project(':search-api')
 
