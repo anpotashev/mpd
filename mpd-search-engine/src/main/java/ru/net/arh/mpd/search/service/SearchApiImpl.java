@@ -27,7 +27,6 @@ public class SearchApiImpl implements SearchApi {
         }
         Predicate<TreeItem> predicate = ConditionUtil.getPredicate(searchCondition);
         return treeService.getItems().stream()
-                .filter(treeItem -> treeItem.getFile() != null)
                 .filter(predicate)
                 .collect(Collectors.toList());
     }
