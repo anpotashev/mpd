@@ -23,9 +23,6 @@ public class StatusServiceImpl implements StatusService {
     @Autowired
     private ConnectionService connectionService;
 
-    @Autowired
-    private StatusService statusService;
-
     @Override
     @ThrowIfNotConnected
     @Cacheable(cacheNames = CacheNames.Constants.STATUS)
@@ -41,7 +38,7 @@ public class StatusServiceImpl implements StatusService {
     @ThrowIfNotConnected
     @MpdIdleEventMethod(eventType = MpdEventType.SONG_TIME, types = {MpdIdleType.PLAYLIST, MpdIdleType.PLAYER, MpdIdleType.OPTIONS})
     public MpdShortStatus songTime() {
-        MpdStatus status = statusService.status();
+        MpdStatus status = status(); //вызов напрямую, т.к. иначе кэш
         MpdShortStatus result = new MpdShortStatus();
         result.setSongTime(status.getTime());
         result.setSongPos(status.getSong());
