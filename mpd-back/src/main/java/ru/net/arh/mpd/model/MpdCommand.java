@@ -1,8 +1,10 @@
 package ru.net.arh.mpd.model;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -18,8 +20,15 @@ public class MpdCommand {
 
     private List<String> params = new ArrayList<>();
 
+    public MpdCommand() {
+    }
+
     private MpdCommand(Command command) {
         this.command = command;
+    }
+
+    public static MpdCommand of(List<MpdCommand> commands) {
+        return new MpdListCommand(commands);
     }
 
     public static MpdCommand of(Command command) {
@@ -106,7 +115,8 @@ public class MpdCommand {
         LOAD("load"),
         RM("rm"),
         SAVE("save"),
-        RENAME("rename")
+        RENAME("rename"),
+        PASSWORD("password")
         ;
 
         private String str;
@@ -120,5 +130,20 @@ public class MpdCommand {
             this.acceptParam = acceptParam;
         }
 
+    }
+
+    private static class MpdListCommand extends MpdCommand {
+        private List<MpdCommand> commands;
+
+        public MpdListCommand(List<MpdCommand> commands) {
+            this.commands = commands;
+        }
+
+        @Override
+        public String toString() {
+            return "command_list_begin\n" +
+                commands.stream().map(cmd -> cmd.toString()).collect(Collectors.joining("\n"))
+                + "\ncommand_list_end";
+        }
     }
 }

@@ -1,71 +1,66 @@
 package ru.net.arh.mpd.connection.rw;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import ru.net.arh.mpd.model.MpdCommand;
 import ru.net.arh.mpd.model.exception.MpdException;
-
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static ru.net.arh.mpd.model.MpdCommand.Command.PASSWORD;
 
 @Slf4j
 public class MpdReaderWriter {
 
-    private BufferedReader reader;
-    private BufferedWriter writer;
+    private MpdReader reader;
+    private MpdWriter writer;
     private Socket socket;
+    private static final Pattern VERSION_PATTERN = Pattern.compile("OK MPD (.*)");
+    @Getter
+    private String version;
 
     public MpdReaderWriter(Socket socket, String password) throws IOException {
         this.socket = socket;
         log.debug("creating MpdReaderWriter object");
-        reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream(), Charset.forName("UTF-8")));
-        writer = new BufferedWriter(new OutputStreamWriter(this.socket.getOutputStream(), Charset.forName("UTF-8")));
-        readMpdVersion();
-        if (password != null && !password.isEmpty()) {
-            enterPassword(password);
+        reader = new MpdReader(new InputStreamReader(this.socket.getInputStream(), Charset.forName("UTF-8")));
+        writer = new MpdWriter(new OutputStreamWriter(this.socket.getOutputStream(), Charset.forName("UTF-8")));
+        version = readMpdVersion();
+        if (StringUtils.isNotEmpty(password)) {
+            sendCommand(MpdCommand.of(PASSWORD).add(password));
         }
     }
 
-    private void readMpdVersion() throws IOException {
-        String s = reader.readLine();
-        log.debug("got '{}' on connect", s);
-        if (!s.startsWith("OK")) {
-            throw new MpdException("don't get OK answer on connect");
+    private String readMpdVersion() throws IOException {
+        List<String> strings = reader.readAnswer();
+        if (strings.size() != 1) {
+            log.error("On connect got answer: ", strings);
+            throw new MpdException("Got impossible answer");
         }
+        Matcher matcher = VERSION_PATTERN.matcher(strings.get(0));
+        if (matcher.find()) {
+            return matcher.group(0);
+        }
+        log.error("got unknown answer on connect: {}", strings.get(0));
+        throw new MpdException("got unknown answer on connect: {}", strings.get(0));
     }
 
-    private void enterPassword(String password) throws IOException {
-        List<String> list = sendCommand("password " + password);
-        if (!list.get(list.size() - 1).startsWith("OK")) {
-            throw new MpdException("don't get OK answer on password");
+    public List<String> sendCommand(MpdCommand command) throws IOException {
+        writer.writeCommand(command);
+        List<String> strings = reader.readAnswer();
+        String last = strings.get(strings.size() - 1);
+        if (strings.get(strings.size()-1).startsWith("OK")) {
+            return strings;
         }
-    }
-
-    public List<String> sendCommand(String command) throws IOException {
-        writer.write(command + "\n");
-        writer.flush();
-        List<String> result = new ArrayList<String>();
-        while (true) {
-            String s = reader.readLine();
-            result.add(s);
-            if (s.startsWith("OK")) {
-                log.debug(
-                        "got result for '{}' command. Result: {}'",
-                        command,
-                        result.subList(Math.max(result.size() - 10, 0), result.size())
-                );
-                return result;
-            }
-            if (s.startsWith("ACK")) {
-                log.info("On sending command: '{}' got error '{}'", command, s.substring(3).trim());
-                throw new MpdException("On sending command: '{}' got error '{}'", command, s.substring(3).trim());
-            }
-        }
+        log.info("On sending command: '{}' got error '{}'", command, last.substring(3).trim());
+        throw new MpdException("On sending command: '{}' got error '{}'", command, last.substring(3).trim());
     }
 
     public void disconnect() throws IOException {

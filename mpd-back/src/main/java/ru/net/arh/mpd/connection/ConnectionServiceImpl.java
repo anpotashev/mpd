@@ -86,7 +86,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new MpdException("Not connected");
         }
         try {
-            return send(command.toString());
+            return send(command);
         } catch (IOException e) {
             disconnect();
             throw new MpdException("IOException on sending command '" + command.toString() + "'. Disconnected.");
@@ -104,11 +104,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                     .values().stream().forEach(cmd -> sendCommands(cmd));
         }
         try {
-            return send(
-                    "command_list_begin\n" +
-                    commands.stream().map(cmd -> cmd.toString()).collect(Collectors.joining("\n"))
-                    + "\ncommand_list_end"
-            );
+            return send(MpdCommand.of(commands));
         } catch (IOException e) {
             disconnect();
             throw new MpdException("IOException on sending command '" + commands.toString() + "'. Disconnected.");
@@ -116,7 +112,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
 
 
-    private synchronized List<String> send(String cmd) throws IOException {
+    private synchronized List<String> send(MpdCommand cmd) throws IOException {
         return rw.sendCommand(cmd);
     }
 
@@ -126,7 +122,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new MpdException("Not connected");
         }
         try {
-            return idleRw.sendCommand(MpdCommand.of(Command.IDLE).toString());
+            return idleRw.sendCommand(MpdCommand.of(Command.IDLE));
         } catch (IOException e) {
             disconnect();
             throw new MpdException("IOException on sending command 'idle'. Disconnected.");
