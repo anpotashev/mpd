@@ -26,8 +26,7 @@ public class WsSubscribersServiceImpl implements WsSubscribersService {
 
     @EventListener
     private void onSessionSubscribeEvent(SessionSubscribeEvent event) {
-        String simpSessionId = event.getMessage().getHeaders().get("simpSessionId", String.class);
-        simpSessionId = event.getMessage().getHeaders().get(SESSION_ID_HEADER, String.class);
+        String simpSessionId = event.getMessage().getHeaders().get(SESSION_ID_HEADER, String.class);
         String simpDestination = event.getMessage().getHeaders().get(DESTINATION_HEADER, String.class);
         subscriptions.putIfAbsent(simpSessionId, new HashSet<>());
         subscriptions.get(simpSessionId).add(simpDestination);
