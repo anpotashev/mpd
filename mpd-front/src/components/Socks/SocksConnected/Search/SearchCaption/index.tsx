@@ -28,9 +28,9 @@ const SearchCaptionComponent = (props: ISearchCaptionProps) => <span className="
         <li><button className="dropdown-item nowrap"
                     onClick={e => props.addSearch(props.condition.condition)}>add to current playlist at last</button></li>
         <li><button className="dropdown-item nowrap"
-                    onClick={e => props.editSearch(props.condition.name)}><span className={'glyphicon glyphicon-edit'}/> Edit</button></li>
+                    onClick={e => props.editSearch(props.condition.name)} disabled={true}><span className={'glyphicon glyphicon-edit'}/> Edit (todo)</button></li>
         <li><button className="dropdown-item nowrap"
-                    onClick={e => {}}>Rename</button></li>
+                    onClick={e => {}} disabled={true}>Rename (todo)</button></li>
         <li><button className="dropdown-item nowrap"
                     onClick={e => props.removeSearch(props.condition.name)}><span className={'glyphicon glyphicon-remove'}/> Delete</button></li>
     </ul>
