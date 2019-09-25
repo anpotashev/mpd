@@ -12,10 +12,12 @@ import ru.net.arh.mpd.model.MpdCommand;
 import ru.net.arh.mpd.model.exception.MpdException;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,33 +32,41 @@ public class ConnectionServiceImplWithPool implements ConnectionService {
 
     private static final int RW_COUNT = 3;
 
-    private ExecutorService executor = Executors.newFixedThreadPool(10);
+    private ExecutorService executor;
     private BlockingQueue<MpdReaderWriter> readerWriters = new LinkedBlockingQueue<>();
     private MpdReaderWriter idleReaderWriter;
     private List<MpdReaderWriter> allReaderWriters;
+    private ReentrantLock locker = new ReentrantLock();
 
     @Getter
     private volatile boolean connected = false;
 
     @Override
     public void connect() {
+        if (connected) {
+            return;
+        }
+        locker.lock();
+        if (connected) {
+            return;
+        }
         try {
             allReaderWriters = new ArrayList<>();
             for (int i = 0; i<RW_COUNT; i++) {
-                Socket socket = new Socket(connectionSettings.getHost(), connectionSettings.getPort());
-                MpdReaderWriter rw = new MpdReaderWriter(socket, connectionSettings.getPassword());
+                MpdReaderWriter rw = new MpdReaderWriter(connectionSettings.getHost(), connectionSettings.getPort(), connectionSettings.getPassword());
                 allReaderWriters.add(rw);
                 readerWriters.add(rw);
             }
-            Socket socket = new Socket(connectionSettings.getHost(), connectionSettings.getPort());
-            idleReaderWriter = new MpdReaderWriter(socket, connectionSettings.getPassword());
+            idleReaderWriter = new MpdReaderWriter(connectionSettings.getHost(), connectionSettings.getPort(), connectionSettings.getPassword());
             allReaderWriters.add(idleReaderWriter);
+            executor = Executors.newFixedThreadPool(RW_COUNT);
             connected = true;
-            executor = Executors.newFixedThreadPool(10);
             eventsService.onConnect();
         } catch (Exception e) {
             disconnect();
             throw new MpdException(e.getStackTrace().toString());
+        } finally {
+            locker.unlock();
         }
     }
 
@@ -78,21 +88,7 @@ public class ConnectionServiceImplWithPool implements ConnectionService {
         if (!connected) {
             throw new MpdException("Not connected");
         }
-        Callable<List<String>> task = new Callable<List<String>>() {
-            @Override
-            public List<String> call() throws Exception {
-                MpdReaderWriter rw = readerWriters.take();
-                List<String> result;
-                try {
-                    result = rw.sendCommand(command);
-                } catch (IOException e) {
-                    disconnect();
-                    throw new MpdException(e.getMessage());
-                }
-                readerWriters.put(rw);
-                return result;
-            }
-        };
+        Callable<List<String>> task = new SendCommandTask(command);
         Future<List<String>> feature = executor.submit(task);
         try {
             return feature.get();
@@ -104,8 +100,22 @@ public class ConnectionServiceImplWithPool implements ConnectionService {
 
     @Override
     public List<String> sendCommands(List<MpdCommand> commands) {
-        //todo разбить при commands.size() > MAX_COMMANDS_COUNT
-        //см БАГУЛИНА в ConnectionServiceImpl
+        if (!connected) {
+            throw new MpdException("Not connected");
+        }
+        if (commands.size()>MAX_COMMANDS_COUNT) {
+            AtomicInteger counter = new AtomicInteger(0);
+            List<String> result = commands.stream()
+                    .collect(Collectors.groupingBy(i -> counter.getAndIncrement() / MAX_COMMANDS_COUNT))
+                    .values()
+                    .stream()
+                    .map(cmd -> sendCommands(cmd))
+                    .peek(list -> list.remove(list.get(list.size() - 1)))
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList());
+            result.add("OK");
+            return result;
+        }
         return sendCommand(MpdCommand.join(commands));
     }
 
@@ -119,6 +129,28 @@ public class ConnectionServiceImplWithPool implements ConnectionService {
         } catch (IOException e) {
             disconnect();
             throw new MpdException(e.getMessage());
+        }
+    }
+
+    class SendCommandTask implements Callable<List<String>> {
+        private final BaseMpdCommand command;
+
+        SendCommandTask(BaseMpdCommand command) {
+            this.command = command;
+        }
+
+        @Override
+        public List<String> call() throws Exception {
+            MpdReaderWriter rw = readerWriters.take();
+            List<String> result;
+            try {
+                result = rw.sendCommand(command);
+            } catch (IOException e) {
+                disconnect();
+                throw new MpdException(e.getMessage());
+            }
+            readerWriters.put(rw);
+            return result;
         }
     }
 }

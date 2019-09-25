@@ -29,14 +29,21 @@ public class MpdReaderWriter implements Closeable {
     @Getter
     private String version;
 
-    public MpdReaderWriter(Socket socket, String password) throws IOException {
-        this.socket = socket;
-        log.debug("creating MpdReaderWriter object");
-        reader = new MpdReader(new InputStreamReader(this.socket.getInputStream(), Charset.forName("UTF-8")));
-        writer = new MpdWriter(new OutputStreamWriter(this.socket.getOutputStream(), Charset.forName("UTF-8")));
-        version = readMpdVersion();
-        if (StringUtils.isNotEmpty(password)) {
-            sendCommand(MpdCommand.of(PASSWORD).add(password));
+    public MpdReaderWriter(String host, int port, String password) throws IOException {
+        try {
+            this.socket = new Socket(host, port);
+            log.debug("creating MpdReaderWriter object");
+            reader = new MpdReader(new InputStreamReader(this.socket.getInputStream(), Charset.forName("UTF-8")));
+            writer = new MpdWriter(new OutputStreamWriter(this.socket.getOutputStream(), Charset.forName("UTF-8")));
+            version = readMpdVersion();
+            if (StringUtils.isNotEmpty(password)) {
+                sendCommand(MpdCommand.of(PASSWORD).add(password));
+            }
+        } catch (Exception e) {
+            try {
+                this.close();
+            } catch (IOException e1){}
+            throw e;
         }
     }
 
@@ -72,6 +79,6 @@ public class MpdReaderWriter implements Closeable {
 
     @Override
     public void close() throws IOException {
-        socket.close();
+        if (!socket.isClosed()) socket.close();
     }
 }

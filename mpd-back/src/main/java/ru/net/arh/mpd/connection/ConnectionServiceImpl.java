@@ -52,7 +52,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     protected MpdReaderWriter createMpdReaderWriter(Socket socket, String password)
             throws IOException {
-        return new MpdReaderWriter(socket, password);
+        return new MpdReaderWriter(connectionSettings.getHost(), connectionSettings.getPort(), password);
     }
 
     protected Socket createSocket(String host, Integer port) throws IOException {
