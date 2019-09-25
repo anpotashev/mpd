@@ -7,6 +7,7 @@ import ru.net.arh.mpd.model.BaseMpdCommand;
 import ru.net.arh.mpd.model.MpdCommand;
 import ru.net.arh.mpd.model.exception.MpdException;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
 import static ru.net.arh.mpd.model.MpdCommand.Command.PASSWORD;
 
 @Slf4j
-public class MpdReaderWriter {
+public class MpdReaderWriter implements Closeable {
 
     private MpdReader reader;
     private MpdWriter writer;
@@ -66,6 +67,11 @@ public class MpdReaderWriter {
 
     public void disconnect() throws IOException {
         log.debug("closing connection");
+        socket.close();
+    }
+
+    @Override
+    public void close() throws IOException {
         socket.close();
     }
 }

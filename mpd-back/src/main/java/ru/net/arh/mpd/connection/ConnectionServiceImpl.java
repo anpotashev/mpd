@@ -3,6 +3,7 @@ package ru.net.arh.mpd.connection;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.connection.rw.MpdReaderWriter;
 import ru.net.arh.mpd.events.EventsService;
@@ -102,7 +103,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             commands.stream()
                     .collect(Collectors.groupingBy(i -> counter.getAndIncrement() / MAX_COMMANDS_COUNT))
                     .values().stream().forEach(cmd -> sendCommands(cmd));
-        }
+        }//БАГУЛИНА
         try {
             return send(MpdCommand.join(commands));
         } catch (IOException e) {
