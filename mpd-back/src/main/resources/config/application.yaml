@@ -4,6 +4,8 @@ mpdserver:
   defaultPassword: 12345678
   defaultPingInterval: 15000
   defaultStreamUrl: http://localhost:8000/mpd.mp3
+  defaultMaxCommandCount: 250
+  defaultMaxConnectionCount: 3
 
 searchEngine:
   defaultUrl: http://localhost:9090/search

@@ -3,7 +3,11 @@ package ru.net.arh.mpd.connection;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.connection.rw.MpdReaderWriter;
 import ru.net.arh.mpd.events.EventsService;
@@ -23,24 +27,31 @@ import java.util.stream.IntStream;
 @Service
 @Slf4j
 @Primary
-public class ConnectionServiceImplWithPool implements ConnectionService {
+@PropertySources({
+        @PropertySource("classpath:/config/application.yaml")
+        ,
+        @PropertySource(value = "file:./custom/mpd.properties", ignoreResourceNotFound = true)
+})
+public abstract class ConnectionServiceImplWithPool implements ConnectionService {
 
-    private static final int MAX_COMMANDS_COUNT = 250;
-    @Autowired
-    private ConnectionSettings connectionSettings;
+    @Value("${mpdserver.maxCommandCount:${mpdserver.defaultMaxCommandCount}}")
+    private final int MAX_COMMANDS_COUNT = 250;
+    @Value("${mpdserver.maxConnectionCount:${mpdserver.defaultMaxConnectionCount}}")
+    private final int RW_COUNT = 3;
     @Autowired
     private EventsService eventsService;
-
-    private static final int RW_COUNT = 3;
 
     private ExecutorService executor;
     private BlockingQueue<MpdReaderWriter> readerWriters = new LinkedBlockingQueue<>();
     private MpdReaderWriter idleReaderWriter;
-    private List<MpdReaderWriter> allReaderWriters;
+    private List<MpdReaderWriter> allReaderWriters = new ArrayList<>();
     private ReentrantLock locker = new ReentrantLock();
 
     @Getter
     private volatile boolean connected = false;
+
+    @Lookup
+    abstract MpdReaderWriter getMpdReaderWriter();
 
     @Override
     public void connect() {
@@ -54,18 +65,18 @@ public class ConnectionServiceImplWithPool implements ConnectionService {
         try {
             allReaderWriters = new ArrayList<>();
             for (int i = 0; i<RW_COUNT; i++) {
-                MpdReaderWriter rw = new MpdReaderWriter(connectionSettings.getHost(), connectionSettings.getPort(), connectionSettings.getPassword());
+                MpdReaderWriter rw = getMpdReaderWriter();
                 allReaderWriters.add(rw);
                 readerWriters.add(rw);
             }
-            idleReaderWriter = new MpdReaderWriter(connectionSettings.getHost(), connectionSettings.getPort(), connectionSettings.getPassword());
+            idleReaderWriter = getMpdReaderWriter();
             allReaderWriters.add(idleReaderWriter);
             executor = Executors.newFixedThreadPool(RW_COUNT);
             connected = true;
             eventsService.onConnect();
         } catch (Exception e) {
             disconnect();
-            throw new MpdException(e.getStackTrace().toString());
+            throw new MpdException(e.getMessage());
         } finally {
             locker.unlock();
         }
@@ -77,7 +88,13 @@ public class ConnectionServiceImplWithPool implements ConnectionService {
         executor.shutdown();
         readerWriters.clear();
         allReaderWriters.forEach(
-                rw -> {try {rw.close();} catch (IOException e) {log.warn(e.getStackTrace().toString());}}
+                rw -> {
+                    try {
+                        rw.close();
+                    } catch (IOException e) {
+                        log.warn("Exception on close: ", e);
+                    }
+                }
         );
         allReaderWriters.clear();
         idleReaderWriter = null;
@@ -89,12 +106,11 @@ public class ConnectionServiceImplWithPool implements ConnectionService {
         if (!connected) {
             throw new MpdException("Not connected");
         }
-        Callable<List<String>> task = new SendCommandTask(command);
-        Future<List<String>> feature = executor.submit(task);
+        Future<List<String>> feature = executor.submit(new SendCommandTask(command));
         try {
             return feature.get();
         } catch (InterruptedException | ExecutionException e) {
-            log.warn(e.getStackTrace().toString());
+            log.warn(e.getMessage());
             throw new MpdException(e.getMessage());
         }
     }
@@ -111,7 +127,7 @@ public class ConnectionServiceImplWithPool implements ConnectionService {
                     .values()
                     .stream()
                     .map(cmd -> sendCommands(cmd))
-                    .peek(list -> list.remove(list.get(list.size() - 1)))
+                    .peek(list -> list.remove(list.size() - 1))
                     .flatMap(List::stream)
                     .collect(Collectors.toList());
             result.add("OK");

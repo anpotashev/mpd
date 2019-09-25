@@ -3,6 +3,7 @@ package ru.net.arh.mpd.connection;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.connection.rw.MpdReaderWriter;
@@ -20,11 +21,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class ConnectionServiceImpl implements ConnectionService {
+public abstract class ConnectionServiceImpl implements ConnectionService {
 
     private static final int MAX_COMMANDS_COUNT = 250;
-    @Autowired
-    private ConnectionSettings connectionSettings;
     @Autowired
     private EventsService eventsService;
 
@@ -33,18 +32,19 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     private MpdReaderWriter rw, idleRw;
 
+    @Lookup
+    abstract MpdReaderWriter getMpdReaderWriter();
+
     public void connect() {
         if (connected) {
             return;
         }
         try {
-            Socket socket = createSocket(connectionSettings.getHost(), connectionSettings.getPort());
-            rw = createMpdReaderWriter(socket, connectionSettings.getPassword());
-            Socket socket2 = createSocket(connectionSettings.getHost(), connectionSettings.getPort());
-            idleRw = createMpdReaderWriter(socket2, connectionSettings.getPassword());
+            rw = getMpdReaderWriter();
+            idleRw = getMpdReaderWriter();
             connected = true;
             eventsService.onConnect();
-        } catch (IOException e) {
+        } catch (Exception e) {
             disconnect();
             throw new MpdException(e.getMessage());
         }
@@ -52,7 +52,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
     protected MpdReaderWriter createMpdReaderWriter(Socket socket, String password)
             throws IOException {
-        return new MpdReaderWriter(connectionSettings.getHost(), connectionSettings.getPort(), password);
+        return getMpdReaderWriter();
     }
 
     protected Socket createSocket(String host, Integer port) throws IOException {
