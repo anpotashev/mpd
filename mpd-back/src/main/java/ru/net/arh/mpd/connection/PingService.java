@@ -13,8 +13,7 @@ import ru.net.arh.mpd.model.MpdCommand.Command;
  */
 @PropertySources({
         @PropertySource("classpath:/config/application.yaml")
-        ,
-        @PropertySource(value = "file:./custom/mpd.properties", ignoreResourceNotFound = true)
+        , @PropertySource(value = "file:./custom/mpd.properties", ignoreResourceNotFound = true)
 })
 @Service
 public class PingService {
@@ -25,7 +24,7 @@ public class PingService {
     @Scheduled(fixedDelayString = "${mpdserver.pingInterval:${mpdserver.defaultPingInterval}}")
     private void ping() {
         if (connectionService.isConnected()) {
-            connectionService.sendCommand(MpdCommand.of(Command.PING));
+            connectionService.ping();
         }
     }
 }

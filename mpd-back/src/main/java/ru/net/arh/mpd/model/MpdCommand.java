@@ -10,7 +10,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * Модель команды для отправки на mpd-сервер.
  */
 @EqualsAndHashCode
-public class MpdCommand {
+public class MpdCommand extends BaseMpdCommand {
 
     private static Map<Command, MpdCommand> cache = new HashMap<>();
 
@@ -20,6 +20,10 @@ public class MpdCommand {
 
     private MpdCommand(Command command) {
         this.command = command;
+    }
+
+    public static MpdCommandList join(List<MpdCommand> commands) {
+        return new MpdCommandList(commands);
     }
 
     public static MpdCommand of(Command command) {
@@ -106,11 +110,13 @@ public class MpdCommand {
         LOAD("load"),
         RM("rm"),
         SAVE("save"),
-        RENAME("rename")
+        RENAME("rename"),
+        PASSWORD("password")
         ;
 
         private String str;
-        private boolean acceptParam;
+        private boolean acceptParam; //флаг-маркер. false, если команда не принимает аргументов.
+        // Используется для получаения инстанцов из пула, вместо создания новых.
 
         Command(String str) {
             this(str, true);

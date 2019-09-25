@@ -1,5 +1,6 @@
 package ru.net.arh.mpd.connection;
 
+import ru.net.arh.mpd.model.BaseMpdCommand;
 import ru.net.arh.mpd.model.MpdCommand;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public interface ConnectionService {
      * @param command
      * @return массив строк, который вернул сервер
      */
-    List<String> sendCommand(MpdCommand command);
+    List<String> sendCommand(BaseMpdCommand command);
 
     List<String> sendCommands(List<MpdCommand> commands);
 
@@ -42,4 +43,6 @@ public interface ConnectionService {
      * @return массив строк, который вернул сервер
      */
     List<String> sendIdleCommand();
+
+    void ping();
 }

@@ -35,6 +35,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation 'org.apache.commons:commons-lang3:3.9'
 
     runtimeOnly ('org.webjars:jquery:3.2.1')  { transitive = false }
     runtimeOnly ('org.webjars.npm:jplayer:2.9.2')  { transitive = false }
