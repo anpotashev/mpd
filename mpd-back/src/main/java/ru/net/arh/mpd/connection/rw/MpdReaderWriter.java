@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.net.arh.mpd.connection.ConnectionSettings;
-import ru.net.arh.mpd.model.BaseMpdCommand;
-import ru.net.arh.mpd.model.MpdCommand;
+import ru.net.arh.mpd.model.commands.MpdCommand;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder;
 import ru.net.arh.mpd.model.exception.MpdException;
 
 import java.io.Closeable;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ru.net.arh.mpd.model.MpdCommand.Command.PASSWORD;
+import static ru.net.arh.mpd.model.commands.MpdCommandBuilder.Command.PASSWORD;
 
 @Slf4j
 @Component
@@ -44,12 +44,13 @@ public class MpdReaderWriter implements Closeable {
             writer = new MpdWriter(new OutputStreamWriter(this.socket.getOutputStream(), Charset.forName("UTF-8")));
             version = readMpdVersion();
             if (StringUtils.isNotEmpty(connectionSettings.getPassword())) {
-                sendCommand(MpdCommand.of(PASSWORD).add(connectionSettings.getPassword()));
+                sendCommand(MpdCommandBuilder.of(PASSWORD).add(connectionSettings.getPassword()));
             }
         } catch (Exception e) {
             try {
                 this.close();
-            } catch (IOException e1){}
+            } catch (IOException e1) {
+            }
             throw e;
         }
     }
@@ -68,20 +69,15 @@ public class MpdReaderWriter implements Closeable {
         throw new MpdException("got unknown answer on connect: {}", strings.get(0));
     }
 
-    public List<String> sendCommand(BaseMpdCommand command) throws IOException {
+    public List<String> sendCommand(MpdCommand command) throws IOException {
         writer.writeCommand(command);
         List<String> strings = reader.readAnswer();
         String last = strings.get(strings.size() - 1);
-        if (strings.get(strings.size()-1).startsWith("OK")) {
+        if (strings.get(strings.size() - 1).startsWith("OK")) {
             return strings;
         }
         log.info("On sending command: '{}' got error '{}'", command, last.substring(3).trim());
         throw new MpdException("On sending command: '{}' got error '{}'", command, last.substring(3).trim());
-    }
-
-    public void disconnect() throws IOException {
-        log.debug("closing connection");
-        socket.close();
     }
 
     @Override

@@ -8,7 +8,6 @@ import ru.net.arh.mpd.model.MpdErrorType;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.model.sockjs.SockJsResponse;
 import ru.net.arh.mpd.model.status.MpdShortStatus;
-import ru.net.arh.mpd.model.status.MpdSongTime;
 import ru.net.arh.mpd.model.status.MpdStatus;
 import ru.net.arh.mpd.services.setting.SettingService;
 import ru.net.arh.mpd.services.status.StatusService;

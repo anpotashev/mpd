@@ -12,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -49,6 +48,7 @@ public class MpdAnswersParser {
                 ? s.substring(1)
                 : s;
     }
+
     private static <T> T parse(Class<T> clazz, List<String> list, Map<String, Field> fieldsMap) {
         try {
             T result = clazz.newInstance();
@@ -135,14 +135,14 @@ public class MpdAnswersParser {
                         .filter(s -> !s.startsWith("OK"))
                         .collect(
                                 groupingBy(
-                                        s -> counter.addAndGet(isNew(s, beginLine) ? 1: 0)
+                                        s -> counter.addAndGet(isNew(s, beginLine) ? 1 : 0)
                                         , LinkedHashMap::new
                                         , Collectors.toList()
                                 )
                         ).values());
     }
 
-    private static boolean isNew(String value, String...values) {
+    private static boolean isNew(String value, String... values) {
         return Arrays.stream(values).map(value::startsWith).reduce(Boolean::logicalOr).get();
     }
 }

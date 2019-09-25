@@ -1,7 +1,6 @@
 package ru.net.arh.mpd.services.search;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.cache.CacheNames;

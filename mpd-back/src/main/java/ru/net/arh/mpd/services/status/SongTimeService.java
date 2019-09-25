@@ -5,10 +5,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.connection.ConnectionService;
-import ru.net.arh.mpd.model.MpdIdleType;
 import ru.net.arh.mpd.model.events.MpdEvent;
 import ru.net.arh.mpd.model.events.MpdEventType;
-import ru.net.arh.mpd.model.events.MpdIdleEventMethod;
 import ru.net.arh.mpd.stomp.WsSubscribersService;
 
 @Service

@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.connection.ConnectionService;
-import ru.net.arh.mpd.model.MpdCommand;
-import ru.net.arh.mpd.model.MpdCommand.Command;
 import ru.net.arh.mpd.model.MpdIdleType;
+import ru.net.arh.mpd.model.commands.MpdCommand;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder.Command;
 import ru.net.arh.mpd.model.events.MpdEventType;
 import ru.net.arh.mpd.model.events.MpdIdleEventMethod;
 import ru.net.arh.mpd.model.playlist.Playlist;
@@ -40,19 +41,19 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Cacheable(CacheNames.Constants.PLAYLIST)
     @MpdIdleEventMethod(types = {MpdIdleType.PLAYLIST}, eventType = MpdEventType.PLAYLIST_CHANGED)
     public Playlist playlist() {
-        return new Playlist(MpdAnswersParser.parseAll(PlaylistItem.class, connectionService.sendCommand(MpdCommand.of(Command.PLAYLIST_INFO))));
+        return new Playlist(MpdAnswersParser.parseAll(PlaylistItem.class, connectionService.sendCommand(MpdCommandBuilder.of(Command.PLAYLIST_INFO))));
     }
 
     @Override
     @ThrowIfNotConnected
     public void clear() {
-        connectionService.sendCommand(MpdCommand.of(Command.CLEAR));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.CLEAR));
     }
 
     @Override
     @ThrowIfNotConnected
     public void addToPos(String path, Integer position) {
-        MpdCommand command = MpdCommand.of(Command.LISTALL).add(path);
+        MpdCommand command = MpdCommandBuilder.of(Command.LISTALL).add(path);
         List<String> paths = MpdAnswersParser
                 .parseAll(TreeItem.class, connectionService.sendCommand(command))
                 .stream()
@@ -65,33 +66,33 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     @ThrowIfNotConnected
     public void delete(PlaylistItem item) {
-        connectionService.sendCommand(MpdCommand.of(Command.DELETE).add(item.getId()));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.DELETE).add(item.getId()));
     }
 
     @Override
     @ThrowIfNotConnected
     public void delete(int pos) {
-        connectionService.sendCommand(MpdCommand.of(Command.DELETE).add(pos));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.DELETE).add(pos));
     }
 
     @Override
     @ThrowIfNotConnected
     public void move(int from, int to) {
-        connectionService.sendCommand(MpdCommand.of(Command.MOVE).add(from, to));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.MOVE).add(from, to));
     }
 
     @Override
     @ThrowIfNotConnected
     public void move(int fromStart, int fromEnd, int to) {
-        connectionService.sendCommand(MpdCommand.of(Command.MOVE).add(fromStart + ":" + fromEnd, to + ""));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.MOVE).add(fromStart + ":" + fromEnd, to + ""));
     }
 
     @Override
     @ThrowIfNotConnected
     public void shuffle(Integer start, Integer end) {
         MpdCommand mpdCommand = (start != null && end != null)
-                ? MpdCommand.of(Command.SHUFFLE).add(start, end)
-                : MpdCommand.of(Command.SHUFFLE);
+                ? MpdCommandBuilder.of(Command.SHUFFLE).add(start, end)
+                : MpdCommandBuilder.of(Command.SHUFFLE);
         connectionService.sendCommand(mpdCommand);
     }
 
@@ -100,7 +101,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Cacheable(cacheNames = CacheNames.Constants.STORED_PLAYLIST)
     @MpdIdleEventMethod(eventType = MpdEventType.STORED_PLAYLISTS, types = {MpdIdleType.STORED_PLAYLIST})
     public List<Playlist> storedPlaylists() {
-        List<String> list = connectionService.sendCommand(MpdCommand.of(Command.LISTPLAYLISTS));
+        List<String> list = connectionService.sendCommand(MpdCommandBuilder.of(Command.LISTPLAYLISTS));
         List<Playlist> playlists = MpdAnswersParser.parseAll(Playlist.class, list);
         playlists.forEach(playlist -> playlist.setPlaylistItems(playlistService.storedPlaylist(playlist.getName()).getPlaylistItems()));
         return playlists;
@@ -110,7 +111,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     @ThrowIfNotConnected
     @Cacheable(cacheNames = CacheNames.Constants.STORED_PLAYLIST)
     public Playlist storedPlaylist(String name) {
-        MpdCommand command = MpdCommand.of(Command.LISTPLAYLIST_INFO).add(name);
+        MpdCommand command = MpdCommandBuilder.of(Command.LISTPLAYLIST_INFO).add(name);
         List<String> list = connectionService.sendCommand(command);
         return new Playlist(
                 MpdAnswersParser.parseAll(PlaylistItem.class, list)
@@ -121,15 +122,15 @@ public class PlaylistServiceImpl implements PlaylistService {
     @ThrowIfNotConnected
     public void addFileToPos(String path, Integer position) {
         MpdCommand command = position == null
-                ? MpdCommand.of(Command.ADD).add(path)
-                : MpdCommand.of(Command.ADD_ID).add(path, position.toString());
+                ? MpdCommandBuilder.of(Command.ADD).add(path)
+                : MpdCommandBuilder.of(Command.ADD_ID).add(path, position.toString());
         connectionService.sendCommand(command);
     }
 
     @Override
     @ThrowIfNotConnected
     public void load(String name) {
-        connectionService.sendCommand(MpdCommand.of(Command.LOAD).add(name));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.LOAD).add(name));
     }
 
     @Override
@@ -142,8 +143,8 @@ public class PlaylistServiceImpl implements PlaylistService {
         final AtomicInteger currentPosition = new AtomicInteger(position);
         List<MpdCommand> commands = playlist.getPlaylistItems()
                 .stream()
-                .map(item -> MpdCommand.of(Command.ADD_ID).add(item.getFile(),
-                                            currentPosition.getAndIncrement() + ""
+                .map(item -> MpdCommandBuilder.of(Command.ADD_ID).add(item.getFile(),
+                        currentPosition.getAndIncrement() + ""
                 ))
                 .collect(Collectors.toList());
         connectionService.sendCommands(commands);
@@ -152,19 +153,19 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     @ThrowIfNotConnected
     public void rmStored(String name) {
-        connectionService.sendCommand(MpdCommand.of(Command.RM).add(name));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.RM).add(name));
     }
 
     @Override
     @ThrowIfNotConnected
     public void saveStored(String name) {
-        connectionService.sendCommand(MpdCommand.of(Command.SAVE).add(name));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.SAVE).add(name));
     }
 
     @Override
     @ThrowIfNotConnected
     public void renameStored(String oldName, String newName) {
-        connectionService.sendCommand(MpdCommand.of(Command.RENAME).add(oldName, newName));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.RENAME).add(oldName, newName));
     }
 
     @Override
@@ -177,14 +178,14 @@ public class PlaylistServiceImpl implements PlaylistService {
         if (paths.isEmpty()) return;
         if (pos == null) {
             List<MpdCommand> commands = paths.stream()
-                    .map(s->MpdCommand.of(Command.ADD).add(s))
+                    .map(s -> MpdCommandBuilder.of(Command.ADD).add(s))
                     .collect(Collectors.toList());
             connectionService.sendCommands(commands);
             return;
         }
         final AtomicInteger currentPosition = new AtomicInteger(pos);
         List<MpdCommand> commands = paths.stream()
-                .map(item -> MpdCommand.of(Command.ADD_ID).add(item,
+                .map(item -> MpdCommandBuilder.of(Command.ADD_ID).add(item,
                         currentPosition.getAndIncrement() + ""
                 ))
                 .collect(Collectors.toList());
