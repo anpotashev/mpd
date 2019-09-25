@@ -1,6 +1,5 @@
 package ru.net.arh.mpd.services.playlist;
 
-import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.model.playlist.Playlist;
 import ru.net.arh.mpd.model.playlist.PlaylistItem;
 import ru.net.arh.mpd.search.model.TreeItem;
@@ -86,6 +85,7 @@ public interface PlaylistService {
 
     /**
      * Добавить файл в текущий плейлист в указанную позицию (в конец если она null)
+     *
      * @param value
      * @param position
      */
@@ -104,18 +104,21 @@ public interface PlaylistService {
 
     /**
      * Удалить сохраненный плейлист по его имени
+     *
      * @param name имя плейлиста
      */
     void rmStored(String name);
 
     /**
      * Сохранить текущий плейлист в списке сохраненных
+     *
      * @param name - имя нового плейлиста
      */
     void saveStored(String name);
 
     /**
      * переименовать сохраненный плейлист
+     *
      * @param oldName - старое имя
      * @param newName - новое имя
      */
@@ -124,6 +127,7 @@ public interface PlaylistService {
     /**
      * Добавить в текущий плейлист лист треков в указанную позицию.
      * Если не задана, то добавляются в конец
+     *
      * @param items
      */
     void addAll(List<TreeItem> items, Integer pos);

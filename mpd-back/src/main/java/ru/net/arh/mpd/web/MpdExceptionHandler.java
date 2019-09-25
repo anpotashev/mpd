@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import ru.net.arh.mpd.model.MpdErrorType;
 import ru.net.arh.mpd.model.exception.MpdException;
 import ru.net.arh.mpd.model.sockjs.MpdSockJsError;
+
 import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice

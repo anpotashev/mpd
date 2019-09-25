@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.connection.ConnectionService;
-import ru.net.arh.mpd.model.MpdCommand;
-import ru.net.arh.mpd.model.MpdCommand.Command;
 import ru.net.arh.mpd.model.MpdIdleType;
+import ru.net.arh.mpd.model.commands.MpdCommand;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder.Command;
 import ru.net.arh.mpd.model.events.MpdEventType;
 import ru.net.arh.mpd.model.events.MpdIdleEventMethod;
 import ru.net.arh.mpd.model.outputs.MpdOutput;
@@ -31,7 +32,7 @@ public class OutputsServiceImpl implements OutputsService {
     public List<MpdOutput> outputs() {
         return MpdAnswersParser.parseAll(
                 MpdOutput.class,
-                connectionService.sendCommand(MpdCommand.of(Command.OUTPUTS))
+                connectionService.sendCommand(MpdCommandBuilder.of(Command.OUTPUTS))
         );
     }
 
@@ -39,8 +40,8 @@ public class OutputsServiceImpl implements OutputsService {
     @ThrowIfNotConnected
     public void save(MpdOutput output) {
         MpdCommand command = output.isEnabled()
-                ? MpdCommand.of(Command.ENABLE_OUTPUT).add(output.getId())
-                : MpdCommand.of(Command.DISABLE_OUTPUT).add(output.getId() + "");
+                ? MpdCommandBuilder.of(Command.ENABLE_OUTPUT).add(output.getId())
+                : MpdCommandBuilder.of(Command.DISABLE_OUTPUT).add(output.getId() + "");
         connectionService.sendCommand(command);
     }
 

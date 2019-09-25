@@ -11,8 +11,8 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.connection.rw.MpdReaderWriter;
 import ru.net.arh.mpd.events.EventsService;
-import ru.net.arh.mpd.model.BaseMpdCommand;
-import ru.net.arh.mpd.model.MpdCommand;
+import ru.net.arh.mpd.model.commands.MpdCommand;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder;
 import ru.net.arh.mpd.model.exception.MpdException;
 
 import java.io.IOException;
@@ -66,7 +66,7 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
         }
         try {
             allReaderWriters = new ArrayList<>();
-            for (int i = 0; i<RW_COUNT; i++) {
+            for (int i = 0; i < RW_COUNT; i++) {
                 MpdReaderWriter rw = getMpdReaderWriter();
                 allReaderWriters.add(rw);
                 readerWriters.add(rw);
@@ -104,7 +104,7 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
     }
 
     @Override
-    public List<String> sendCommand(BaseMpdCommand command) {
+    public List<String> sendCommand(MpdCommand command) {
         if (!connected) {
             throw new MpdException("Not connected");
         }
@@ -122,7 +122,7 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
         if (!connected) {
             throw new MpdException("Not connected");
         }
-        if (commands.size()>MAX_COMMANDS_COUNT) {
+        if (commands.size() > MAX_COMMANDS_COUNT) {
             AtomicInteger counter = new AtomicInteger(0);
             List<String> result = commands.stream()
                     .collect(Collectors.groupingBy(i -> counter.getAndIncrement() / MAX_COMMANDS_COUNT))
@@ -135,7 +135,7 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
             result.add("OK");
             return result;
         }
-        return sendCommand(MpdCommand.join(commands));
+        return sendCommand(MpdCommandBuilder.join(commands));
     }
 
     @Override
@@ -144,7 +144,7 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
             throw new MpdException("Not connected");
         }
         try {
-            return idleReaderWriter.sendCommand(MpdCommand.of(MpdCommand.Command.IDLE));
+            return idleReaderWriter.sendCommand(MpdCommandBuilder.of(MpdCommandBuilder.Command.IDLE));
         } catch (IOException e) {
             disconnect();
             return EMPTY_LIST;
@@ -153,13 +153,13 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
 
     @Override
     public void ping() {
-        IntStream.range(0, RW_COUNT).forEach(value -> sendCommand(MpdCommand.of(MpdCommand.Command.PING)));
+        IntStream.range(0, RW_COUNT).forEach(value -> sendCommand(MpdCommandBuilder.of(MpdCommandBuilder.Command.PING)));
     }
 
     class SendCommandTask implements Callable<List<String>> {
-        private final BaseMpdCommand command;
+        private final MpdCommand command;
 
-        SendCommandTask(BaseMpdCommand command) {
+        SendCommandTask(MpdCommand command) {
             this.command = command;
         }
 

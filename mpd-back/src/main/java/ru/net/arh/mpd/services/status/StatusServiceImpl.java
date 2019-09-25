@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.connection.ConnectionService;
-import ru.net.arh.mpd.model.MpdCommand;
-import ru.net.arh.mpd.model.MpdCommand.Command;
 import ru.net.arh.mpd.model.MpdIdleType;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder.Command;
 import ru.net.arh.mpd.model.events.MpdEventType;
 import ru.net.arh.mpd.model.events.MpdIdleEventMethod;
 import ru.net.arh.mpd.model.status.MpdShortStatus;
@@ -30,7 +30,7 @@ public class StatusServiceImpl implements StatusService {
     public MpdStatus status() {
         return MpdAnswersParser.parse(
                 MpdStatus.class,
-                connectionService.sendCommand(MpdCommand.of(Command.STATUS))
+                connectionService.sendCommand(MpdCommandBuilder.of(Command.STATUS))
         );
     }
 

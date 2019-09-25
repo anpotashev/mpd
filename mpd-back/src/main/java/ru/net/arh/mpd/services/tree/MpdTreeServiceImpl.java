@@ -7,9 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.connection.ConnectionService;
-import ru.net.arh.mpd.model.MpdCommand;
-import ru.net.arh.mpd.model.MpdCommand.Command;
 import ru.net.arh.mpd.model.MpdIdleType;
+import ru.net.arh.mpd.model.commands.MpdCommand;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder.Command;
 import ru.net.arh.mpd.model.events.MpdEventType;
 import ru.net.arh.mpd.model.events.MpdIdleEventMethod;
 import ru.net.arh.mpd.model.tree.TreeItem;
@@ -40,7 +41,7 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     @Cacheable(cacheNames = CacheNames.Constants.TREE)
     @MpdIdleEventMethod(types = {MpdIdleType.DATABASE}, eventType = MpdEventType.TREE_CHANGED)
     public TreeItem tree() {
-        List<String> list = connectionService.sendCommand(MpdCommand.of(Command.LISTALL));
+        List<String> list = connectionService.sendCommand(MpdCommandBuilder.of(Command.LISTALL));
         return mpdListAllParser.parse(list);
     }
 
@@ -49,8 +50,8 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     @Cacheable(cacheNames = CacheNames.Constants.FULL_TREE)
     @MpdIdleEventMethod(types = {MpdIdleType.DATABASE}, eventType = MpdEventType.FULL_TREE_CHANGED)
     public TreeItem fullTree() {
-        List<String> list = connectionService.sendCommand(MpdCommand.of(Command.LISTALLINFO));
-        return  mpdListAllParser.parse(list);
+        List<String> list = connectionService.sendCommand(MpdCommandBuilder.of(Command.LISTALLINFO));
+        return mpdListAllParser.parse(list);
     }
 
     public TreeItem root() {
@@ -60,24 +61,24 @@ public class MpdTreeServiceImpl implements MpdTreeService {
     @Cacheable(cacheNames = CacheNames.Constants.TREE)
     @ThrowIfNotConnected
     public List<TreeItem> children(final String path) {
-        List<String> list = connectionService.sendCommand(MpdCommand.of(Command.LSINFO).add(path));
+        List<String> list = connectionService.sendCommand(MpdCommandBuilder.of(Command.LSINFO).add(path));
         return MpdAnswersParser.parseAll(TreeItem.class, list);
     }
 
     @Override
     @ThrowIfNotConnected
     public void update(String path) {
-        connectionService.sendCommand(MpdCommand.of(Command.UPDATE).add(path));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.UPDATE).add(path));
     }
 
     @Override
     @ThrowIfNotConnected
     public void add(String path) {
         List<TreeItem> treeItems = MpdAnswersParser
-                .parseAll(TreeItem.class, connectionService.sendCommand(MpdCommand.of(Command.LISTALL).add(path)));
+                .parseAll(TreeItem.class, connectionService.sendCommand(MpdCommandBuilder.of(Command.LISTALL).add(path)));
         List<MpdCommand> commands = treeItems.stream()
                 .filter(item -> item.getFile() != null)
-                .map(item -> MpdCommand.of(Command.ADD).add(item.getFile()))
+                .map(item -> MpdCommandBuilder.of(Command.ADD).add(item.getFile()))
                 .collect(Collectors.toList());
         connectionService.sendCommands(commands);
     }

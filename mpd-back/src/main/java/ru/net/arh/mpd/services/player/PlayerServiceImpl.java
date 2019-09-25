@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.aop.ThrowIfNotConnected;
 import ru.net.arh.mpd.connection.ConnectionService;
-import ru.net.arh.mpd.model.MpdCommand;
-import ru.net.arh.mpd.model.MpdCommand.Command;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder;
+import ru.net.arh.mpd.model.commands.MpdCommandBuilder.Command;
 import ru.net.arh.mpd.model.player.PlayerCommand;
 
 @Slf4j
@@ -22,49 +22,49 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     @ThrowIfNotConnected
     public void play() {
-        connectionService.sendCommand(MpdCommand.of(Command.PLAY));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.PLAY));
     }
 
     @Override
     @ThrowIfNotConnected
     public void pause() {
-        connectionService.sendCommand(MpdCommand.of(Command.PAUSE));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.PAUSE));
     }
 
     @Override
     @ThrowIfNotConnected
     public void stop() {
-        connectionService.sendCommand(MpdCommand.of(Command.STOP));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.STOP));
     }
 
     @Override
     @ThrowIfNotConnected
     public void prev() {
-        connectionService.sendCommand(MpdCommand.of(Command.PREV));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.PREV));
     }
 
     @Override
     @ThrowIfNotConnected
     public void next() {
-        connectionService.sendCommand(MpdCommand.of(Command.NEXT));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.NEXT));
     }
 
     @Override
     @ThrowIfNotConnected
     public void playPos(int songPos) {
-        connectionService.sendCommand(MpdCommand.of(Command.PLAY).add(songPos));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.PLAY).add(songPos));
     }
 
     @Override
     @ThrowIfNotConnected
     public void playId(int id) {
-        connectionService.sendCommand(MpdCommand.of(Command.PLAY_ID).add(id));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.PLAY_ID).add(id));
     }
 
     @Override
     @ThrowIfNotConnected
     public void seek(int songPos, int seekPos) {
-        connectionService.sendCommand(MpdCommand.of(Command.SEEK).add(songPos).add(seekPos));
+        connectionService.sendCommand(MpdCommandBuilder.of(Command.SEEK).add(songPos).add(seekPos));
     }
 
     @Override
