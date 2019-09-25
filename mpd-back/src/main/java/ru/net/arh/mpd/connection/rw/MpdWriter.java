@@ -1,10 +1,9 @@
 package ru.net.arh.mpd.connection.rw;
 
-import ru.net.arh.mpd.model.MpdCommand;
+import ru.net.arh.mpd.model.BaseMpdCommand;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Writer;
 
 public class MpdWriter {
@@ -13,7 +12,7 @@ public class MpdWriter {
         this.writer = new BufferedWriter(writer);
     }
 
-    public void writeCommand(MpdCommand command) throws IOException {
+    public void writeCommand(BaseMpdCommand command) throws IOException {
         writer.write(command.toString() + "\n");
         writer.flush();
     }

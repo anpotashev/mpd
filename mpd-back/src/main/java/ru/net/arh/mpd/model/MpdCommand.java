@@ -1,10 +1,8 @@
 package ru.net.arh.mpd.model;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
 
@@ -12,7 +10,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * Модель команды для отправки на mpd-сервер.
  */
 @EqualsAndHashCode
-public class MpdCommand {
+public class MpdCommand extends BaseMpdCommand {
 
     private static Map<Command, MpdCommand> cache = new HashMap<>();
 
@@ -20,15 +18,12 @@ public class MpdCommand {
 
     private List<String> params = new ArrayList<>();
 
-    public MpdCommand() {
-    }
-
     private MpdCommand(Command command) {
         this.command = command;
     }
 
-    public static MpdCommand of(List<MpdCommand> commands) {
-        return new MpdListCommand(commands);
+    public static MpdCommandList join(List<MpdCommand> commands) {
+        return new MpdCommandList(commands);
     }
 
     public static MpdCommand of(Command command) {
@@ -120,7 +115,8 @@ public class MpdCommand {
         ;
 
         private String str;
-        private boolean acceptParam;
+        private boolean acceptParam; //флаг-маркер. false, если команда не принимает аргументов.
+        // Используется для получаения инстанцов из пула, вместо создания новых.
 
         Command(String str) {
             this(str, true);
@@ -130,20 +126,5 @@ public class MpdCommand {
             this.acceptParam = acceptParam;
         }
 
-    }
-
-    private static class MpdListCommand extends MpdCommand {
-        private List<MpdCommand> commands;
-
-        public MpdListCommand(List<MpdCommand> commands) {
-            this.commands = commands;
-        }
-
-        @Override
-        public String toString() {
-            return "command_list_begin\n" +
-                commands.stream().map(cmd -> cmd.toString()).collect(Collectors.joining("\n"))
-                + "\ncommand_list_end";
-        }
     }
 }

@@ -3,9 +3,10 @@ package ru.net.arh.mpd.connection.rw;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import ru.net.arh.mpd.model.BaseMpdCommand;
 import ru.net.arh.mpd.model.MpdCommand;
 import ru.net.arh.mpd.model.exception.MpdException;
-import java.io.BufferedWriter;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -52,7 +53,7 @@ public class MpdReaderWriter {
         throw new MpdException("got unknown answer on connect: {}", strings.get(0));
     }
 
-    public List<String> sendCommand(MpdCommand command) throws IOException {
+    public List<String> sendCommand(BaseMpdCommand command) throws IOException {
         writer.writeCommand(command);
         List<String> strings = reader.readAnswer();
         String last = strings.get(strings.size() - 1);

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.connection.rw.MpdReaderWriter;
 import ru.net.arh.mpd.events.EventsService;
+import ru.net.arh.mpd.model.BaseMpdCommand;
 import ru.net.arh.mpd.model.MpdCommand;
 import ru.net.arh.mpd.model.MpdCommand.Command;
 import ru.net.arh.mpd.model.exception.MpdException;
@@ -13,7 +14,6 @@ import ru.net.arh.mpd.model.exception.MpdException;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -81,7 +81,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
     }
 
-    public List<String> sendCommand(MpdCommand command) {
+    public List<String> sendCommand(BaseMpdCommand command) {
         if (!connected) {
             throw new MpdException("Not connected");
         }
@@ -104,7 +104,7 @@ public class ConnectionServiceImpl implements ConnectionService {
                     .values().stream().forEach(cmd -> sendCommands(cmd));
         }
         try {
-            return send(MpdCommand.of(commands));
+            return send(MpdCommand.join(commands));
         } catch (IOException e) {
             disconnect();
             throw new MpdException("IOException on sending command '" + commands.toString() + "'. Disconnected.");
@@ -112,7 +112,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
 
 
-    private synchronized List<String> send(MpdCommand cmd) throws IOException {
+    private synchronized List<String> send(BaseMpdCommand cmd) throws IOException {
         return rw.sendCommand(cmd);
     }
 
