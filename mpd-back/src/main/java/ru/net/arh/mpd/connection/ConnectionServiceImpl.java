@@ -4,96 +4,120 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.connection.rw.MpdReaderWriter;
 import ru.net.arh.mpd.events.EventsService;
 import ru.net.arh.mpd.model.BaseMpdCommand;
 import ru.net.arh.mpd.model.MpdCommand;
-import ru.net.arh.mpd.model.MpdCommand.Command;
 import ru.net.arh.mpd.model.exception.MpdException;
 
 import java.io.IOException;
-import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-@Slf4j
+import static java.util.Collections.EMPTY_LIST;
+
 @Service
+@Slf4j
+@Primary
+@PropertySources({
+        @PropertySource("classpath:/config/application.yaml")
+        ,
+        @PropertySource(value = "file:./custom/mpd.properties", ignoreResourceNotFound = true)
+})
 public abstract class ConnectionServiceImpl implements ConnectionService {
 
-    private static final int MAX_COMMANDS_COUNT = 250;
+    @Value("${mpdserver.maxCommandCount:${mpdserver.defaultMaxCommandCount}}")
+    private final int MAX_COMMANDS_COUNT = 250;
+    @Value("${mpdserver.maxConnectionCount:${mpdserver.defaultMaxConnectionCount}}")
+    private final int RW_COUNT = 3;
     @Autowired
     private EventsService eventsService;
 
-    @Getter
-    private boolean connected = false;
+    private ExecutorService executor;
+    private BlockingQueue<MpdReaderWriter> readerWriters = new LinkedBlockingQueue<>();
+    private MpdReaderWriter idleReaderWriter;
+    private List<MpdReaderWriter> allReaderWriters = new ArrayList<>();
+    private ReentrantLock locker = new ReentrantLock();
 
-    private MpdReaderWriter rw, idleRw;
+    @Getter
+    private volatile boolean connected = false;
 
     @Lookup
     abstract MpdReaderWriter getMpdReaderWriter();
 
+    @Override
     public void connect() {
         if (connected) {
             return;
         }
+        locker.lock();
+        if (connected) {
+            return;
+        }
         try {
-            rw = getMpdReaderWriter();
-            idleRw = getMpdReaderWriter();
+            allReaderWriters = new ArrayList<>();
+            for (int i = 0; i<RW_COUNT; i++) {
+                MpdReaderWriter rw = getMpdReaderWriter();
+                allReaderWriters.add(rw);
+                readerWriters.add(rw);
+            }
+            idleReaderWriter = getMpdReaderWriter();
+            allReaderWriters.add(idleReaderWriter);
+            executor = Executors.newFixedThreadPool(RW_COUNT);
             connected = true;
             eventsService.onConnect();
         } catch (Exception e) {
             disconnect();
             throw new MpdException(e.getMessage());
+        } finally {
+            locker.unlock();
         }
     }
 
-    protected MpdReaderWriter createMpdReaderWriter(Socket socket, String password)
-            throws IOException {
-        return getMpdReaderWriter();
-    }
-
-    protected Socket createSocket(String host, Integer port) throws IOException {
-        return new Socket(host, port);
-    }
-
+    @Override
     public void disconnect() {
-        if (!connected) {
-            return;
-        }
-        try {
-            rw.disconnect();
-        } catch (IOException e) {
-            log.warn("IO exception during disconnect");
-        } finally {
-            rw = null;
-        }
-        try {
-            idleRw.disconnect();
-        } catch (IOException e) {
-            log.warn("IO exception during disconnect");
-        } finally {
-
-            idleRw = null;
-            connected = false;
-            eventsService.onDisconnect();
-        }
+        connected = false;
+        executor.shutdownNow();
+        readerWriters.clear();
+        allReaderWriters.forEach(
+                rw -> {
+                    try {
+                        rw.close();
+                    } catch (IOException e) {
+                        log.warn("Exception on close: ", e);
+                    }
+                }
+        );
+        allReaderWriters.clear();
+        idleReaderWriter = null;
+        eventsService.onDisconnect();
     }
 
+    @Override
     public List<String> sendCommand(BaseMpdCommand command) {
         if (!connected) {
             throw new MpdException("Not connected");
         }
+        Future<List<String>> feature = executor.submit(new SendCommandTask(command));
         try {
-            return send(command);
-        } catch (IOException e) {
-            disconnect();
-            throw new MpdException("IOException on sending command '" + command.toString() + "'. Disconnected.");
+            return feature.get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn(e.getMessage());
+            throw new MpdException(e.getMessage());
         }
     }
 
+    @Override
     public List<String> sendCommands(List<MpdCommand> commands) {
         if (!connected) {
             throw new MpdException("Not connected");
@@ -105,23 +129,13 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
                     .values()
                     .stream()
                     .map(cmd -> sendCommands(cmd))
-                    .peek(list -> list.remove(list.get(list.size() - 1)))
+                    .peek(list -> list.remove(list.size() - 1))
                     .flatMap(List::stream)
                     .collect(Collectors.toList());
             result.add("OK");
             return result;
         }
-        try {
-            return send(MpdCommand.join(commands));
-        } catch (IOException e) {
-            disconnect();
-            throw new MpdException("IOException on sending command '" + commands.toString() + "'. Disconnected.");
-        }
-    }
-
-
-    private synchronized List<String> send(BaseMpdCommand cmd) throws IOException {
-        return rw.sendCommand(cmd);
+        return sendCommand(MpdCommand.join(commands));
     }
 
     @Override
@@ -130,16 +144,37 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
             throw new MpdException("Not connected");
         }
         try {
-            return idleRw.sendCommand(MpdCommand.of(Command.IDLE));
+            return idleReaderWriter.sendCommand(MpdCommand.of(MpdCommand.Command.IDLE));
         } catch (IOException e) {
             disconnect();
-            throw new MpdException("IOException on sending command 'idle'. Disconnected.");
+            return EMPTY_LIST;
         }
-
     }
 
     @Override
     public void ping() {
-        sendCommand(MpdCommand.of(Command.PING));
+        IntStream.range(0, RW_COUNT).forEach(value -> sendCommand(MpdCommand.of(MpdCommand.Command.PING)));
+    }
+
+    class SendCommandTask implements Callable<List<String>> {
+        private final BaseMpdCommand command;
+
+        SendCommandTask(BaseMpdCommand command) {
+            this.command = command;
+        }
+
+        @Override
+        public List<String> call() throws Exception {
+            MpdReaderWriter rw = readerWriters.take();
+            List<String> result;
+            try {
+                result = rw.sendCommand(command);
+            } catch (IOException e) {
+                disconnect();
+                throw new MpdException(e.getMessage());
+            }
+            readerWriters.put(rw);
+            return result;
+        }
     }
 }

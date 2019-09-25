@@ -17,7 +17,7 @@ public class LogginHandlerDecorator extends WebSocketHandlerDecorator {
 
     @Override
     public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-        log.info(message.toString());
+//        log.info(message.toString());
         super.handleMessage(session, message);
     }
 }
