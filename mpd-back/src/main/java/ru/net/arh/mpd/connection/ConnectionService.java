@@ -43,4 +43,6 @@ public interface ConnectionService {
      * @return массив строк, который вернул сервер
      */
     List<String> sendIdleCommand();
+
+    void ping();
 }

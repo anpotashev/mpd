@@ -18,6 +18,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @Slf4j
@@ -130,6 +131,11 @@ public class ConnectionServiceImplWithPool implements ConnectionService {
             disconnect();
             throw new MpdException(e.getMessage());
         }
+    }
+
+    @Override
+    public void ping() {
+        IntStream.range(0, RW_COUNT).forEach(value -> sendCommand(MpdCommand.of(MpdCommand.Command.PING)));
     }
 
     class SendCommandTask implements Callable<List<String>> {

@@ -100,10 +100,17 @@ public class ConnectionServiceImpl implements ConnectionService {
         }
         if (commands.size()>MAX_COMMANDS_COUNT) {
             AtomicInteger counter = new AtomicInteger(0);
-            commands.stream()
+            List<String> result = commands.stream()
                     .collect(Collectors.groupingBy(i -> counter.getAndIncrement() / MAX_COMMANDS_COUNT))
-                    .values().stream().forEach(cmd -> sendCommands(cmd));
-        }//БАГУЛИНА
+                    .values()
+                    .stream()
+                    .map(cmd -> sendCommands(cmd))
+                    .peek(list -> list.remove(list.get(list.size() - 1)))
+                    .flatMap(List::stream)
+                    .collect(Collectors.toList());
+            result.add("OK");
+            return result;
+        }
         try {
             return send(MpdCommand.join(commands));
         } catch (IOException e) {
@@ -129,5 +136,10 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new MpdException("IOException on sending command 'idle'. Disconnected.");
         }
 
+    }
+
+    @Override
+    public void ping() {
+        sendCommand(MpdCommand.of(Command.PING));
     }
 }
