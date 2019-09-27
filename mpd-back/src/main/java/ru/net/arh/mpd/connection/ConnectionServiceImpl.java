@@ -37,9 +37,9 @@ import static java.util.Collections.EMPTY_LIST;
 public abstract class ConnectionServiceImpl implements ConnectionService {
 
     @Value("${mpdserver.maxCommandCount:${mpdserver.defaultMaxCommandCount}}")
-    private final int MAX_COMMANDS_COUNT = 250;
+    private int MAX_COMMANDS_COUNT;
     @Value("${mpdserver.maxConnectionCount:${mpdserver.defaultMaxConnectionCount}}")
-    private final int RW_COUNT = 3;
+    private int RW_COUNT;
     @Autowired
     private EventsService eventsService;
 
@@ -53,7 +53,7 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
     private volatile boolean connected = false;
 
     @Lookup
-    abstract MpdReaderWriter getMpdReaderWriter();
+    abstract MpdReaderWriter getMpdReaderWriter() throws IOException;
 
     @Override
     public void connect() {
@@ -65,6 +65,7 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
             return;
         }
         try {
+            executor = Executors.newFixedThreadPool(RW_COUNT);
             allReaderWriters = new ArrayList<>();
             for (int i = 0; i < RW_COUNT; i++) {
                 MpdReaderWriter rw = getMpdReaderWriter();
@@ -73,7 +74,6 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
             }
             idleReaderWriter = getMpdReaderWriter();
             allReaderWriters.add(idleReaderWriter);
-            executor = Executors.newFixedThreadPool(RW_COUNT);
             connected = true;
             eventsService.onConnect();
         } catch (Exception e) {
@@ -113,6 +113,9 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
             return feature.get();
         } catch (InterruptedException | ExecutionException e) {
             log.warn(e.getMessage());
+            if (e.getCause() instanceof MpdException) {
+                throw (MpdException)e.getCause();
+            }
             throw new MpdException(e.getMessage());
         }
     }

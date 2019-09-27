@@ -92,12 +92,11 @@ const PlaylistComponent =
                                                       e.stopPropagation();
                                                       if (canProcessReleaseAction(value, props.capturedObject)) {
                                                         props.releaseObject(props.capturedObject, value.pos);
-                                                      } else {
-                                                        props.captureObject({
-                                                          type: 'none',
-                                                          path: ''
-                                                        });
                                                       }
+                                                      props.captureObject({
+                                                        type: 'none',
+                                                        path: ''
+                                                      });
                                                    }}
                                                    onMouseDown={e=>{e.stopPropagation();
                                                    props.captureObject({path:'', type: 'pos', pos: value.pos})}}

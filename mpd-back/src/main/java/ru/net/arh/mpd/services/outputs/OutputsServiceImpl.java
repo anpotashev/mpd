@@ -41,7 +41,7 @@ public class OutputsServiceImpl implements OutputsService {
     public void save(MpdOutput output) {
         MpdCommand command = output.isEnabled()
                 ? MpdCommandBuilder.of(Command.ENABLE_OUTPUT).add(output.getId())
-                : MpdCommandBuilder.of(Command.DISABLE_OUTPUT).add(output.getId() + "");
+                : MpdCommandBuilder.of(Command.DISABLE_OUTPUT).add(output.getId());
         connectionService.sendCommand(command);
     }
 
