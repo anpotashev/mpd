@@ -1,9 +1,6 @@
 package ru.net.arh.mpd.connection.rw;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -13,15 +10,13 @@ import ru.net.arh.mpd.model.commands.MpdMultiCommand;
 import ru.net.arh.mpd.model.commands.MpdSingleCommand;
 import ru.net.arh.mpd.model.exception.MpdException;
 
-import javax.annotation.Resource;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.sql.Ref;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Primary
 public class MpdReaderWriterMockImpl implements MpdReaderWriter {
     private Map<String, Map<String, List<String>>> commands = new HashMap<>();
 
@@ -54,6 +49,12 @@ public class MpdReaderWriterMockImpl implements MpdReaderWriter {
                 ? str.split(" ")[0]
                 : str;
         String params = str.substring(cmd.length()).trim();
+        if (params.startsWith("\"")) {
+            params = params.substring(1);
+        }
+        if (params.endsWith("\"")) {
+            params = params.substring(0, params.length() - 1);
+        }
         Map<String, List<String>> paramMap = commands.get(cmd);
         if (paramMap == null) {
             throw new MpdException("command not found");
