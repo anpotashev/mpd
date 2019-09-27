@@ -1,0 +1,5 @@
+password:
+  '12345678': [ 'asdf', 'OK' ]
+  'default': [ 'ACK wrong password' ]
+ping:
+  'default': [ 'OK' ]

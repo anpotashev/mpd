@@ -54,6 +54,7 @@ dependencies {
 
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testCompile 'uk.co.jemos.podam:podam:7.2.3.RELEASE'
+    testCompile 'org.yaml:snakeyaml:1.25'
 
 }
 
