@@ -74,7 +74,7 @@ public class MpdReaderWriterImpl implements MpdReaderWriter {
         writer.writeCommand(command);
         List<String> strings = reader.readAnswer();
         String last = strings.get(strings.size() - 1);
-        if (strings.get(strings.size() - 1).startsWith("OK")) {
+        if (last.startsWith("OK")) {
             return strings;
         }
         log.info("On sending command: '{}' got error '{}'", command, last.substring(3).trim());
