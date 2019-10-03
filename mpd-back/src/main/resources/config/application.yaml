@@ -9,3 +9,9 @@ mpdserver:
 
 searchEngine:
   defaultUrl: http://localhost:9090/search
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

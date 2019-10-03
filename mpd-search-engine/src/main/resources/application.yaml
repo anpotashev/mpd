@@ -3,3 +3,10 @@ server:
 
 mpdback:
   defaultAddress: ws://localhost:8080/javaclient
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
