@@ -129,10 +129,8 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
                     .values()
                     .stream()
                     .map(cmd -> sendCommands(cmd))
-                    .peek(list -> list.remove(list.size() - 1))
                     .flatMap(List::stream)
                     .collect(Collectors.toList());
-            result.add("OK");
             return result;
         }
         return sendCommand(MpdCommandBuilder.join(commands));
