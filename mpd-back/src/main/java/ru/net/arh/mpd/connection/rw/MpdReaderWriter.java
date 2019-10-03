@@ -73,8 +73,8 @@ public class MpdReaderWriter implements Closeable {
         writer.writeCommand(command);
         List<String> strings = reader.readAnswer();
         String last = strings.get(strings.size() - 1);
-        if (strings.get(strings.size() - 1).startsWith("OK")) {
-            return strings;
+        if (last.startsWith("OK")) {
+            return strings.subList(0, strings.size()-1);
         }
         log.info("On sending command: '{}' got error '{}'", command, last.substring(3).trim());
         throw new MpdException("On sending command: '{}' got error '{}'", command, last.substring(3).trim());

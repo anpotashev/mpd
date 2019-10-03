@@ -34,10 +34,6 @@ public class MpdListAllParserImpl implements MpdListAllParser {
     public TreeItem parse(List<String> list) {
         TreeItem root = new TreeItem();
         root.setShowChildren(true);
-
-        if (!list.get(list.size() - 1).equals("OK")) {
-            throw new RuntimeException("Don't get OK");
-        }
         final TreeItem[] lastItem = {root};
 
         List<TreeItem> treeItems = MpdAnswersParser.parseAll(TreeItem.class, list);

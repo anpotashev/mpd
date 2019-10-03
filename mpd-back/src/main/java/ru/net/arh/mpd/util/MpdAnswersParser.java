@@ -22,8 +22,6 @@ import static java.util.stream.Collectors.toMap;
  */
 public class MpdAnswersParser {
 
-    private static final String OK = "OK";
-
     /**
      * Парсинг ответа в коллекцию объектов.
      *
@@ -132,7 +130,6 @@ public class MpdAnswersParser {
         AtomicInteger counter = new AtomicInteger(0);
         return new ArrayList(
                 answer.stream()
-                        .filter(s -> !s.startsWith("OK"))
                         .collect(
                                 groupingBy(
                                         s -> counter.addAndGet(isNew(s, beginLine) ? 1 : 0)

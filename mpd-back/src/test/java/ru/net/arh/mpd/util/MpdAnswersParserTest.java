@@ -23,7 +23,6 @@ public class MpdAnswersParserTest {
                 .map(MpdPojo4Test::stringList)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
-        list.add("OK");
         List<MpdPojo4Test> actual = MpdAnswersParser.parseAll(MpdPojo4Test.class, list);
         assertThat(actual.size()).isEqualTo(expected.size());
         IntStream.range(0, actual.size()).forEach(i -> assertThat(expected.get(i)).isEqualToComparingFieldByFieldRecursively(actual.get(i)));
