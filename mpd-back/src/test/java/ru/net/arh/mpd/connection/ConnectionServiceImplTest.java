@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -142,12 +143,17 @@ public class ConnectionServiceImplTest {
     @Test
     public void sendCommandWithMpdException() throws IOException {
         connectionService.connect();
+        Field field = ReflectionUtils.findField(ConnectionServiceImpl.class, "readerWriters", BlockingQueue.class);
+        field.setAccessible(true);
+        int startedSize = ((BlockingQueue) ReflectionUtils.getField(field, connectionService)).size();
         when(mpdReaderWriter.sendCommand(any(MpdSingleCommand.class))).thenThrow(new MpdException("Some error text"));
         try {
             connectionService.sendCommand(MpdCommandBuilder.of(PING));
         } catch (MpdException e) {
             assertEquals( "Some error text", e.getMessage());
             assertTrue(connectionService.isConnected());
+            int endSize = ((BlockingQueue) ReflectionUtils.getField(field, connectionService)).size();
+            assertEquals(startedSize, endSize);
         }
     }
 

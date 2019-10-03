@@ -127,14 +127,13 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
         }
         if (commands.size() > MAX_COMMANDS_COUNT) {
             AtomicInteger counter = new AtomicInteger(0);
-            List<String> result = commands.stream()
+            return commands.stream()
                     .collect(Collectors.groupingBy(i -> counter.getAndIncrement() / MAX_COMMANDS_COUNT))
                     .values()
                     .stream()
                     .map(cmd -> sendCommands(cmd))
                     .flatMap(List::stream)
                     .collect(Collectors.toList());
-            return result;
         }
         return sendCommand(MpdCommandBuilder.join(commands));
     }
@@ -173,8 +172,11 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
             } catch (IOException e) {
                 disconnect();
                 throw new MpdException(e.getMessage());
+            } finally {
+                if (connected) {
+                    readerWriters.put(rw);
+                }
             }
-            readerWriters.put(rw);
             return result;
         }
     }
