@@ -1,6 +1,15 @@
 package ru.net.arh.mpd.search.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.MatchAllQueryBuilder;
+import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -24,6 +33,8 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+
 /**
  * Импелментация сервиса, в основу которого положено взаимодействие с приложением mpd-back по ws протоколу.
  */
@@ -43,6 +54,10 @@ public class TreeServiceImpl implements TreeService {
     private MyStompSessionHandler sessionHandler;
     @Autowired
     private TaskScheduler scheduler;
+    @Autowired
+    private RestHighLevelClient client;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private WebSocketStompClient stompClient;
 
@@ -86,6 +101,30 @@ public class TreeServiceImpl implements TreeService {
     @EventListener(condition = "#event.type == T(ru.net.arh.mpd.search.model.EventType).FULL_TREE")
     private void onFullTreeGet(StompEvent event) {
         this.items = TreeItemUtil.setPathConvertToListAndRemoveDirs((TreeItem) event.getBody());
+        try {
+            delete();
+            add(this.items);
+        } catch (IOException e) {}
     }
 
+
+    private void add(List<TreeItem> items) throws IOException {
+        BulkRequest request = new BulkRequest();
+        items.forEach(treeItem -> request.add(new IndexRequest("mpd").id(treeItem.getPath()).source(toJson(treeItem), XContentType.JSON)));
+        client.bulk(request, RequestOptions.DEFAULT);
+    }
+
+    private void delete() throws IOException {
+        DeleteByQueryRequest request = new DeleteByQueryRequest("mpd");
+        request.setQuery(new MatchAllQueryBuilder());
+        client.deleteByQuery(request, RequestOptions.DEFAULT);
+    }
+
+    private String toJson(TreeItem treeItem) {
+        try {
+            return objectMapper.writeValueAsString(treeItem);
+        } catch (JsonProcessingException e) {
+            return "{}";
+        }
+    }
 }

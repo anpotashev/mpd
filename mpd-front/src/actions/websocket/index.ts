@@ -1,5 +1,11 @@
 import {DEFAULT_TIMEOUT, WS_REQUEST, WsDestination} from "constants/Socks";
-import {ON_SOCKS_CONNECTED, ON_SOCKS_DISCONNECTED, SEND_MESSAGE, SOCKS_CONNECT} from "constants/ActionTypes";
+import {
+    ON_SOCKS_CONNECTED,
+    ON_SOCKS_DISCONNECTED,
+    SEARCH_NEW,
+    SEND_MESSAGE,
+    SOCKS_CONNECT
+} from "constants/ActionTypes";
 import {ISendMessagePayload} from "redux/SockJSMiddleware";
 import {IOutput} from "../../reducers/Outputs";
 import {IBaseSearchCondition} from "../../reducers/Search";
@@ -350,6 +356,17 @@ export const requestShortStatus = (timeout: number = DEFAULT_TIMEOUT) => {
             type: WsDestination.SONG_TIME,
             timeout: timeout,
             msg: {}
+        }
+    }
+};
+
+
+export const searchNew = (text: string) => {
+    return {
+        type: WS_REQUEST,
+        payload: {
+            type: WsDestination.SEARCH_NEW,
+            msg: text
         }
     }
 };

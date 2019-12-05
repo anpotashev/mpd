@@ -8,4 +8,6 @@ import java.util.List;
 public interface SearchApi {
 
     List<TreeItem> search(Condition searchCondition);
+    List<TreeItem> search(String searchString);
+
 }

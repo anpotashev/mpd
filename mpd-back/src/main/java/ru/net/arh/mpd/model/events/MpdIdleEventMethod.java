@@ -19,4 +19,6 @@ public @interface MpdIdleEventMethod {
 
     MpdEventType eventType();
 
+    boolean alwaysUpdate() default false;
+
 }

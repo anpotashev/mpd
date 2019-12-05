@@ -27,4 +27,11 @@ public class MpdSearchController {
     public <T extends Condition> SockJsResponse<List<TreeItem>> search(T condition) {
         return new SockJsResponse<>(ResponseType.SEARCH, searchService.search(condition));
     }
+
+    @MessageMapping("/search_new")
+    @SendToUser(REPLY_QUEUE)
+    @MpdErrorType(type = ResponseType.SEARCH_NEW)
+    public SockJsResponse<List<TreeItem>> search(String searchString) {
+        return new SockJsResponse<>(ResponseType.SEARCH, searchService.search(searchString));
+    }
 }

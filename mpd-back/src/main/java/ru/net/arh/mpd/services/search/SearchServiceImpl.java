@@ -8,6 +8,7 @@ import ru.net.arh.mpd.search.api.SearchApi;
 import ru.net.arh.mpd.search.model.Condition;
 import ru.net.arh.mpd.search.model.TreeItem;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -20,5 +21,10 @@ public class SearchServiceImpl implements SearchService {
     @Cacheable(cacheNames = CacheNames.Constants.FULL_TREE)
     public List<TreeItem> search(Condition condition) {
         return searchApi.search(condition);
+    }
+
+    @Override
+    public List<TreeItem> search(String searchString) {
+        return searchApi.search(searchString);
     }
 }
