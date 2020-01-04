@@ -1,5 +1,7 @@
 package ru.net.arh.mpd.search.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +29,10 @@ import static ru.net.arh.mpd.search.model.Id3Tag.ARTIST;
 public class SearchApiImplTest {
     @Mock
     private TreeService treeService;
+    @Mock
+    private RestHighLevelClient restHighLevelClient;
+    @Mock
+    private ObjectMapper objectMapper;
     private SearchApi searchApi;
 
     @Before
@@ -35,7 +41,7 @@ public class SearchApiImplTest {
         PowerMockito.mockStatic(ConditionUtil.class);
         when(ConditionUtil.getPredicate(any(Condition.class)))
                 .thenReturn(treeItem -> Integer.parseInt(treeItem.getTitle()) % 2 == 0);
-        searchApi = new SearchApiImpl(treeService);
+        searchApi = new SearchApiImpl(treeService, restHighLevelClient, objectMapper);
     }
 
     @Test
