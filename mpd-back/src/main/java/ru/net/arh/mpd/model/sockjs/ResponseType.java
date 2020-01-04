@@ -30,6 +30,7 @@ public enum ResponseType {
     , PLAYLIST_RM
     , PLAYLIST_MOVE
     , SEARCH
+    , SEARCH_NEW
     , PLAYLIST_ADD_SEARCH
     ;
 

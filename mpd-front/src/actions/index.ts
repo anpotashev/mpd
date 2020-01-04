@@ -32,7 +32,8 @@ export {onSocketConnected,
     moveInPlaylist,
     search,
     addSearch,
-    requestShortStatus
+    requestShortStatus,
+    searchNew
 } from './websocket';
 
 export {
@@ -49,6 +50,6 @@ export {hideNewConditionWindow,
     showNewConditionWindow,
     startEdit,
     cancelEdit,
-    addSearchByName
-
+    addSearchByName,
+    clearSearch
 } from './search'

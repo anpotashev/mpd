@@ -25,6 +25,9 @@ dependencies {
     implementation('org.springframework:spring-websocket')
     implementation('org.springframework:spring-messaging')
     implementation('org.springframework.boot:spring-boot-starter-actuator')
+    implementation 'org.elasticsearch.client:elasticsearch-rest-client:7.3.2'
+    implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.3.2'
+    implementation 'org.elasticsearch:elasticsearch:7.3.2'
     implementation project(':search-api')
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'

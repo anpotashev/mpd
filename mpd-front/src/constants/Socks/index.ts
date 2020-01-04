@@ -27,6 +27,7 @@ export class WsDestination {
     static UPDATE_DB = new WsDestination("/mpd/updateDb", "UPDATE_DB");
     static STREAM_URL = new WsDestination("/mpd/streamPlayer", "STREAM_URL");
     static SEARCH = new WsDestination("/mpd/search", "SEARCH");
+    static SEARCH_NEW = new WsDestination("/mpd/search_new", "SEARCH_NEW");
 
     static SET_REPEAT = new WsDestination("/mpd/status/repeat", "SET_REPEAT");
     static SET_CONSUME = new WsDestination("/mpd/status/consume", "SET_CONSUME");

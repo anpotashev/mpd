@@ -12,6 +12,7 @@ import CapturedObject from "./Dnd";
 import Search from "./Search";
 import Errors from "./Errors";
 import {LOADING} from "../redux/SockJSMiddleware2";
+import SearchResult from "./SearchResult";
 
 const reducers = combineReducers({
     socksConnection: SocksConnection,
@@ -25,7 +26,8 @@ const reducers = combineReducers({
     shortStatus: ShortStatus,
     capturedObject: CapturedObject,
     search: Search,
-    errors: Errors
+    errors: Errors,
+    searchResult: SearchResult
 });
 export default reducers;
 

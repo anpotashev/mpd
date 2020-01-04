@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.net.arh.mpd.cache.CacheNames;
 import ru.net.arh.mpd.search.api.SearchApi;
 import ru.net.arh.mpd.search.model.Condition;
+import ru.net.arh.mpd.search.model.SearchConditionNew;
+import ru.net.arh.mpd.search.model.SearchResult;
 import ru.net.arh.mpd.search.model.TreeItem;
 
 import java.util.List;
@@ -20,5 +22,10 @@ public class SearchServiceImpl implements SearchService {
     @Cacheable(cacheNames = CacheNames.Constants.FULL_TREE)
     public List<TreeItem> search(Condition condition) {
         return searchApi.search(condition);
+    }
+
+    @Override
+    public SearchResult search(SearchConditionNew searchConditionNew) {
+        return searchApi.search(searchConditionNew);
     }
 }

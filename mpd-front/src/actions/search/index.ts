@@ -3,7 +3,7 @@ import {
     REMOVE_CONDITION,
     RENAME_CONDITION,
     SHOW_NEW_CONDITION_WINDOW,
-    START_EDIT, CANCEL_EDIT, ADD_SEARCH_BY_NAME
+    START_EDIT, CANCEL_EDIT, ADD_SEARCH_BY_NAME, CLEAR_SEARCH
 } from "constants/ActionTypes";
 import {IBaseSearchCondition} from "reducers/Search";
 
@@ -70,5 +70,10 @@ export const addSearchByName = (name: string, pos?: number) => {
             name: name,
             pos: pos
         }
+    }
+};
+export const clearSearch = () => {
+    return {
+        type: CLEAR_SEARCH
     }
 };
