@@ -8,6 +8,8 @@ import ru.net.arh.mpd.model.MpdErrorType;
 import ru.net.arh.mpd.model.sockjs.ResponseType;
 import ru.net.arh.mpd.model.sockjs.SockJsResponse;
 import ru.net.arh.mpd.search.model.Condition;
+import ru.net.arh.mpd.search.model.SearchConditionNew;
+import ru.net.arh.mpd.search.model.SearchResult;
 import ru.net.arh.mpd.search.model.TreeItem;
 import ru.net.arh.mpd.services.search.SearchService;
 
@@ -31,7 +33,7 @@ public class MpdSearchController {
     @MessageMapping("/search_new")
     @SendToUser(REPLY_QUEUE)
     @MpdErrorType(type = ResponseType.SEARCH_NEW)
-    public SockJsResponse<List<TreeItem>> search(String searchString) {
-        return new SockJsResponse<>(ResponseType.SEARCH, searchService.search(searchString));
+    public SockJsResponse<SearchResult> search(SearchConditionNew searchCondition) {
+        return new SockJsResponse<>(ResponseType.SEARCH, searchService.search(searchCondition));
     }
 }

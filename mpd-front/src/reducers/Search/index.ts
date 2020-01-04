@@ -3,8 +3,7 @@ import {
     REMOVE_CONDITION,
     RENAME_CONDITION,
     START_EDIT,
-    CANCEL_EDIT,
-    SEARCH
+    CANCEL_EDIT
 } from "constants/ActionTypes";
 import {SUCCESS_SUFFIX} from "../../redux/SockJSMiddleware2";
 import {getArrayCookie, setArrayCookie} from "../../lib/cookie";
@@ -38,7 +37,7 @@ export interface Conditions {
 }
 
 const loadFromCookie = () => getArrayCookie("conditions");
-const saveInCookie = (conditions: IBaseSearchCondition[]) => setArrayCookie("conditions", conditions, {expires: 10000});
+const saveInCookie = (conditions: IBaseSearchCondition[]) => setArrayCookie("conditions", conditions, {expires: 100000});
 
 const emptyConditions = loadFromCookie() === undefined ? {conditions: [], isEditing: false} : {conditions: loadFromCookie(), isEditing: false};
 
@@ -82,9 +81,6 @@ export default function (state: Conditions = emptyConditions, action: any): Cond
             return {conditions: conditions, isEditing: true};
         case CANCEL_EDIT:
             return {conditions: conditions, isEditing: false};
-    }
-    if (action.type === SEARCH + SUCCESS_SUFFIX) {
-        console.log('search result: ', JSON.stringify(action.payload, null, 2));
     }
     return state;
 }

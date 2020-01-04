@@ -18,7 +18,7 @@ export enum LOADING {
     notLoading,
     loading,
     loaded
-};
+}
 
 export const PROCESSING_SUFFIX = '_PROCESSING';
 export const FAILED_SUFFIX = '_FAILED';

@@ -361,12 +361,19 @@ export const requestShortStatus = (timeout: number = DEFAULT_TIMEOUT) => {
 };
 
 
-export const searchNew = (text: string) => {
+export const searchNew = (text: string, searchPlaces: string[], from: number = 0, size: number = 20) => {
+    console.log(text);
+    console.log(searchPlaces);
     return {
         type: WS_REQUEST,
         payload: {
             type: WsDestination.SEARCH_NEW,
-            msg: text
+            msg: {
+                searchString: text,
+                searchPlaces: searchPlaces,
+                size: size,
+                from: from
+            }
         }
     }
 };

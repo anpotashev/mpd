@@ -25,10 +25,10 @@ const left = () => <LeftPanel>
     <LeftPanelElement id="second" title="Playlists" iconClass="glyphicon glyphicon-th-list">
         <StoredPlaylists/>
     </LeftPanelElement>
-    <LeftPanelElement id="third" title="Search" iconClass="glyphicon glyphicon-search">
+    <LeftPanelElement id="third" title="Stored search" iconClass="glyphicon glyphicon-search">
         <SearchComponent/>
     </LeftPanelElement>
-    <LeftPanelElement id="fourth" title="Simple search" iconClass="glyphicon glyphicon-search">
+    <LeftPanelElement id="fourth" title="Quick search (beta)" iconClass="glyphicon glyphicon-search">
         <SimpleSearch/>
     </LeftPanelElement>
 </LeftPanel>;

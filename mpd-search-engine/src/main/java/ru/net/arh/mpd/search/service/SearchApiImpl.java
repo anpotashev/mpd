@@ -11,11 +11,11 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.net.arh.mpd.search.api.SearchApi;
-import ru.net.arh.mpd.search.model.Condition;
-import ru.net.arh.mpd.search.model.TreeItem;
+import ru.net.arh.mpd.search.model.*;
 import ru.net.arh.mpd.search.util.ConditionUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -52,19 +52,33 @@ public class SearchApiImpl implements SearchApi {
     }
 
     @Override
-    public List<TreeItem> search(String searchString) {
+    public SearchResult search(SearchConditionNew searchCondition) {
         try {
-            QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(searchString);
+            QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(searchCondition.getSearchString()
+                    , searchCondition.getSearchPlaces()
+                            .stream()
+                            .map(SearchPlaces::getEsFieldName)
+                            .toArray(String[]::new)
+
+                    );
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
-                    .query(queryBuilder);
+                    .query(queryBuilder)
+                    .from(searchCondition.getFrom())
+                    .size(searchCondition.getSize());
             SearchRequest searchRequest = new SearchRequest("mpd")
                     .source(sourceBuilder);
             SearchResponse search = client.search(searchRequest, RequestOptions.DEFAULT);
-            return Arrays.stream(search.getHits().getHits())
+            SearchResult result = new SearchResult();
+            result.setFrom(searchCondition.getFrom());
+            result.setSize(searchCondition.getSize());
+            result.setItems(Arrays.stream(search.getHits().getHits())
                     .map(this::toTreeItem)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
+            result.setHasMore(search.getHits().getTotalHits().value > searchCondition.getFrom() + search.getHits().getHits().length);
+            result.setTotalCount(search.getHits().getTotalHits().value);
+            return result;
         } catch (IOException e) {
-            return EMPTY_LIST;
+            return null;
         }
     }
 

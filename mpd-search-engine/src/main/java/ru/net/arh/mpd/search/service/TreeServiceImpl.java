@@ -3,6 +3,7 @@ package ru.net.arh.mpd.search.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
@@ -102,7 +103,11 @@ public class TreeServiceImpl implements TreeService {
     private void onFullTreeGet(StompEvent event) {
         this.items = TreeItemUtil.setPathConvertToListAndRemoveDirs((TreeItem) event.getBody());
         try {
-            delete();
+            try {
+                delete();
+            } catch (ElasticsearchStatusException e) {
+
+            }
             add(this.items);
         } catch (IOException e) {}
     }

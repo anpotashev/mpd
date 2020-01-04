@@ -50,6 +50,6 @@ export {hideNewConditionWindow,
     showNewConditionWindow,
     startEdit,
     cancelEdit,
-    addSearchByName
-
+    addSearchByName,
+    clearSearch
 } from './search'

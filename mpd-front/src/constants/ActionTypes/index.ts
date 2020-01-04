@@ -32,3 +32,4 @@ export const START_EDIT='START_EDIT';
 export const CANCEL_EDIT='CANCEL_EDIT';
 export const ADD_SEARCH_BY_NAME='ADD_SEARCH_BY_NAME';
 export const SEARCH_NEW='SEARCH_NEW';
+export const CLEAR_SEARCH='CLEAR_SEARCH';
