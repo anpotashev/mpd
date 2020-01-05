@@ -15,13 +15,10 @@ import ru.net.arh.mpd.search.model.*;
 import ru.net.arh.mpd.search.util.ConditionUtil;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static java.util.Collections.EMPTY_LIST;
 
 public class SearchApiImpl implements SearchApi {
 
