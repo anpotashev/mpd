@@ -1,0 +1,21 @@
+{
+  "analysis": {
+    "analyzer": {
+      "mpd_analyzer": {
+        "type": "custom",
+        "tokenizer": "standard",
+        "filter": ["lowercase", "mpd_russian", "mpd_english"]
+      }
+    },
+    "filter": {
+      "mpd_russian": {
+        "type": "stemmer",
+        "name": "russian"
+      },
+      "mpd_english": {
+        "type": "stemmer",
+        "name": "english"
+      }
+    }
+  }
+}

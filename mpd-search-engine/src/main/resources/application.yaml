@@ -12,6 +12,8 @@ management:
         include: "*"
 
 elasticsearch:
-  host: es01
+  host: localhost
   port: 9200
   protocol: http
+  index: mpd1
+

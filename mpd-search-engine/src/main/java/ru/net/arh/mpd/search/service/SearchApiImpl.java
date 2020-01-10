@@ -1,25 +1,45 @@
 package ru.net.arh.mpd.search.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.PutMappingRequest;
+import org.elasticsearch.common.Strings;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import ru.net.arh.mpd.search.api.SearchApi;
 import ru.net.arh.mpd.search.model.*;
 import ru.net.arh.mpd.search.util.ConditionUtil;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+
+@PropertySources({
+        @PropertySource("classpath:application.yaml")
+        ,
+        @PropertySource(value = "file:./custom/mpd-search.properties", ignoreResourceNotFound = true)
+})
 public class SearchApiImpl implements SearchApi {
 
     @Autowired
@@ -31,10 +51,14 @@ public class SearchApiImpl implements SearchApi {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public SearchApiImpl(TreeService treeService, RestHighLevelClient client, ObjectMapper objectMapper) {
+    @Autowired
+    private ESProperties esProperties;
+
+    public SearchApiImpl(TreeService treeService, RestHighLevelClient client, ObjectMapper objectMapper, ESProperties esProperties) {
         this.treeService = treeService;
         this.client = client;
         this.objectMapper = objectMapper;
+        this.esProperties = esProperties;
     }
 
     @Override
@@ -57,12 +81,12 @@ public class SearchApiImpl implements SearchApi {
                             .map(SearchPlaces::getEsFieldName)
                             .toArray(String[]::new)
 
-                    );
+                    ).operator(Operator.AND);
             SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
                     .query(queryBuilder)
                     .from(searchCondition.getFrom())
                     .size(searchCondition.getSize());
-            SearchRequest searchRequest = new SearchRequest("mpd")
+            SearchRequest searchRequest = new SearchRequest(esProperties.getESindex())
                     .source(sourceBuilder);
             SearchResponse search = client.search(searchRequest, RequestOptions.DEFAULT);
             SearchResult result = new SearchResult();
@@ -75,7 +99,7 @@ public class SearchApiImpl implements SearchApi {
             result.setTotalCount(search.getHits().getTotalHits().value);
             return result;
         } catch (IOException e) {
-            return null;
+            throw new RuntimeException("todo");
         }
     }
 
