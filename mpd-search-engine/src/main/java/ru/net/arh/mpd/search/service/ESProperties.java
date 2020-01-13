@@ -15,6 +15,6 @@ import org.springframework.stereotype.Component;
 })
 public class ESProperties {
 
-    @Value("${elasticsearch.index:{elasticsearch.defaultIndex}}")
+    @Value("${elasticsearch.index:${elasticsearch.defaultIndex}}")
     private String eSindex;
 }

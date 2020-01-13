@@ -22,11 +22,11 @@ import org.springframework.context.annotation.PropertySources;
 })
 public class ESConfig {
 
-    @Value("${elasticsearch.host:{elasticsearch.defaultHost}}")
+    @Value("${elasticsearch.host:${elasticsearch.defaultHost}}")
     private String elasticsearchHost;
-    @Value("${elasticsearch.port:{elasticsearch.defaultPort}}")
+    @Value("${elasticsearch.port:${elasticsearch.defaultPort}}")
     private int elasticsearchPort;
-    @Value("${elasticsearch.protocol:{elasticsearch.defaultProtocol}}")
+    @Value("${elasticsearch.protocol:${elasticsearch.defaultProtocol}}")
     private String elasticsearchProtocol;
 
     @Bean(destroyMethod = "close")
