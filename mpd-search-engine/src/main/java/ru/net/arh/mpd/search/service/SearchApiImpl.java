@@ -11,8 +11,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import ru.net.arh.mpd.search.api.SearchApi;
 import ru.net.arh.mpd.search.model.*;
 import ru.net.arh.mpd.search.util.ConditionUtil;
@@ -23,13 +21,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
-
-@PropertySources({
-        @PropertySource("classpath:application.yaml")
-        ,
-        @PropertySource(value = "file:./custom/mpd-search.properties", ignoreResourceNotFound = true)
-})
 public class SearchApiImpl implements SearchApi {
 
     @Autowired
