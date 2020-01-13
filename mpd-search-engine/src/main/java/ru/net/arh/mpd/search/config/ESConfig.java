@@ -22,26 +22,18 @@ import org.springframework.context.annotation.PropertySources;
 })
 public class ESConfig {
 
-    @Value("${elasticsearch.host}")
+    @Value("${elasticsearch.host:{elasticsearch.defaultHost}}")
     private String elasticsearchHost;
-    @Value("${elasticsearch.port}")
+    @Value("${elasticsearch.port:{elasticsearch.defaultPort}}")
     private int elasticsearchPort;
-    @Value("${elasticsearch.protocol}")
+    @Value("${elasticsearch.protocol:{elasticsearch.defaultProtocol}}")
     private String elasticsearchProtocol;
-//    @Value("${elasticsearch.username}")
-//    private String username;
-//    @Value("${elasticsearch.password}")
-//    private String password;
 
     @Bean(destroyMethod = "close")
     public RestHighLevelClient client() {
-//        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-//        credentialsProvider.setCredentials(AuthScope.ANY,new UsernamePasswordCredentials("username", "password"));
-        RestHighLevelClient client = new RestHighLevelClient(
+        return new RestHighLevelClient(
                 RestClient.builder(new HttpHost(elasticsearchHost, elasticsearchPort, elasticsearchProtocol))
-//                        .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider))
         );
-        return client;
     }
 
 
