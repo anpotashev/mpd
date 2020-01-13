@@ -34,6 +34,8 @@ public class SearchApiImplTest {
     @Mock
     private ObjectMapper objectMapper;
     private SearchApi searchApi;
+    @Mock
+    private ESProperties properties;
 
     @Before
     public void setUp() throws Exception {
@@ -41,7 +43,7 @@ public class SearchApiImplTest {
         PowerMockito.mockStatic(ConditionUtil.class);
         when(ConditionUtil.getPredicate(any(Condition.class)))
                 .thenReturn(treeItem -> Integer.parseInt(treeItem.getTitle()) % 2 == 0);
-        searchApi = new SearchApiImpl(treeService, restHighLevelClient, objectMapper);
+        searchApi = new SearchApiImpl(treeService, restHighLevelClient, objectMapper, properties);
     }
 
     @Test
@@ -56,7 +58,7 @@ public class SearchApiImplTest {
     }
 
     private List<TreeItem> getTreeItems() {
-        return IntStream.range(0,100).mapToObj(operand -> {
+        return IntStream.range(0, 100).mapToObj(operand -> {
             TreeItem item = new TreeItem();
             item.setTitle("" + operand);
             return item;

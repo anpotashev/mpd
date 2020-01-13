@@ -1,20 +1,11 @@
 package ru.net.arh.mpd.search.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.PutMappingRequest;
-import org.elasticsearch.common.Strings;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -26,7 +17,6 @@ import ru.net.arh.mpd.search.api.SearchApi;
 import ru.net.arh.mpd.search.model.*;
 import ru.net.arh.mpd.search.util.ConditionUtil;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -75,32 +65,39 @@ public class SearchApiImpl implements SearchApi {
     @Override
     public SearchResult search(SearchConditionNew searchCondition) {
         try {
-            QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(searchCondition.getSearchString()
-                    , searchCondition.getSearchPlaces()
-                            .stream()
-                            .map(SearchPlaces::getEsFieldName)
-                            .toArray(String[]::new)
-
-                    ).operator(Operator.AND);
-            SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
-                    .query(queryBuilder)
-                    .from(searchCondition.getFrom())
-                    .size(searchCondition.getSize());
-            SearchRequest searchRequest = new SearchRequest(esProperties.getESindex())
-                    .source(sourceBuilder);
+            SearchRequest searchRequest = prepareSearchQuery(searchCondition);
             SearchResponse search = client.search(searchRequest, RequestOptions.DEFAULT);
-            SearchResult result = new SearchResult();
-            result.setFrom(searchCondition.getFrom());
-            result.setSize(searchCondition.getSize());
-            result.setItems(Arrays.stream(search.getHits().getHits())
-                    .map(this::toTreeItem)
-                    .collect(Collectors.toList()));
-            result.setHasMore(search.getHits().getTotalHits().value > searchCondition.getFrom() + search.getHits().getHits().length);
-            result.setTotalCount(search.getHits().getTotalHits().value);
-            return result;
+            return mapToSearchResult(searchCondition, search);
         } catch (IOException e) {
             throw new RuntimeException("todo");
         }
+    }
+
+    private SearchRequest prepareSearchQuery(SearchConditionNew searchCondition) {
+        QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(searchCondition.getSearchString()
+                , searchCondition.getSearchPlaces()
+                        .stream()
+                        .map(SearchPlaces::getEsFieldName)
+                        .toArray(String[]::new))
+                .type(MultiMatchQueryBuilder.Type.BOOL_PREFIX);
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
+                .query(queryBuilder)
+                .from(searchCondition.getFrom())
+                .size(searchCondition.getSize());
+        return new SearchRequest(esProperties.getESindex())
+                .source(sourceBuilder);
+    }
+
+    private SearchResult mapToSearchResult(SearchConditionNew searchCondition, SearchResponse search) {
+        SearchResult result = new SearchResult();
+        result.setFrom(searchCondition.getFrom());
+        result.setSize(searchCondition.getSize());
+        result.setItems(Arrays.stream(search.getHits().getHits())
+                .map(this::toTreeItem)
+                .collect(Collectors.toList()));
+        result.setHasMore(search.getHits().getTotalHits().value > searchCondition.getFrom() + search.getHits().getHits().length);
+        result.setTotalCount(search.getHits().getTotalHits().value);
+        return result;
     }
 
     private TreeItem toTreeItem(SearchHit documentFields) {

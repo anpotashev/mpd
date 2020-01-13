@@ -1,0 +1,67 @@
+{
+  "properties": {
+    "path": {
+      "type": "search_as_you_type",
+      "analyzer": "mpd_analyzer",
+      "fields": {
+        "suggest": {
+          "type": "completion"
+        }
+      }
+    },
+    "genre": {
+      "type": "search_as_you_type",
+      "analyzer": "mpd_analyzer",
+      "fields": {
+        "suggest": {
+          "type": "completion"
+        }
+      }
+    },
+    "album": {
+      "type": "search_as_you_type",
+      "analyzer": "mpd_analyzer",
+      "fields": {
+        "suggest": {
+          "type": "completion"
+        }
+      }
+    },
+    "artist": {
+      "type": "search_as_you_type",
+      "analyzer": "mpd_analyzer",
+      "fields": {
+        "suggest": {
+          "type": "completion"
+        }
+      }
+    },
+    "albumAritst": {
+      "type": "search_as_you_type",
+      "analyzer": "mpd_analyzer",
+      "fields": {
+        "suggest": {
+          "type": "completion"
+        }
+      }
+    },
+    "title": {
+      "type": "search_as_you_type",
+      "analyzer": "mpd_analyzer",
+      "fields": {
+        "suggest": {
+          "type": "completion"
+        }
+      }
+    },
+    "file": {
+      "type": "search_as_you_type",
+      "analyzer": "mpd_analyzer",
+      "fields": {
+        "suggest": {
+          "type": "completion"
+        }
+      }
+    }
+  }
+}
