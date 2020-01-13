@@ -7,6 +7,7 @@ import '../index.css';
 export interface IFileCaptionProps {
     path: string;
     title: string;
+    hint?: string;
     addToPlaylist: Function;
     catpureOject: Function;
 }
@@ -19,7 +20,7 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators(
     }, dispatch);
 
 
-const FileCaptionComponent = (props: IFileCaptionProps) => <li className="tree-li-file"
+const FileCaptionComponent = (props: IFileCaptionProps) => <li className="tree-li-file" title={props.hint}
                                                                onMouseDown={e => { e.stopPropagation(); props.catpureOject({path:props.path, type:'file'})}}
 ><span
     className="glyphicon glyphicon-file"/>
