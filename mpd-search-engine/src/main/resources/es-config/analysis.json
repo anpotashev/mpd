@@ -3,8 +3,23 @@
     "analyzer": {
       "mpd_analyzer": {
         "type": "custom",
-        "tokenizer": "standard",
-        "filter": ["lowercase", "mpd_russian", "mpd_english"]
+        "tokenizer": "mpd_ngram",
+        "filter": [
+          "lowercase",
+          "mpd_russian",
+          "mpd_english"
+        ]
+      }
+    },
+    "tokenizer": {
+      "mpd_ngram": {
+        "type": "ngram",
+        "min_gram": 3,
+        "max_gram": 4,
+        "token_chars": [
+          "letter",
+          "digit"
+        ]
       }
     },
     "filter": {

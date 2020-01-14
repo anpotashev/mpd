@@ -2,66 +2,43 @@
   "properties": {
     "path": {
       "type": "search_as_you_type",
-      "analyzer": "mpd_analyzer",
-      "fields": {
-        "suggest": {
-          "type": "completion"
-        }
-      }
+      "analyzer": "mpd_analyzer"
     },
     "genre": {
       "type": "search_as_you_type",
-      "analyzer": "mpd_analyzer",
-      "fields": {
-        "suggest": {
-          "type": "completion"
-        }
-      }
+      "analyzer": "mpd_analyzer"
     },
     "album": {
       "type": "search_as_you_type",
-      "analyzer": "mpd_analyzer",
-      "fields": {
-        "suggest": {
-          "type": "completion"
-        }
-      }
+      "analyzer": "mpd_analyzer"
     },
     "artist": {
       "type": "search_as_you_type",
-      "analyzer": "mpd_analyzer",
-      "fields": {
-        "suggest": {
-          "type": "completion"
-        }
-      }
+      "analyzer": "mpd_analyzer"
     },
     "albumAritst": {
       "type": "search_as_you_type",
-      "analyzer": "mpd_analyzer",
-      "fields": {
-        "suggest": {
-          "type": "completion"
-        }
-      }
+      "analyzer": "mpd_analyzer"
     },
     "title": {
       "type": "search_as_you_type",
-      "analyzer": "mpd_analyzer",
-      "fields": {
-        "suggest": {
-          "type": "completion"
-        }
-      }
+      "analyzer": "mpd_analyzer"
     },
     "file": {
       "type": "search_as_you_type",
-      "analyzer": "mpd_analyzer",
-      "fields": {
-        "suggest": {
-          "type": "completion"
-        }
-      }
+      "analyzer": "mpd_analyzer"
+    },
+    "time":{
+      "type": "object",
+      "enabled": false
+    },
+    "track": {
+      "type": "object",
+      "enabled": false
+    },
+    "date": {
+      "type": "object",
+      "enabled": false
     }
   }
 }

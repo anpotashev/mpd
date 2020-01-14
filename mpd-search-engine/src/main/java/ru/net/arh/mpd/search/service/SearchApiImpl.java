@@ -6,6 +6,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -70,7 +71,8 @@ public class SearchApiImpl implements SearchApi {
                         .stream()
                         .map(SearchPlaces::getEsFieldName)
                         .toArray(String[]::new))
-                .type(MultiMatchQueryBuilder.Type.BOOL_PREFIX);
+                .operator(Operator.AND)
+                .type(MultiMatchQueryBuilder.Type.CROSS_FIELDS);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
                 .query(queryBuilder)
                 .from(searchCondition.getFrom())

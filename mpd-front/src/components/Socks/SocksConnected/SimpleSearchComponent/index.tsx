@@ -32,7 +32,7 @@ class SimpleSearch extends React.Component<ISimpleSearchProps, ISimpleSearchStat
     state: ISimpleSearchState = {
         text: "",
         checked: [
-            "file",
+            // "file",
             "path",
             "title",
             "artist",
@@ -70,11 +70,26 @@ class SimpleSearch extends React.Component<ISimpleSearchProps, ISimpleSearchStat
         if (indexOf > -1) {
             newState.checked.splice(indexOf, 1);
         } else {
+            if (label === 'file') {
+                this.remove(newState, 'path');
+            }
+            if (label === 'path') {
+                this.remove(newState, 'file');
+            }
             newState.checked.push(label);
         }
         this.setState(newState);
         this.search()
     }
+
+    private remove(newState: ISimpleSearchState, label: string) {
+        let indexOf = newState.checked.indexOf(label);
+        if (indexOf >-1) {
+            newState.checked.splice(indexOf, 1);
+        }
+    }
+
+
 
     private search(showAll: boolean = false) {
         if (this.state.text !== '' && this.state.checked.length > 0) {
