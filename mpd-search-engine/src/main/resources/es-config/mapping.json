@@ -16,7 +16,7 @@
       "type": "search_as_you_type",
       "analyzer": "mpd_analyzer"
     },
-    "albumAritst": {
+    "albumArtist": {
       "type": "search_as_you_type",
       "analyzer": "mpd_analyzer"
     },
