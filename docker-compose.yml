@@ -14,8 +14,6 @@ services:
   mpd-search:
     build: ./mpd-search-engine
     restart: always
-    ports:
-      - 9090:9090
     volumes:
       - ./custom/:/custom
         - ./logs/:/logs
@@ -24,5 +22,6 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.4.2
     environment:
       - discovery.type=single-node
+      -
     volumes:
       - ./data:/usr/share/elasticsearch/data
