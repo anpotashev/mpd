@@ -3,13 +3,13 @@ package ru.net.arh.mpd.integration;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.ImageFromDockerfile;
@@ -17,13 +17,19 @@ import ru.net.arh.mpd.Main;
 import ru.net.arh.mpd.connection.ConnectionService;
 import ru.net.arh.mpd.connection.ConnectionSettings;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = Main.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BaseIntegrationTest {
+@ContextConfiguration(classes = Main.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public class SpringCucumberIntegrationTest {
 
-    @ClassRule
+    @Value("${local.server.port}")
+    int port;
+
+//    @ClassRule
     public static GenericContainer genericContainer = new GenericContainer(
             new ImageFromDockerfile()
                     .withFileFromClasspath("mpd.conf", "docker/mpd/mpd.conf")
@@ -34,25 +40,42 @@ public class BaseIntegrationTest {
             .withClasspathResourceMapping("docker/mpd/playlists", "/playlists", BindMode.READ_WRITE)
             .withExposedPorts(6600, 8000);
 
-    @Autowired
-    private ConnectionService connectionService;
-    @MockBean
-    ConnectionSettings connectionSettings;
-
-    @BeforeClass
-    public static void before() {
+    static {
         genericContainer.start();
     }
 
+    @Autowired
+    ConnectionService connectionService;
+    @Autowired
+    @MockBean
+    ConnectionSettings connectionSettings;
+
+//    WsClient client;
+
     @Before
-    public void beforeTest() {
+    public void before() {
+        initMocks(this);
         when(connectionSettings.getHost()).thenReturn("127.0.0.1");
         when(connectionSettings.getPassword()).thenReturn("12345678");
         when(connectionSettings.getPort()).thenReturn(genericContainer.getMappedPort(6600));
+
     }
 
-    @Test
-    public void  test() {
+//    public void wsConnect() throws ExecutionException, InterruptedException {
+//        client.connect();
+//    }
+//
+//    public void sendCommand(String command) {
+//        client.sendCommand(command);
+//    }
+//
+//    public void subscribe(String s, StompFrameHandler handler) {
+//        client.subscribe(s, handler);
+//    }
 
+    protected WsClient createClient() throws ExecutionException, InterruptedException {
+        WsClient client = new WsClient("localhost", port);
+        client.connect();
+        return client;
     }
 }

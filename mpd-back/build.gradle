@@ -57,9 +57,9 @@ dependencies {
     testCompile 'uk.co.jemos.podam:podam:7.2.3.RELEASE'
 
     testImplementation('org.testcontainers:testcontainers:1.12.4')
-    testImplementation('io.cucumber:cucumber-java8:4.8.0')
-    testImplementation('io.cucumber:cucumber-spring:4.8.0')
-    testImplementation('io.cucumber:cucumber-junit:4.8.0')
+    testImplementation('info.cukes:cucumber-java:1.2.5')
+    testImplementation('info.cukes:cucumber-junit:1.2.5')
+    testImplementation('info.cukes:cucumber-spring:1.2.5')
 
 }
 
