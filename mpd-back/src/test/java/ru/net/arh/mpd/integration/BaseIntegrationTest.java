@@ -50,4 +50,9 @@ public class BaseIntegrationTest {
         when(connectionSettings.getPassword()).thenReturn("12345678");
         when(connectionSettings.getPort()).thenReturn(genericContainer.getMappedPort(6600));
     }
+
+    @Test
+    public void  test() {
+
+    }
 }
