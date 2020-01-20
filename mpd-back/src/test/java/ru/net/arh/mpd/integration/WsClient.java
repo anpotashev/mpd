@@ -4,6 +4,7 @@ import org.springframework.messaging.converter.ByteArrayMessageConverter;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -12,7 +13,10 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 import org.testcontainers.shaded.org.apache.commons.lang.ObjectUtils;
+import ru.net.arh.mpd.integration.steps.SockJSResponse;
+import ru.net.arh.mpd.model.sockjs.MpdSockJsError;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +55,24 @@ public class WsClient {
         stompSession.send(destination, payload);
     }
 
-    public void subscribe(String s, StompFrameHandler handler) {
-        stompSession.subscribe(s, handler);
+    public void subscribe(String s, MsgHandler handler) {
+        stompSession.subscribe(s, new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return headers.get("destination").get(0).equals("/user/queue/error")
+                        ? MpdSockJsError.class
+                        : SockJSResponse.class;
+            }
+
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                if (!(payload instanceof SockJSResponse || payload instanceof MpdSockJsError)) return;
+                handler.handle(payload);
+            }
+        });
+    }
+
+    public interface MsgHandler {
+        void handle(Object payload);
     }
 }

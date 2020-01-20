@@ -43,7 +43,7 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
     @Autowired
     private EventsService eventsService;
 
-    private ExecutorService executor;
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
     private BlockingQueue<MpdReaderWriter> readerWriters = new LinkedBlockingQueue<>();
     private MpdReaderWriter idleReaderWriter;
     private List<MpdReaderWriter> allReaderWriters = new ArrayList<>();
@@ -86,20 +86,25 @@ public abstract class ConnectionServiceImpl implements ConnectionService {
 
     @Override
     public void disconnect() {
-        connected = false;
-        executor.shutdownNow();
-        readerWriters.clear();
-        allReaderWriters.forEach(
-                rw -> {
-                    try {
-                        rw.close();
-                    } catch (IOException e) {
-                        log.warn("Exception on close: ", e);
+        locker.lock();
+        try {
+            connected = false;
+            executor.shutdownNow();
+            readerWriters.clear();
+            allReaderWriters.forEach(
+                    rw -> {
+                        try {
+                            rw.close();
+                        } catch (IOException e) {
+                            log.warn("Exception on close: ", e);
+                        }
                     }
-                }
-        );
-        allReaderWriters.clear();
-        idleReaderWriter = null;
+            );
+            allReaderWriters.clear();
+            idleReaderWriter = null;
+        } finally {
+            locker.unlock();
+        }
         eventsService.onDisconnect();
     }
 

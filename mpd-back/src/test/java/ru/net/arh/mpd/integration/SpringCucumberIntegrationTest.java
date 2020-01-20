@@ -1,6 +1,7 @@
 package ru.net.arh.mpd.integration;
 
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,7 @@ public class SpringCucumberIntegrationTest {
     @Value("${local.server.port}")
     int port;
 
+    @ClassRule
     public static GenericContainer genericContainer = new GenericContainer("anpotashev/mpd4tests")
             .withExposedPorts(6600, 8000);
 
@@ -31,7 +33,7 @@ public class SpringCucumberIntegrationTest {
     }
 
     @Autowired
-    ConnectionService connectionService;
+    protected ConnectionService connectionService;
     @Autowired
     @MockBean
     ConnectionSettings connectionSettings;

@@ -44,7 +44,7 @@ public class MpdTreeController {
     }
 
     /**
-     * Запрос дерева музыкальной коллекции (детальной информации)
+     * Запрос обновления дерева музыкальной коллекции
      */
     @MessageMapping("/updateDb")
     @MpdErrorType(type = ResponseType.UPDATE_DB)
