@@ -9,6 +9,7 @@ import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import ru.net.arh.mpd.integration.SpringCucumberIntegrationTest;
 import ru.net.arh.mpd.integration.WsClient;
+import ru.net.arh.mpd.model.sockjs.SockJsResponse;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -19,10 +20,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 public class MyStepdefs extends SpringCucumberIntegrationTest {
 
     private WsClient client;
     private Map<String, BlockingQueue> map = new HashMap<>();
+    private Boolean connectionState;
+    private Map<String, Object> savedValues = new HashMap<>();
 
     @Before
     public void setUp() {
@@ -43,10 +49,11 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
             client.subscribe(topic, new StompFrameHandler() {
                 @Override
                 public Type getPayloadType(StompHeaders headers) {
-                    return null;
+                    return SockJSResponse.class;
                 }
                 @Override
                 public void handleFrame(StompHeaders headers, Object payload) {
+                    if (!(payload instanceof SockJSResponse)) return;
                     queue.add(payload);
                 }
             });
@@ -58,11 +65,17 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
         client.sendCommand(destination, null);
     }
 
-    @Тогда("^в течение (\\d+) получает ответ из очереди (.*)$")
-    public void вТечениеПолучаетОтветИзОчереди(int delay, String topic) throws InterruptedException {
+    @Тогда("^в течение (\\d+) получает ответ из очереди (.*) и сохраняет его значение по ключу \"(.*)\"$")
+    public void вТечениеПолучаетОтветИзОчереди(int delay, String topic, String key) throws InterruptedException {
         BlockingQueue queue = map.get(topic);
-        Object poll = queue.poll(delay, TimeUnit.SECONDS);
-        System.out.println("here");
+        SockJSResponse result = (SockJSResponse)queue.poll(delay, TimeUnit.SECONDS);
+        assertNotNull(result);
+        savedValues.put(key, result.getPayload());
     }
 
+    @И("^\"(.*)\" - (true|false)$")
+    public void checkBoolean(String key, boolean value) {
+        Boolean b = (Boolean) savedValues.get(key);
+        assertEquals(b, value);
+    }
 }

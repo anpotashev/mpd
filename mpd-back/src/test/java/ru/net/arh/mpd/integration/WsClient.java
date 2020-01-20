@@ -35,8 +35,6 @@ public class WsClient {
                 new SockJsClient(createTransportClient())
         );
         client.setMessageConverter(new MappingJackson2MessageConverter());
-//        client.setMessageConverter(new ByteArrayMessageConverter());
-//        client.setMessageConverter(new StringMessageConverter());
     }
 
     public void connect() throws ExecutionException, InterruptedException {
@@ -50,7 +48,6 @@ public class WsClient {
     }
 
     public void sendCommand(String destination, Object payload) {
-//        stompSession.send("/connectionState/change", "{\"payload\": true}");
         stompSession.send(destination, payload);
     }
 
