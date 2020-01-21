@@ -91,7 +91,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     @ThrowIfNotConnected
     public void shuffle(Integer start, Integer end) {
         MpdCommand mpdCommand = (start != null && end != null)
-                ? MpdCommandBuilder.of(Command.SHUFFLE).add(start, end)
+                ? MpdCommandBuilder.of(Command.SHUFFLE).add(start + ":" + end)
                 : MpdCommandBuilder.of(Command.SHUFFLE);
         connectionService.sendCommand(mpdCommand);
     }

@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(features = "src/test/resources/features"
-, glue = {"ru.net.arh.mpd.integration.steps"})
+        , glue = {"ru.net.arh.mpd.integration.steps"}
+        , junit = {"--filename-compatible-names"})
 public class CucumberTest {
 }

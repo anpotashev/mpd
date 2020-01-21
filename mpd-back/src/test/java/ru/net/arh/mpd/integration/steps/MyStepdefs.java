@@ -1,6 +1,7 @@
 package ru.net.arh.mpd.integration.steps;
 
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.Дано;
 import cucumber.api.java.ru.И;
@@ -57,8 +58,8 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
         client.sendCommand(destination, null);
     }
 
-    @Тогда("^в течение (\\d+) получает ответ из очереди (.*) и сохраняет его значение по ключу \"(.*)\"$")
-    public void вТечениеПолучаетОтветИзОчереди(int delay, String topic, String key) throws InterruptedException {
+    @Тогда("^в течение (\\d+) секунд получает ответ из очереди (.*) и сохраняет его значение по ключу \"(.*)\"$")
+    public void вТечениеСекундПолучаетОтветИзОчереди(int delay, String topic, String key) throws InterruptedException {
         BlockingQueue queue = map.get(topic);
         Object object = queue.poll(delay, TimeUnit.SECONDS);
         assertNotNull(object);
@@ -119,8 +120,9 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
         client.sendCommand(destination, map);
     }
 
-    @Дано("^соеднинение с mpd разорвано$")
-    public void соеднинениеСMpdРазорвано() throws InterruptedException {
+
+    @Before
+    public void before() {
         connectionService.disconnect();
     }
 
@@ -138,4 +140,23 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
                 .orElse(Boolean.FALSE));
     }
 
+    @И("^У элемента \"([^\"]*)\" в поле \"([^\"]*)\" последний элемент с полями:$")
+    public void уЭлементаВПолеПоследнийЭлементСПолями(String key, String fieldName, DataTable dataTable) throws Throwable {
+        Object obj = savedValues.get(key);
+        Object field = ReflectionTestUtils.getField(obj, fieldName);
+        Object lastElement = field instanceof Object[]
+                ? ((Object[])field)[((Object[]) field).length - 1]
+                : ((List)field).get(((List)field).size() - 1);
+        assertTrue(checkValues(dataTable, lastElement));
+    }
+
+    @И("^У элемента \"([^\"]*)\" в поле \"([^\"]*)\" на (\\d+) месте элемент с полями:$")
+    public void уЭлементаВПолеНаМестеЭлементСПолями(String key, String fieldName, int pos, DataTable dataTable) throws Throwable {
+        Object obj = savedValues.get(key);
+        Object field = ReflectionTestUtils.getField(obj, fieldName);
+        Object nstElement = field instanceof Object[]
+                ? ((Object[])field)[pos]
+                : ((List)field).get(pos);
+        assertTrue(checkValues(dataTable, nstElement));
+    }
 }

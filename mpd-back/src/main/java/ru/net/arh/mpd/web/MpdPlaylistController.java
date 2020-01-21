@@ -42,14 +42,14 @@ public class MpdPlaylistController {
     @MessageMapping("/playlist/add")
     @MpdErrorType(type = ResponseType.PLAYLIST_ADD)
     public void add(@MapKeys(keys = {"path"}) Map<String, Object> map) {
-        playlistService.addToPos((String)map.get("path"), (Integer) map.getOrDefault("pos", null));
+        playlistService.addToPos((String)map.get("path"), intValue(map.get("pos")));
     }
 
 
     @MessageMapping("/playlist/addFile")
     @MpdErrorType(type = ResponseType.PLAYLIST_ADD_FILE)
     public void addFile(@MapKeys(keys = {"path"}) Map<String, Object> map) {
-        playlistService.addFileToPos((String)map.get("path"), (Integer) map.getOrDefault("pos", null));
+        playlistService.addFileToPos((String)map.get("path"), intValue(map.get("pos")));
     }
 
     /**
@@ -95,6 +95,12 @@ public class MpdPlaylistController {
     public static class AddSearchRequest {
         private Condition condition;
         private Integer pos;
+    }
+
+    private Integer intValue(Object o) {
+        if (o == null) return null;
+        if (o instanceof Integer) return (Integer) o;
+        return Integer.valueOf((String) o);
     }
 
 }
