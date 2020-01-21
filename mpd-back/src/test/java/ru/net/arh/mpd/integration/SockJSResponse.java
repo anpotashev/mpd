@@ -1,4 +1,4 @@
-package ru.net.arh.mpd.integration.steps;
+package ru.net.arh.mpd.integration;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeId;
@@ -21,6 +21,7 @@ public class SockJSResponse<T> {
             @JsonSubTypes.Type(value = TreeItem.class, name = "TREE"),
             @JsonSubTypes.Type(value = Boolean.class, name = "CONNECTION_STATE"),
             @JsonSubTypes.Type(value = Playlist.class, name = "PLAYLIST"),
+            @JsonSubTypes.Type(value = Playlist[].class, name = "STORED_PLAYLISTS"),
             @JsonSubTypes.Type(value = MpdOutput[].class, name = "OUTPUT")
     })
     private T payload;

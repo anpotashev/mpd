@@ -1,8 +1,7 @@
 package ru.net.arh.mpd.integration;
 
-import org.springframework.messaging.converter.ByteArrayMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -12,17 +11,12 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
-import org.testcontainers.shaded.org.apache.commons.lang.ObjectUtils;
-import ru.net.arh.mpd.integration.steps.SockJSResponse;
 import ru.net.arh.mpd.model.sockjs.MpdSockJsError;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class WsClient {
 

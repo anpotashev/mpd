@@ -1,13 +1,13 @@
 package ru.net.arh.mpd.integration.steps;
 
 import cucumber.api.DataTable;
-import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.Дано;
 import cucumber.api.java.ru.И;
 import cucumber.api.java.ru.Когда;
 import cucumber.api.java.ru.Тогда;
 import org.springframework.test.util.ReflectionTestUtils;
+import ru.net.arh.mpd.integration.SockJSResponse;
 import ru.net.arh.mpd.integration.SpringCucumberIntegrationTest;
 import ru.net.arh.mpd.integration.WsClient;
 

@@ -1,6 +1,9 @@
 package ru.net.arh.mpd.model.playlist;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +22,8 @@ public class Playlist {
     @MpdAnswer(preffix = "playlist:")
     private String name;
     @MpdAnswer(preffix = "Last-Modified:")
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime lastModified;
 
     public Playlist(List<PlaylistItem> playlistItems) {
