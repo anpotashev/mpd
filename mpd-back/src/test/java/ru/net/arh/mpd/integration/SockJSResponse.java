@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.net.arh.mpd.model.outputs.MpdOutput;
 import ru.net.arh.mpd.model.playlist.Playlist;
+import ru.net.arh.mpd.model.status.MpdShortStatus;
 import ru.net.arh.mpd.model.status.MpdStatus;
 import ru.net.arh.mpd.search.model.TreeItem;
 
@@ -25,6 +26,7 @@ public class SockJSResponse<T> {
             @JsonSubTypes.Type(value = Playlist[].class, name = "STORED_PLAYLISTS"),
             @JsonSubTypes.Type(value = Playlist.class, name = "STORED_PLAYLIST"),
             @JsonSubTypes.Type(value = MpdStatus.class, name = "STATUS"),
+            @JsonSubTypes.Type(value = MpdShortStatus.class, name = "SONG_TIME"),
             @JsonSubTypes.Type(value = MpdOutput[].class, name = "OUTPUT")
     })
     private T payload;

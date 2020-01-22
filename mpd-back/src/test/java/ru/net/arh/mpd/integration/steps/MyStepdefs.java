@@ -48,7 +48,7 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
 
     @И("^клиент подписывается на$")
     public void клиентПодписываетсяНа(List<String> topics) {
-        topics.forEach(topic -> {
+         topics.forEach(topic -> {
             BlockingQueue queue = new LinkedBlockingQueue();
             map.put(topic, queue);
             client.subscribe(topic, (payload -> queue.add(payload)));

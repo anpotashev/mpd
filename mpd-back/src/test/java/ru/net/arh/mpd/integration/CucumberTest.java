@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
         , glue = {"ru.net.arh.mpd.integration.steps"}
         , format = { "pretty", "json:target/cucumber-reports/cucumber.json"}
 //        , junit = {"--filename-compatible-names"}
-        , tags = {"@status"}
+        , tags = {"@player"}
 //        , tags = {"@all"}
         )
 public class CucumberTest {
