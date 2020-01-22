@@ -8,8 +8,8 @@ import org.junit.runner.RunWith;
 @CucumberOptions(features = "src/test/resources/features"
         , glue = {"ru.net.arh.mpd.integration.steps"}
         , format = { "pretty", "json:target/cucumber-reports/cucumber.json"}
-        , junit = {"--filename-compatible-names"}
-        , tags = {"@stored_playlists"}
+//        , junit = {"--filename-compatible-names"}
+        , tags = {"@status"}
 //        , tags = {"@all"}
         )
 public class CucumberTest {

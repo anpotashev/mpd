@@ -40,7 +40,7 @@ public class MpdStoredPlaylistController {
     @MessageMapping("/storedPlaylist/info")
     @SendToUser(REPLY_QUEUE)
     public SockJsResponse<Playlist> storedPlaylist(@MapKeys(keys = {"name"}) Map<String, String> map) {
-        return new SockJsResponse<>(ResponseType.STORED_PLAYLISTS, service.storedPlaylist(map.get("name")));
+        return new SockJsResponse<>(ResponseType.STORED_PLAYLIST, service.storedPlaylist(map.get("name")));
     }
 
     @MpdErrorType(type = ResponseType.STORED_PLAYLIST_LOAD)
@@ -53,7 +53,7 @@ public class MpdStoredPlaylistController {
     @MpdErrorType(type = ResponseType.STORED_PLAYLIST_ADD)
     @MessageMapping("/storedPlaylist/add")
     public void addStored(@MapKeys(keys = {"storedPlaylist"}) Map<String, Object> map) {
-        service.addStored((String) map.get("storedPlaylist"), (Integer) map.getOrDefault("pos", null));
+        service.addStored((String) map.get("storedPlaylist"), intValue(map.get("pos")));
     }
 
     @MpdErrorType(type = ResponseType.STORED_PLAYLIST_RM)
@@ -72,5 +72,11 @@ public class MpdStoredPlaylistController {
     @MessageMapping("/storedPlaylist/rename")
     public void renameStored(@MapKeys(keys = {"oldName", "newName"}) Map<String, String> map) {
         service.renameStored(map.get("oldName"), map.get("newName"));
+    }
+
+    private Integer intValue(Object o) {
+        if (o == null) return null;
+        if (o instanceof Integer) return (Integer) o;
+        return Integer.valueOf((String) o);
     }
 }

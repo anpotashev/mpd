@@ -1,5 +1,6 @@
 package ru.net.arh.mpd.model.playlist;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import ru.net.arh.mpd.model.MpdAnswer;
 @Getter
 @Setter
 @MpdAnswer(preffix = "file:")
+@EqualsAndHashCode(of = "file")
 public class PlaylistItem {
     @MpdAnswer(preffix = "file:")
     private String file;

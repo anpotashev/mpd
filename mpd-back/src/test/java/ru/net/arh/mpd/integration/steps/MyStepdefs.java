@@ -1,6 +1,7 @@
 package ru.net.arh.mpd.integration.steps;
 
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.Дано;
 import cucumber.api.java.ru.И;
@@ -22,6 +23,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -72,9 +74,23 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
         savedValues.put(key, object);
     }
 
-    @И("^\"(.*)\" - (true|false)$")
+    @Тогда("^в течение (\\d+) секунд получает ответ из очереди (\\S*)$")
+    public void вТечениеСекундПолучаетОтветИзОчередиTopicPlaylist(int delay, String topic) throws InterruptedException {
+        BlockingQueue queue = map.get(topic);
+        Object object = queue.poll(delay, TimeUnit.SECONDS);
+        assertNotNull(object);
+    }
+
+    @И("^\"([^\\.]*)\" - (true|false)$")
     public void checkBoolean(String key, boolean value) {
         Boolean b = (Boolean) savedValues.get(key);
+        assertEquals(b, value);
+    }
+
+
+    @И("^\"([^\\.]*)\\.([^\\.]*)\" - (true|false)$")
+    public void checkBooleanField(String key, String fieldName, boolean value) {
+        Boolean b = (Boolean) ReflectionTestUtils.getField(savedValues.get(key), fieldName);
         assertEquals(b, value);
     }
 
@@ -89,15 +105,15 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
         assertTrue(checkValues(dataTable, o));
     }
 
-    @И("^\"([^\"]*)\" содержит элемент с полями:$")
-    public void содержитСтрокуСПолями(String key, DataTable dataTable) throws Throwable {
+    @И("^\"([^\"]*)\"( не | )содержит элемент с полями:$")
+    public void содержитСтрокуСПолями(String key, String flag, DataTable dataTable) throws Throwable {
         Object[] arr = (Object[]) savedValues.get(key);
         List<Map<String, Object>> values = dataTable.asMaps(String.class, Object.class);
-        assertTrue(
+        assertEquals(
                 Arrays.stream(arr)
                         .map(o -> checkValues(dataTable, o))
                         .reduce(Boolean::logicalOr)
-                        .orElse(Boolean.FALSE));
+                        .orElse(Boolean.FALSE), flag.trim().isEmpty());
     }
 
     private boolean checkValues(DataTable dataTable, Object object) {
@@ -106,7 +122,7 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
                     Object fieldValue = ReflectionTestUtils.getField(object, (String) s.get("поле"));
                     fieldValue = fieldValue == null ? "null" : fieldValue.toString();
                     return s.get("значение").equals(fieldValue);
-                    })
+                })
                 .reduce(Boolean::logicalAnd)
                 .orElse(Boolean.FALSE);
     }
@@ -145,8 +161,8 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
         Object obj = savedValues.get(key);
         Object field = ReflectionTestUtils.getField(obj, fieldName);
         Object lastElement = field instanceof Object[]
-                ? ((Object[])field)[((Object[]) field).length - 1]
-                : ((List)field).get(((List)field).size() - 1);
+                ? ((Object[]) field)[((Object[]) field).length - 1]
+                : ((List) field).get(((List) field).size() - 1);
         assertTrue(checkValues(dataTable, lastElement));
     }
 
@@ -155,8 +171,28 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
         Object obj = savedValues.get(key);
         Object field = ReflectionTestUtils.getField(obj, fieldName);
         Object nstElement = field instanceof Object[]
-                ? ((Object[])field)[pos]
-                : ((List)field).get(pos);
+                ? ((Object[]) field)[pos]
+                : ((List) field).get(pos);
         assertTrue(checkValues(dataTable, nstElement));
     }
+
+    @И("^\"([^\"]*)\" такой же как и \"([^\"]*)\"$")
+    public void такойЖеКакИ(String key1, String key2) throws Throwable {
+        assertThat(savedValues.get(key1)).isEqualToComparingFieldByFieldRecursively(savedValues.get(key2));
+    }
+
+    @И("^У списка \"([^\"]*)\" элемент с полями из таблицы ниже сохраняется как \"([^\"]*)\"$")
+    public void уСпискаЭлементСПолямиИзТаблицыНижеСохраняетсяКак(String key, String newKey, DataTable dataTable) throws Throwable {
+        Object obj = findElementByFields(savedValues.get(key), dataTable);
+        savedValues.put(newKey, obj);
+    }
+
+    private Object findElementByFields(Object field, DataTable dataTable) {
+        Stream<Object> stream = (field instanceof Object[])
+                ? Arrays.stream((Object[]) field)
+                : ((Collection) field).stream();
+        return stream.filter(e -> checkValues(dataTable, e))
+                .findFirst().get();
+    }
+
 }
