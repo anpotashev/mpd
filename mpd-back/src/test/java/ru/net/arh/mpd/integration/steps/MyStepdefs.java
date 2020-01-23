@@ -1,7 +1,7 @@
 package ru.net.arh.mpd.integration.steps;
 
 import cucumber.api.DataTable;
-import cucumber.api.PendingException;
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.Дано;
 import cucumber.api.java.ru.И;
@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -31,13 +32,19 @@ import static org.junit.Assert.assertTrue;
 public class MyStepdefs extends SpringCucumberIntegrationTest {
 
     private WsClient client;
-    private Map<String, BlockingQueue> map = new HashMap<>();
-    private Boolean connectionState;
+    private Map<String, BlockingQueue> subscriptions = new HashMap<>();
     private Map<String, Object> savedValues = new HashMap<>();
 
     @Before
     public void setUp() {
         super.before();
+    }
+    @After
+    public void setDown() throws InterruptedException {
+        if (connectionService.isConnected()) {
+            connectionService.disconnect();
+        }
+//        клиентПереводитСостояниеПодключенияКMpdСерверуВ(Boolean.FALSE);
     }
 
 
@@ -50,7 +57,7 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
     public void клиентПодписываетсяНа(List<String> topics) {
          topics.forEach(topic -> {
             BlockingQueue queue = new LinkedBlockingQueue();
-            map.put(topic, queue);
+            subscriptions.put(topic, queue);
             client.subscribe(topic, (payload -> queue.add(payload)));
         });
     }
@@ -62,7 +69,7 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
 
     @Тогда("^в течение (\\d+) секунд получает ответ из очереди (.*) и сохраняет его значение по ключу \"(.*)\"$")
     public void вТечениеСекундПолучаетОтветИзОчереди(int delay, String topic, String key) throws InterruptedException {
-        BlockingQueue queue = map.get(topic);
+        BlockingQueue queue = subscriptions.get(topic);
         Object object = queue.poll(delay, TimeUnit.SECONDS);
         assertNotNull(object);
         if (object instanceof SockJSResponse) {
@@ -76,7 +83,7 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
 
     @Тогда("^в течение (\\d+) секунд получает ответ из очереди (\\S*)$")
     public void вТечениеСекундПолучаетОтветИзОчередиTopicPlaylist(int delay, String topic) throws InterruptedException {
-        BlockingQueue queue = map.get(topic);
+        BlockingQueue queue = subscriptions.get(topic);
         Object object = queue.poll(delay, TimeUnit.SECONDS);
         assertNotNull(object);
     }
@@ -95,14 +102,15 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
     }
 
     @Когда("^клиент отправляет \"(.*)\" по адресу (.*)$")
-    public void клиентОтправляетПоАдресу(String command, String address) {
+    public void клиентОтправляетПоАдресу(Object command, String address) {
         client.sendCommand(address, command);
     }
 
     @И("^\"([^\"]*)\" содержит поля:$")
     public void содержитПоля(String key, DataTable dataTable) throws Throwable {
         Object o = savedValues.get(key);
-        assertTrue(checkValues(dataTable, o));
+        String out = Objects.toString(o);
+        assertTrue(out, checkValues(dataTable, o));
     }
 
     @И("^\"([^\"]*)\"( не | )содержит элемент с полями:$")
@@ -195,4 +203,47 @@ public class MyStepdefs extends SpringCucumberIntegrationTest {
                 .findFirst().get();
     }
 
+    @И("^клиент переводит состояние подключения к mpd-серверу в (true|false)$")
+    public void клиентПереводитСостояниеПодключенияКMpdСерверуВ(Boolean newState) throws InterruptedException {
+        клиентОтправляетПоАдресу(newState, "/mpd/connectionState/change");
+        вТечениеСекундПолучаетОтветИзОчереди(10, "/topic/connection", "состояние подключения");
+        checkBoolean("состояние подключения", Boolean.valueOf(newState));
+    }
+
+    @И("^клиент (под|от)ключается (к|от) mpd-сервер(у|а)$")
+    public void клиентКлючаетсяКMpdСерверу(String newState, String a, String b) throws InterruptedException {
+        клиентПереводитСостояниеПодключенияКMpdСерверуВ(newState.equals("под"));
+    }
+
+    @Когда("^клиент очищает очередь (.*)$")
+    public void клиентОчищаетОчередьTopicStatus(String queueName) {
+        subscriptions.get(queueName).clear();
+    }
+
+    @Тогда("^в течение (\\d+) секунд получает из очереди \"([^\"]*)\" ответ с полями:$")
+    public void вТечениеСекундПолучаетИзОчередиОтветСПолями(int timeout, String topic, DataTable dataTable) throws Throwable {
+        boolean done = false;
+        do {
+            BlockingQueue queue = subscriptions.get(topic);
+            Object object = queue.poll(timeout, TimeUnit.SECONDS);
+            assertNotNull(object);
+            if (object instanceof SockJSResponse) {
+                SockJSResponse obj = (SockJSResponse) object;
+                assertNotNull(obj);
+                object = obj.getPayload();
+            }
+            done = checkValues(dataTable, object);
+        } while (!done);
+    }
+
+    @Тогда("^в течение (\\d+) секунд получает ответ из очереди \"(.*)\" со значением (true|false)$")
+    public void вТечениеСекундПолучаетОтветИзОчередиUserQueueReplyСоЗначением(int timeout, String topic, boolean value) throws InterruptedException {
+        boolean done = false;
+        do {
+            BlockingQueue queue = subscriptions.get(topic);
+            Object object = queue.poll(timeout, TimeUnit.SECONDS);
+            assertNotNull(object);
+            done = ((SockJSResponse)object).getPayload().equals(value);
+        } while (!done);
+    }
 }
